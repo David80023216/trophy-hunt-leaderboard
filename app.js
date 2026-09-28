@@ -51,6 +51,7 @@
       '<td class="rank">' + rankBadge(rank) + '</td>' +
       '<td><span class="player-cell">' + imgHtml +
         '<span class="player-name">' + esc(entry.handle) + '</span>' + streakHtml +
+        '<a class="row-photo-btn" href="https://forms.gle/HEtMitfJZLq7NQPL9" target="_blank" rel="noopener" title="Submit your dog\'s photo — +5 pts daily!">📸</a>' +
       '</span></td>' +
       '<td class="points">' + entry.points + ' pts</td>' +
     '</tr>';
