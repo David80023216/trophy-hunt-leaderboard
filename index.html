@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trophy Hunt Daily — Leaderboard</title>
+<meta name="description" content="Official Trophy Hunt Daily leaderboard — verified winners only. Gone To The Dogs.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="hero">
+  <h1>🏆 TROPHY HUNT DAILY — LEADERBOARD</h1>
+  <p class="subtitle">Who found today's dog? Verified winners only.</p>
+  <p class="snapshot" id="snapshot">Loading standings…</p>
+</header>
+
+<div class="search-wrap">
+  <input type="search" id="player-search" placeholder="🔍 Search players…" autocomplete="off" aria-label="Search players">
+</div>
+
+<main id="boards">
+  <section class="board" data-section="daily">
+    <h2>DAILY <span class="board-label" id="label-daily"></span></h2>
+    <p class="board-caption">Best shot hunters of the day</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>RANK</th><th>PLAYER</th><th>POINTS</th></tr></thead>
+      <tbody id="rows-daily"></tbody>
+    </table></div>
+    <p class="empty-msg" id="empty-daily" hidden>No players match your search.</p>
+  </section>
+
+  <section class="board" data-section="weekly">
+    <h2>WEEKLY <span class="board-label" id="label-weekly"></span></h2>
+    <p class="board-caption">Top 5 hunters of the week</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>RANK</th><th>PLAYER</th><th>POINTS</th></tr></thead>
+      <tbody id="rows-weekly"></tbody>
+    </table></div>
+    <p class="empty-msg" id="empty-weekly" hidden>No players match your search.</p>
+  </section>
+
+  <section class="board" data-section="monthly">
+    <h2>MONTHLY <span class="board-label" id="label-monthly"></span></h2>
+    <p class="board-caption">Top 5 of the month</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>RANK</th><th>PLAYER</th><th>POINTS</th></tr></thead>
+      <tbody id="rows-monthly"></tbody>
+    </table></div>
+    <p class="empty-msg" id="empty-monthly" hidden>No players match your search.</p>
+  </section>
+
+  <section class="board" data-section="all_time">
+    <h2>ALL-TIME</h2>
+    <p class="board-caption">Hall of fame — best of the best</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>RANK</th><th>PLAYER</th><th>POINTS</th></tr></thead>
+      <tbody id="rows-all_time"></tbody>
+    </table></div>
+    <p class="empty-msg" id="empty-all_time" hidden>No players match your search.</p>
+  </section>
+</main>
+
+<section class="prizes">
+  <h2>🏅 PRIZES</h2>
+  <div class="prize-cards">
+    <div class="prize-card">
+      <h3>🏆 Daily Winner</h3>
+      <p>YOUR FAVORITE PICTURE OF YOUR DOG GOES IN THE NEXT TROPHY HUNT VIDEO!</p>
+    </div>
+    <div class="prize-card">
+      <h3>🏆 Weekly Champ</h3>
+      <p>YOUR dog becomes the 100-point trophy dog for 7 rounds!</p>
+    </div>
+    <div class="prize-card">
+      <h3>🌟 Monthly Champ</h3>
+      <p>YOUR dog gets its own spotlight Short on the channel!</p>
+    </div>
+  </div>
+</section>
+
+<section class="rules">
+  <p class="notice">📢 You must be subscribed to <strong>Gone To The Dogs</strong> to win.</p>
+  <p class="fine">This leaderboard is updated daily and shows the top 5 hunters across all boards.
+  Points are added after claims are verified. Check this board for the latest posted standings.</p>
+  <h3>HOW IT WORKS</h3>
+  <ol class="how">
+    <li>Watch the daily Trophy Hunt Short on <strong>Gone To The Dogs</strong>.</li>
+    <li>Screenshot a numbered dog and comment its number.</li>
+    <li>One claim per player per video — points are revealed in the reply.</li>
+    <li>Point values reshuffle after every claim, so everyone has a fair shot at the big one.</li>
+    <li>Claim on consecutive days to build a streak 🔥.</li>
+    <li>Only verified claims appear here — no exceptions.</li>
+    <li>🏆 Weekly champ: YOUR dog becomes the 100-point trophy dog for 7 rounds!</li>
+  </ol>
+</section>
+
+<footer>
+  <p>Trophy Hunt Daily · Gone To The Dogs 🐶</p>
+</footer>
+
+<script id="th-data" type="application/json">
+{
+ "updated_at": "2026-09-27T20:34:43-05:00",
+ "avatars": {
+  "@Poppywiththesillyd0gies": "https://yt3.ggpht.com/OeW-8XzQxaapgIg1LvDw_Xp3zZETJhhn5CF9Q_1TRVCbZO8f5TJxCBz-6Uz-4JT1en7v4Z0KWA=s176-c-k-c0x00ffffff-no-rj",
+  "@housemouse17": "https://yt3.ggpht.com/1W_lS6p_JaCH4XXwByokBR0-MYCkHeLgjqYpCDYfXb-6AefxUnnhMaRZcugRmxs4FgrkpRzEew=s176-c-k-c0x00ffffff-no-rj",
+  "@THEchannel-c8p": "https://yt3.ggpht.com/8HUJa36a4QKl93Km3qchzln4rGE8VOtplxyJrmg2Izpe4XRsYJhxidO90sJ7W5FwizOWREAx0g=s176-c-k-c0x00ffffff-no-rj",
+  "@YOURS.TRULY.JANE27": "https://yt3.ggpht.com/7NX_g22DmDT55WKHcg7lG32qz_Qj_6TZlHT6CTr1xxqVYp4cmYomnnnAwAg-imXTStA9T8kC=s176-c-k-c0x00ffffff-no-rj",
+  "@jaimiedouble8340": "https://yt3.ggpht.com/ytc/AIdro_nnsruDFO1XJcnv_cddH5rjUbyJMc0u0ynaphb_kT8xkwOE=s176-c-k-c0x00ffffff-no-rj"
+ },
+ "streaks": {
+  "@Poppywiththesillyd0gies": 1,
+  "@housemouse17": 1,
+  "@THEchannel-c8p": 1,
+  "@YOURS.TRULY.JANE27": 1,
+  "@jaimiedouble8340": 1
+ },
+ "daily": {
+  "label": "Sun Sep 27",
+  "standings": {
+   "@Poppywiththesillyd0gies": 25,
+   "@housemouse17": 5,
+   "@THEchannel-c8p": 10,
+   "@YOURS.TRULY.JANE27": 50,
+   "@jaimiedouble8340": 2
+  }
+ },
+ "weekly": {
+  "label": "Week of Sep 21",
+  "standings": {
+   "@Poppywiththesillyd0gies": 25,
+   "@housemouse17": 5,
+   "@THEchannel-c8p": 10,
+   "@YOURS.TRULY.JANE27": 50,
+   "@jaimiedouble8340": 2
+  }
+ },
+ "monthly": {
+  "label": "September 2026",
+  "standings": {
+   "@Poppywiththesillyd0gies": 25,
+   "@housemouse17": 5,
+   "@THEchannel-c8p": 10,
+   "@YOURS.TRULY.JANE27": 50,
+   "@jaimiedouble8340": 2
+  }
+ },
+ "all_time": {
+  "@Poppywiththesillyd0gies": 25,
+  "@housemouse17": 5,
+  "@THEchannel-c8p": 10,
+  "@YOURS.TRULY.JANE27": 50,
+  "@jaimiedouble8340": 2
+ }
+}
+</script>
+<script src="app.js"></script>
+</body>
+</html>

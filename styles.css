@@ -1,0 +1,186 @@
+/* Trophy Hunt Daily — dark sporty leaderboard */
+:root {
+  --bg: #0b0f14;
+  --bg2: #111722;
+  --card: #151d2a;
+  --line: #232f45;
+  --gold: #ffd34d;
+  --gold-dim: #b98f1f;
+  --text: #eef3fa;
+  --muted: #93a1b8;
+  --accent: #4da3ff;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: radial-gradient(1200px 500px at 50% -80px, #16202f 0%, var(--bg) 60%);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+.hero {
+  text-align: center;
+  padding: 2.2rem 1rem 1.2rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.hero h1 {
+  margin: 0 0 .4rem;
+  font-size: clamp(1.4rem, 5vw, 2.2rem);
+  letter-spacing: .04em;
+  color: var(--gold);
+  text-shadow: 0 2px 18px rgba(255, 211, 77, .25);
+}
+
+.subtitle { margin: 0; color: var(--muted); font-size: 1.02rem; }
+.snapshot { margin: .5rem 0 0; color: var(--muted); font-size: .85rem; }
+
+.search-wrap {
+  max-width: 640px;
+  margin: 1.2rem auto 0;
+  padding: 0 1rem;
+}
+
+#player-search {
+  width: 100%;
+  padding: .8rem 1rem;
+  font-size: 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--bg2);
+  color: var(--text);
+  outline: none;
+}
+#player-search:focus { border-color: var(--gold-dim); box-shadow: 0 0 0 3px rgba(255, 211, 77, .15); }
+#player-search::placeholder { color: var(--muted); }
+
+main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: grid;
+  gap: 1.2rem;
+}
+
+.board {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem 1rem 1.2rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, .35);
+}
+
+.board h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  letter-spacing: .06em;
+  color: var(--gold);
+}
+
+.board-label {
+  font-size: .8rem;
+  color: var(--muted);
+  letter-spacing: 0;
+  font-weight: normal;
+}
+
+.board-caption { margin: .15rem 0 .8rem; color: var(--muted); font-size: .88rem; }
+
+.table-wrap { overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; font-size: .98rem; }
+
+thead th {
+  text-align: left;
+  font-size: .72rem;
+  letter-spacing: .12em;
+  color: var(--muted);
+  padding: .5rem .6rem;
+  border-bottom: 1px solid var(--line);
+}
+
+tbody td {
+  padding: .55rem .6rem;
+  border-bottom: 1px solid rgba(35, 47, 69, .6);
+  vertical-align: middle;
+}
+
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: rgba(77, 163, 255, .06); }
+
+td.rank { width: 3.2rem; font-weight: 700; white-space: nowrap; }
+td.points { font-weight: 800; color: var(--gold); text-align: right; white-space: nowrap; }
+thead th:last-child { text-align: right; }
+
+.player-cell { display: flex; align-items: center; gap: .6rem; min-width: 0; }
+.player-cell img {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--gold-dim);
+  flex: none;
+}
+.player-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.streak { color: #ff7a3d; font-weight: 700; margin-left: .35rem; white-space: nowrap; }
+
+.empty-msg { color: var(--muted); font-size: .9rem; margin: .6rem 0 0; }
+
+.prizes, .rules {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 1rem 1.2rem;
+}
+
+.prizes h2, .rules h3 { color: var(--gold); letter-spacing: .05em; }
+
+.prize-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: .9rem;
+}
+
+.prize-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+.prize-card h3 { margin: 0 0 .4rem; font-size: 1rem; color: var(--gold); }
+.prize-card p { margin: 0; font-size: .92rem; color: var(--text); }
+
+.rules .notice {
+  background: rgba(255, 211, 77, .08);
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius);
+  padding: .9rem 1rem;
+  font-size: .98rem;
+}
+.rules .fine { color: var(--muted); font-size: .88rem; }
+
+.how { padding-left: 1.3rem; color: var(--text); font-size: .93rem; }
+.how li { margin: .35rem 0; }
+.how strong { color: var(--gold); }
+
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: .82rem;
+  padding: 1.4rem 1rem 2.4rem;
+  border-top: 1px solid var(--line);
+}
+
+@media (max-width: 520px) {
+  .hero { padding: 1.6rem .8rem 1rem; }
+  table { font-size: .9rem; }
+  .player-cell img { width: 30px; height: 30px; }
+}
