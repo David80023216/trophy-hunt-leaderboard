@@ -184,3 +184,18 @@ footer {
   table { font-size: .9rem; }
   .player-cell img { width: 30px; height: 30px; }
 }
+
+.cta-wrap { text-align: center; margin: 1.1rem 1rem 0; }
+.photo-btn {
+  display: inline-block;
+  background: linear-gradient(180deg, var(--gold), var(--gold-dim));
+  color: #1a1405;
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: .8rem 1.6rem;
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow: 0 4px 18px rgba(255, 211, 77, .35);
+}
+.photo-btn:hover { filter: brightness(1.08); }
+.photo-btn:active { transform: scale(.97); }
