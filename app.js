@@ -47,11 +47,16 @@
     var imgHtml = avatar
       ? '<img src="' + esc(avatar) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">'
       : '';
+    var dog = (data.dog_photos && data.dog_photos[entry.handle]) || null;
+    var dogHtml = dog && dog.src
+      ? '<img class="dog-thumb" src="' + esc(dog.src) + '" data-full="' + esc(dog.full || dog.src) + '" alt="' + esc(dog.name || 'dog') + '" loading="lazy" title="Click to expand — ' + esc(dog.name || 'player dog') + ' 🐶" onerror="this.style.display=\'none\'">'
+      : '';
     return '<tr data-handle="' + esc(entry.handle.toLowerCase()) + '">' +
       '<td class="rank">' + rankBadge(rank) + '</td>' +
       '<td><span class="player-cell">' + imgHtml +
         '<span class="player-name">' + esc(entry.handle) + '</span>' + streakHtml +
         '<a class="row-photo-btn" href="https://forms.gle/HEtMitfJZLq7NQPL9" target="_blank" rel="noopener" title="Submit your dog\'s photo — +5 pts daily!">📸</a>' +
+        dogHtml +
       '</span></td>' +
       '<td class="points">' + entry.points + ' pts</td>' +
     '</tr>';
@@ -104,6 +109,31 @@
   }
 
   document.getElementById('player-search').addEventListener('input', applySearch);
+
+  // Dog photo lightbox: click a .dog-thumb to expand, click anywhere to close.
+  var lightbox = null;
+  function showDogPhoto(src, name) {
+    if (!lightbox) {
+      lightbox = document.createElement('div');
+      lightbox.id = 'dog-lightbox';
+      lightbox.innerHTML = '<img alt="">';
+      lightbox.addEventListener('click', function () {
+        lightbox.classList.remove('open');
+      });
+      document.body.appendChild(lightbox);
+    }
+    var img = lightbox.querySelector('img');
+    img.src = src;
+    img.alt = name || 'player dog';
+    lightbox.classList.add('open');
+  }
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (t && t.classList && t.classList.contains('dog-thumb')) {
+      e.preventDefault();
+      showDogPhoto(t.getAttribute('data-full') || t.src, t.alt);
+    }
+  });
 
   renderSnapshot();
   renderAll();
