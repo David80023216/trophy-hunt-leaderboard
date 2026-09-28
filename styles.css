@@ -52,7 +52,7 @@ body {
   font-size: 1rem;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: var(--bg2);
+  background: var(--card);
   color: var(--text);
   outline: none;
 }
@@ -91,7 +91,14 @@ main {
 
 .board-caption { margin: .15rem 0 .8rem; color: var(--muted); font-size: .88rem; }
 
-.table-wrap { overflow-x: auto; }
+.table-wrap { overflow-x: auto; max-height: 17.5rem; overflow-y: auto; }
+
+thead th {
+  position: sticky;
+  top: 0;
+  background: var(--card);
+  z-index: 1;
+}
 
 table { width: 100%; border-collapse: collapse; font-size: .98rem; }
 

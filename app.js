@@ -24,7 +24,7 @@
       return { handle: handle, points: Number(map[handle]) || 0 };
     });
     rows.sort(function (a, b) { return b.points - a.points; });
-    return { label: label, rows: rows.slice(0, 5) };
+    return { label: label, rows: rows };
   }
 
   function rankBadge(rank) {
