@@ -114,8 +114,9 @@
       document.getElementById('featured-comment').href = watchUrl(v);
     }
     setFeatured(vids[0]);
+    var VISIBLE = 14; // past-video cap: grid never grows past this + one button
     var grid = document.getElementById('video-grid');
-    grid.innerHTML = vids.map(function (v, i) {
+    function cardHTML(v, i) {
       var label = v.title || ('Day ' + v.day);
       return '<div class="video-card">' +
         '<button type="button" class="video-thumb" data-idx="' + i + '" aria-label="Play ' + esc(label) + '">' +
@@ -124,8 +125,19 @@
         '</button>' +
         '<a class="video-comment" href="' + esc(watchUrl(v)) + '" target="_blank" rel="noopener">💬 Comment to score</a>' +
       '</div>';
-    }).join('');
+    }
+    var rest = vids.length - VISIBLE;
+    grid.innerHTML = vids.slice(0, VISIBLE).map(cardHTML).join('') +
+      (rest > 0
+        ? '<button type="button" class="video-more">Show ' + rest + ' earlier video' + (rest > 1 ? 's' : '') + '</button>'
+        : '');
     grid.addEventListener('click', function (ev) {
+      var more = ev.target && ev.target.closest ? ev.target.closest('.video-more') : null;
+      if (more) {
+        more.remove();
+        grid.insertAdjacentHTML('beforeend', vids.slice(VISIBLE).map(cardHTML).join(''));
+        return;
+      }
       var btn = ev.target && ev.target.closest ? ev.target.closest('.video-thumb') : null;
       if (!btn) return;
       var v = vids[Number(btn.getAttribute('data-idx'))];

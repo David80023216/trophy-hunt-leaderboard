@@ -289,3 +289,9 @@ footer {
   font-size: .85rem; font-weight: 600; text-decoration: none;
 }
 .video-comment:hover { text-decoration: underline; }
+.video-more {
+  grid-column: 1 / -1; justify-self: center; margin: .4rem 0 0;
+  padding: .7rem 1.4rem; border-radius: 999px; border: 1px solid #e0c36a;
+  background: #fff8e7; color: #8a6d1a; font: 600 .9rem/1 system-ui, sans-serif; cursor: pointer;
+}
+.video-more:hover { background: #ffefc2; }
