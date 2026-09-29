@@ -114,30 +114,19 @@
       document.getElementById('featured-comment').href = watchUrl(v);
     }
     setFeatured(vids[0]);
-    var VISIBLE = 14; // past-video cap: grid never grows past this + one button
     var grid = document.getElementById('video-grid');
     function cardHTML(v, i) {
       var label = v.title || ('Day ' + v.day);
       return '<div class="video-card">' +
         '<button type="button" class="video-thumb" data-idx="' + i + '" aria-label="Play ' + esc(label) + '">' +
           '<img src="https://i.ytimg.com/vi/' + esc(v.video_id) + '/hqdefault.jpg" alt="" loading="lazy" onerror="this.style.display=\'none\'">' +
-          '<span class="video-label">' + esc(label) + '</span>' +
         '</button>' +
-        '<a class="video-comment" href="' + esc(watchUrl(v)) + '" target="_blank" rel="noopener">💬 Comment to score</a>' +
+        '<div class="video-meta"><span class="video-label">' + esc(label) + '</span>' +
+        '<a class="video-comment" href="' + esc(watchUrl(v)) + '" target="_blank" rel="noopener">💬 Score</a></div>' +
       '</div>';
     }
-    var rest = vids.length - VISIBLE;
-    grid.innerHTML = vids.slice(0, VISIBLE).map(cardHTML).join('') +
-      (rest > 0
-        ? '<button type="button" class="video-more">Show ' + rest + ' earlier video' + (rest > 1 ? 's' : '') + '</button>'
-        : '');
+    grid.innerHTML = vids.map(cardHTML).join('');
     grid.addEventListener('click', function (ev) {
-      var more = ev.target && ev.target.closest ? ev.target.closest('.video-more') : null;
-      if (more) {
-        more.remove();
-        grid.insertAdjacentHTML('beforeend', vids.slice(VISIBLE).map(cardHTML).join(''));
-        return;
-      }
       var btn = ev.target && ev.target.closest ? ev.target.closest('.video-thumb') : null;
       if (!btn) return;
       var v = vids[Number(btn.getAttribute('data-idx'))];

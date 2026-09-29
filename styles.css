@@ -270,28 +270,33 @@ footer {
 }
 .comment-btn:hover { filter: brightness(1.08); }
 .video-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: .8rem;
+  display: flex; gap: .6rem; overflow-x: auto;
+  padding: .2rem .1rem .8rem; margin-top: .9rem;
+  scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+}
+.video-grid::-webkit-scrollbar { height: 6px; }
+.video-grid::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+.shelf-title {
+  margin: 1rem 0 0; font-size: .8rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .06em; opacity: .65;
 }
 .video-card {
+  flex: 0 0 148px; scroll-snap-align: start;
   background: var(--card); border: 1px solid var(--line);
   border-radius: var(--radius); overflow: hidden;
-  display: flex; flex-direction: column;
 }
 .video-thumb {
   background: none; border: 0; padding: 0; cursor: pointer;
-  display: block; text-align: left; color: var(--text); width: 100%;
+  display: block; width: 100%;
 }
 .video-thumb img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: #000; }
-.video-label { display: block; padding: .5rem .7rem .2rem; font-weight: 700; font-size: .9rem; }
+.video-meta {
+  display: flex; align-items: center; justify-content: space-between; gap: .3rem;
+  padding: .35rem .5rem .45rem;
+}
+.video-label { font-weight: 700; font-size: .72rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .video-comment {
-  display: block; padding: .45rem .7rem .7rem; color: var(--accent);
-  font-size: .85rem; font-weight: 600; text-decoration: none;
+  color: var(--accent); font-size: .72rem; font-weight: 700;
+  text-decoration: none; white-space: nowrap;
 }
 .video-comment:hover { text-decoration: underline; }
-.video-more {
-  grid-column: 1 / -1; justify-self: center; margin: .4rem 0 0;
-  padding: .7rem 1.4rem; border-radius: 999px; border: 1px solid #e0c36a;
-  background: #fff8e7; color: #8a6d1a; font: 600 .9rem/1 system-ui, sans-serif; cursor: pointer;
-}
-.video-more:hover { background: #ffefc2; }
