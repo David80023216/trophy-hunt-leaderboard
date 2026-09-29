@@ -226,3 +226,23 @@ footer {
   border: 3px solid var(--gold);
   box-shadow: 0 12px 60px rgba(0, 0, 0, .6);
 }
+
+/* Season 1 additions */
+.spotlight { max-width: 640px; margin: 1.4rem auto 0; padding: 0 1rem; }
+.spotlight h2 { text-align: center; color: var(--gold); margin: 0 0 .8rem; font-size: 1.15rem; letter-spacing: .06em; }
+.spot-card {
+  display: flex; gap: 1rem; align-items: center;
+  background: var(--card); border: 1px solid var(--gold-dim);
+  border-radius: var(--radius); padding: 1rem;
+  box-shadow: 0 4px 28px rgba(255, 211, 77, .12);
+}
+.spot-card img {
+  width: 120px; height: 120px; object-fit: cover; border-radius: 12px;
+  border: 2px solid var(--gold); flex-shrink: 0;
+}
+.spot-dog { font-size: 1.35rem; font-weight: 800; color: var(--text); }
+.spot-handle { color: var(--gold); font-weight: 600; margin-top: .15rem; }
+.spot-streak { color: var(--muted); margin-top: .25rem; font-size: .92rem; }
+.streak-1 { color: var(--muted); font-size: .85rem; }
+.today { color: var(--accent); font-size: .8rem; font-weight: 600; }
+.dog-name { margin-left: .4rem; font-weight: 600; }
