@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trophy Hunt — Season 1 Leaderboard</title>
+<meta name="description" content="Official Trophy Hunt Season 1 leaderboard — Top Dog race on Gone To The Dogs.">
+<link rel="stylesheet" href="styles.css?v=1790656236">
+</head>
+<body>
+<div style="background:#b91c1c;color:#fff;text-align:center;font-weight:800;
+padding:10px 12px;font-size:15px;letter-spacing:1px;position:sticky;top:0;z-index:9999">
+⚠️ TEST PREVIEW — fake names, not real standings. This page will be deleted.</div>
+
+<header class="hero">
+  <h1>🏆 TROPHY HUNT — SEASON 1</h1>
+  <p class="subtitle">Top Dog race · Sep 29 – Oct 31 · Gone To The Dogs</p>
+  <p class="snapshot" id="snapshot">Loading standings…</p>
+</header>
+
+<section class="spotlight" id="spotlight" hidden>
+  <h2>⭐ TODAY'S SPOTLIGHT</h2>
+  <div class="spot-card">
+    <img id="spot-photo" alt="Today's spotlight dog" hidden>
+    <div class="spot-info">
+      <div class="spot-dog" id="spot-dog">—</div>
+      <div class="spot-handle" id="spot-handle">—</div>
+      <div class="spot-streak" id="spot-streak"></div>
+    </div>
+  </div>
+</section>
+
+<div class="search-wrap">
+  <input type="search" id="player-search" placeholder="🔍 Search players…" autocomplete="off" aria-label="Search players">
+</div>
+
+<main id="boards">
+  <section class="board">
+    <h2>SEASON STANDINGS</h2>
+    <p class="board-caption">Most points wins Top Dog — a dedicated video about YOUR dog + your dog on our channel banner</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>RANK</th><th>PLAYER</th><th>DOG</th><th>STREAK</th><th>POINTS</th></tr></thead>
+      <tbody id="rows-season"></tbody>
+    </table></div>
+    <p class="empty-msg" id="empty-season" hidden>No players match your search.</p>
+  </section>
+
+  <section class="board" id="history-board" hidden>
+    <h2>🌟 SPOTLIGHT HISTORY</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>DATE</th><th>DOG</th><th>PLAYER</th></tr></thead>
+      <tbody id="rows-history"></tbody>
+    </table></div>
+  </section>
+</main>
+
+<section class="prizes">
+  <h2>🏅 HOW TO PLAY</h2>
+  <div class="prize-cards">
+    <div class="prize-card">
+      <h3>🐶 Enter daily</h3>
+      <p>Comment your dog's NAME on the daily video → +10 pts, once per day. Keep it clean — inappropriate names don't score.</p>
+    </div>
+    <div class="prize-card">
+      <h3>🔥 Streaks</h3>
+      <p>Play consecutive days: 3 days +10 · 7 days +25 · 14 days +50 · 30 days +100. Miss a day and your streak resets.</p>
+    </div>
+    <div class="prize-card">
+      <h3>📸 Photo bonus</h3>
+      <p>Submit a real photo of your dog → +5 pts every day.</p>
+    </div>
+    <div class="prize-card">
+      <h3>👑 Top Dog</h3>
+      <p>Most Season 1 points wins: a dedicated video about YOUR dog + your dog on our channel banner for the month!</p>
+    </div>
+  </div>
+  <p class="notice">📢 You must be subscribed to <strong>Gone To The Dogs</strong> to win.</p>
+</section>
+
+<footer>
+  <p>Trophy Hunt · Gone To The Dogs 🐶</p>
+</footer>
+
+<script id="th-data" type="application/json">
+{"updated_at": "2026-09-29T00:00:00-05:00", "season": {"name": "Season 1", "start": "2026-09-29", "end": "2026-10-31"}, "standings": [{"handle": "@TestRover1", "dog_name": "Rover", "avatar": "", "season_points": 235, "today_points": 15, "streak": 12, "photo": ""}, {"handle": "@TestBella2", "dog_name": "Bella", "avatar": "", "season_points": 180, "today_points": 10, "streak": 7, "photo": ""}, {"handle": "@TestMax3", "dog_name": "Max", "avatar": "", "season_points": 120, "today_points": 10, "streak": 3, "photo": ""}, {"handle": "@TestLuna4", "dog_name": "Luna", "avatar": "", "season_points": 65, "today_points": 0, "streak": 1, "photo": ""}, {"handle": "@TestRocky5", "dog_name": "Rocky", "avatar": "", "season_points": 40, "today_points": 0, "streak": 0, "photo": ""}, {"handle": "@TestCoco6", "dog_name": "Coco", "avatar": "", "season_points": 25, "today_points": 10, "streak": 2, "photo": ""}], "spotlight_today": {"handle": "@TestBella2", "dog_name": "Bella", "streak": 7}, "spotlight_history": [{"date": "2026-09-29", "handle": "@TestRover1", "dog_name": "Rover"}, {"date": "2026-09-30", "handle": "@TestMax3", "dog_name": "Max"}], "dog_photos": {}}
+</script>
+<script src="app.js?v=1790656233"></script>
+</body>
+</html>
