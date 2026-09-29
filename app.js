@@ -92,6 +92,42 @@
     }).join('');
   }
 
+  function watchUrl(id) {
+    return 'https://www.youtube.com/watch?v=' + encodeURIComponent(id);
+  }
+
+  function renderVideos() {
+    var vids = data.videos || [];
+    var sec = document.getElementById('watch');
+    if (!sec || !vids.length) return;
+    sec.hidden = false;
+    function setFeatured(v) {
+      var player = document.getElementById('featured-player');
+      player.src = 'https://www.youtube.com/embed/' + encodeURIComponent(v.video_id) + '?rel=0';
+      document.getElementById('featured-title').textContent =
+        '📺 ' + (v.title || ('Day ' + v.day)) + (v.date ? ' · ' + v.date : '');
+      document.getElementById('featured-comment').href = watchUrl(v.video_id);
+    }
+    setFeatured(vids[0]);
+    var grid = document.getElementById('video-grid');
+    grid.innerHTML = vids.map(function (v, i) {
+      var label = v.title || ('Day ' + v.day);
+      return '<div class="video-card">' +
+        '<button type="button" class="video-thumb" data-idx="' + i + '" aria-label="Play ' + esc(label) + '">' +
+          '<img src="https://i.ytimg.com/vi/' + esc(v.video_id) + '/hqdefault.jpg" alt="" loading="lazy" onerror="this.style.display=\'none\'">' +
+          '<span class="video-label">' + esc(label) + '</span>' +
+        '</button>' +
+        '<a class="video-comment" href="' + esc(watchUrl(v.video_id)) + '" target="_blank" rel="noopener">💬 Comment to score</a>' +
+      '</div>';
+    }).join('');
+    grid.addEventListener('click', function (ev) {
+      var btn = ev.target && ev.target.closest ? ev.target.closest('.video-thumb') : null;
+      if (!btn) return;
+      var v = vids[Number(btn.getAttribute('data-idx'))];
+      if (v) { setFeatured(v); sec.scrollIntoView(); }
+    });
+  }
+
   function applySearch() {
     var q = (document.getElementById('player-search').value || '').trim().toLowerCase();
     var rows = document.querySelectorAll('#rows-season tr');
@@ -117,4 +153,5 @@
   renderSpotlight();
   renderStandings();
   renderHistory();
+  renderVideos();
 })();
