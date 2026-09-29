@@ -92,8 +92,13 @@
     }).join('');
   }
 
-  function watchUrl(id) {
-    return 'https://www.youtube.com/watch?v=' + encodeURIComponent(id);
+  function watchUrl(v) {
+    // Deep-link straight to the pinned comment when we know its ID (&lc=);
+    // otherwise fall back to the video page. There is no URL that opens the
+    // generic comment section — &lc= only works with a real comment ID.
+    var u = 'https://www.youtube.com/watch?v=' + encodeURIComponent(v.video_id);
+    if (v.comment_id) u += '&lc=' + encodeURIComponent(v.comment_id);
+    return u;
   }
 
   function renderVideos() {
@@ -106,7 +111,7 @@
       player.src = 'https://www.youtube.com/embed/' + encodeURIComponent(v.video_id) + '?rel=0';
       document.getElementById('featured-title').textContent =
         '📺 ' + (v.title || ('Day ' + v.day)) + (v.date ? ' · ' + v.date : '');
-      document.getElementById('featured-comment').href = watchUrl(v.video_id);
+      document.getElementById('featured-comment').href = watchUrl(v);
     }
     setFeatured(vids[0]);
     var grid = document.getElementById('video-grid');
@@ -117,7 +122,7 @@
           '<img src="https://i.ytimg.com/vi/' + esc(v.video_id) + '/hqdefault.jpg" alt="" loading="lazy" onerror="this.style.display=\'none\'">' +
           '<span class="video-label">' + esc(label) + '</span>' +
         '</button>' +
-        '<a class="video-comment" href="' + esc(watchUrl(v.video_id)) + '" target="_blank" rel="noopener">💬 Comment to score</a>' +
+        '<a class="video-comment" href="' + esc(watchUrl(v)) + '" target="_blank" rel="noopener">💬 Comment to score</a>' +
       '</div>';
     }).join('');
     grid.addEventListener('click', function (ev) {
