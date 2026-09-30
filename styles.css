@@ -38,6 +38,19 @@ body {
 }
 
 .subtitle { margin: 0; color: var(--muted); font-size: 1.02rem; }
+
+.sub-btn {
+  display: inline-block;
+  margin-top: .8rem;
+  padding: .65rem 1.5rem;
+  background: #ff0033;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 999px;
+  text-decoration: none;
+}
+.sub-btn:hover { filter: brightness(1.12); }
 .snapshot { margin: .5rem 0 0; color: var(--muted); font-size: .85rem; }
 
 .search-wrap {
@@ -306,3 +319,11 @@ footer {
   text-decoration: none; white-space: nowrap;
 }
 .video-comment:hover { text-decoration: underline; }
+
+.channel-logo {
+  width: 1.6em;
+  height: 1.6em;
+  border-radius: 50%;
+  vertical-align: -0.35em;
+  margin-left: .15em;
+}
