@@ -178,7 +178,7 @@ thead th:last-child { text-align: right; }
 .prize-card h3 { margin: 0 0 .4rem; font-size: 1rem; color: var(--gold); }
 .prize-card p { margin: 0; font-size: .92rem; color: var(--text); }
 
-.rules .notice {
+.prizes .notice, .rules .notice {
   background: rgba(255, 211, 77, .08);
   border: 1px solid var(--gold-dim);
   border-radius: var(--radius);
@@ -327,3 +327,5 @@ footer {
   vertical-align: -0.35em;
   margin-left: .15em;
 }
+
+.prizes .notice a { color: #ff8a9a; font-weight: 700; }

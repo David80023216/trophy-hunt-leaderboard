@@ -69,14 +69,31 @@
     '</tr>';
   }
 
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function fmtDay(iso) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || '');
+    return m ? MONTHS[+m[2] - 1] + ' ' + (+m[3]) : (iso || '');
+  }
+  function fmtUpdated(iso) {
+    var d = new Date(iso || '');
+    if (isNaN(d.getTime())) return '';
+    var h = d.getHours(), ap = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    return MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + h + ':' +
+      ('0' + d.getMinutes()).slice(-2) + ' ' + ap;
+  }
   function renderStandings() {
     var rows = data.standings || [];
     var tbody = document.getElementById('rows-season');
-    tbody.innerHTML = rows.map(function (e, i) { return rowHtml(e, i + 1); }).join('');
+    var rank = 0, lastPts = null;
+    tbody.innerHTML = rows.map(function (e, i) {
+      if (e.season_points !== lastPts) { rank = i + 1; lastPts = e.season_points; }
+      return rowHtml(e, rank);
+    }).join('');
     var snap = document.getElementById('snapshot');
     if (data.season) {
-      snap.textContent = data.season.name + ' · ' + data.season.start + ' → ' + data.season.end +
-        ' · updated ' + (data.updated_at || '').slice(0, 16).replace('T', ' ');
+      snap.textContent = data.season.name + ' · ' + fmtDay(data.season.start) + ' → ' +
+        fmtDay(data.season.end) + ' · updated ' + fmtUpdated(data.updated_at);
     }
     applySearch();
   }
