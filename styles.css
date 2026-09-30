@@ -244,44 +244,13 @@ footer {
 .today { color: var(--accent); font-size: .8rem; font-weight: 600; }
 .dog-name { margin-left: .4rem; font-weight: 600; }
 
-/* Watch & Play */
-.watch { max-width: 860px; margin: 1.4rem auto 0; padding: 0 1rem; }
-.watch h2 { text-align: center; color: var(--gold); margin: 0 0 .4rem; font-size: 1.15rem; letter-spacing: .06em; }
-.watch .board-caption { text-align: center; }
 .playlist-link {
   font-size: .8rem; font-weight: 700; color: var(--accent); text-decoration: none;
   border: 1px solid var(--line); border-radius: 999px; padding: .25rem .7rem;
   vertical-align: middle; white-space: nowrap;
 }
 .playlist-link:hover { text-decoration: underline; }
-.video-grid {
-  display: flex; gap: .6rem; overflow-x: auto;
-  padding: .2rem .1rem .8rem; margin-top: .9rem;
-  scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
-}
-.video-grid::-webkit-scrollbar { height: 6px; }
-.video-grid::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
-.video-card {
-  flex: 0 0 104px; scroll-snap-align: start;
-  background: var(--card); border: 1px solid var(--line);
-  border-radius: var(--radius); overflow: hidden;
-  text-decoration: none; color: inherit;
-}
-.video-thumb {
-  background: none; border: 0; padding: 0; cursor: pointer;
-  display: block; width: 100%;
-}
-.video-thumb img { width: 100%; aspect-ratio: 9/16; object-fit: cover; display: block; background: #000; }
-.video-meta {
-  display: flex; align-items: center; justify-content: space-between; gap: .3rem;
-  padding: .35rem .5rem .45rem;
-}
-.video-label { font-weight: 700; font-size: .72rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.video-comment {
-  color: var(--accent); font-size: .72rem; font-weight: 700;
-  text-decoration: none; white-space: nowrap;
-}
-.video-comment:hover { text-decoration: underline; }
+.hero-links { margin: .1rem 0 .7rem; text-align: center; }
 
 .channel-logo {
   width: 1.6em;

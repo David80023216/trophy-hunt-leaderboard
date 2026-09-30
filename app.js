@@ -109,34 +109,6 @@
     }).join('');
   }
 
-  var PLAYLIST_ID = 'PLXRC36_9f9gA';
-  function watchUrl(v) {
-    // Video in playlist context, deep-linked to the pinned comment when we
-    // know its ID (&lc=). One tap: comment box ready, full hunt queue behind it.
-    var u = 'https://www.youtube.com/watch?v=' + encodeURIComponent(v.video_id) +
-      '&list=' + PLAYLIST_ID;
-    if (v.comment_id) u += '&lc=' + encodeURIComponent(v.comment_id);
-    return u;
-  }
-
-  function renderVideos() {
-    var vids = data.videos || [];
-    var sec = document.getElementById('watch');
-    if (!sec || !vids.length) return;
-    sec.hidden = false;
-    var grid = document.getElementById('video-grid');
-    function cardHTML(v, i) {
-      var label = v.title || ('Day ' + v.day);
-      return '<a class="video-card" href="' + esc(watchUrl(v)) + '" target="_blank" rel="noopener" aria-label="Watch ' + esc(label) + ' on YouTube">' +
-        '<span class="video-thumb">' +
-          '<img src="https://i.ytimg.com/vi/' + esc(v.video_id) + '/hqdefault.jpg" alt="" loading="lazy" onerror="this.style.display=\'none\'">' +
-        '</span>' +
-        '<span class="video-meta"><span class="video-label">' + esc(label) + '</span>' +
-        '<span class="video-comment">💬 Score</span></span>' +
-      '</a>';
-    }
-    grid.innerHTML = vids.map(cardHTML).join('');
-  }
 
   function applySearch() {
     var q = (document.getElementById('player-search').value || '').trim().toLowerCase();
@@ -266,5 +238,4 @@
   setInterval(tickCountdown, 1000);
   renderStandings();
   renderHistory();
-  renderVideos();
 })();
