@@ -209,6 +209,23 @@ footer {
   .player-cell img { width: 30px; height: 30px; }
   .howto-box { padding: .2rem 1rem; }
   .howto-box p { font-size: .92rem; padding: .6rem 0; }
+  /* Fit the standings table to the phone screen — no side slider.
+     Fixed layout + proportional columns; long names ellipsize. */
+  .standings-table { table-layout: fixed; }
+  .standings-table thead th, .standings-table tbody td { padding: .5rem .35rem; }
+  .standings-table thead th:nth-child(1), .standings-table tbody td:nth-child(1) { width: 11%; }
+  .standings-table thead th:nth-child(2), .standings-table tbody td:nth-child(2) { width: 36%; }
+  .standings-table thead th:nth-child(3), .standings-table tbody td:nth-child(3) { width: 24%; }
+  .standings-table thead th:nth-child(4), .standings-table tbody td:nth-child(4) { width: 12%; }
+  .standings-table thead th:nth-child(5), .standings-table tbody td:nth-child(5) { width: 17%; }
+  .standings-table .player-cell { gap: .35rem; }
+  .standings-table .player-cell img { width: 26px; height: 26px; }
+  .standings-table .player-name, .standings-table .dog-name {
+    display: block; min-width: 0; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap;
+  }
+  .standings-table .dog-name { margin-left: .25rem; }
+  .standings-table td.points { font-size: .85rem; }
 }
 
 .row-photo-btn {
