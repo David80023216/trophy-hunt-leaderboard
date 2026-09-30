@@ -60,11 +60,14 @@
     }
     var hasDog = !!(entry.dog_name || (dog && dog.src));
     var hasStreak = (Number(entry.streak) || 0) >= 1;
+    var line2 = (hasDog ? dogCell : '') +
+      (hasStreak ? '<span class="streak-inline">' + streakHtml(entry.streak) + '</span>' : '');
+    if (!line2) line2 = '—';
     return '<tr data-handle="' + esc(entry.handle.toLowerCase()) + '">' +
       '<td class="rank">' + rankBadge(rank) + '</td>' +
       '<td class="player"><span class="player-cell">' + avatar +
         '<span class="player-name">' + esc(entry.handle) + '</span></span></td>' +
-      '<td class="dog' + (hasDog ? '' : ' is-empty') + '"><span class="player-cell">' + dogCell + '</span></td>' +
+      '<td class="dog' + ((hasDog || hasStreak) ? '' : ' is-empty') + '"><span class="player-cell">' + line2 + '</span></td>' +
       '<td class="streak-cell' + (hasStreak ? '' : ' is-empty') + '">' + streakHtml(entry.streak) + '</td>' +
       '<td class="points">' + entry.season_points + ' pts</td>' +
     '</tr>';

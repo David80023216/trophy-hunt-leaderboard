@@ -157,6 +157,7 @@ thead th:last-child { text-align: right; }
   font-weight: 600;
 }
 .streak { color: #ff7a3d; font-weight: 700; margin-left: .35rem; white-space: nowrap; }
+.streak-inline { display: none; } /* shown only on mobile, inside the dog cell */
 
 .empty-msg { color: var(--muted); font-size: .9rem; margin: .6rem 0 0; }
 
@@ -210,8 +211,8 @@ footer {
   .howto-box { padding: .2rem 1rem; }
   .howto-box p { font-size: .92rem; padding: .6rem 0; }
   /* Mobile: standings render as cards, not a squished 5-column table.
-     Grid guarantees two lines — rank | handle | points, then dog | streak.
-     (Flex-wrap let line-2 cells crush the handle instead of wrapping.) */
+     Grid guarantees two lines — rank | handle | points, then a centered
+     dog + streak line. (Flex-wrap let line-2 cells crush the handle.) */
   .standings-table { display: block; }
   .standings-table thead { display: none; }
   .standings-table tbody { display: block; }
@@ -220,7 +221,7 @@ footer {
     grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-areas:
       "rank player points"
-      "dog streak streak";
+      "dog dog dog";
     column-gap: .55rem;
     align-items: center;
     background: rgba(255,255,255,.028);
@@ -233,16 +234,13 @@ footer {
   .standings-table td.rank { grid-area: rank; width: auto; font-size: 1.2rem; }
   .standings-table td.player { grid-area: player; }
   .standings-table td.points { grid-area: points; width: auto; font-size: 1rem; text-align: right; }
-  .standings-table td.dog { grid-area: dog; font-size: .85rem; color: var(--muted); margin-top: .35rem; }
-  .standings-table td.streak-cell { grid-area: streak; font-size: .85rem; justify-self: start; margin-top: .35rem; }
-  /* Line 2 tucks in under the handle: visual shift only, grid tracks unchanged
-     so Ned and the streak stay glued together. */
-  .standings-table td.dog,
-  .standings-table td.streak-cell { position: relative; left: 1.75rem; }
+  .standings-table td.dog { grid-area: dog; justify-self: center; font-size: .85rem; color: var(--muted); margin-top: .35rem; }
+  .standings-table td.streak-cell { display: none; } /* mobile: the streak rides inside the dog cell */
   .standings-table td.is-empty { display: none; }
+  .standings-table .streak-inline { display: inline; }
   .standings-table .player-cell { gap: .5rem; }
   .standings-table .player-cell img { width: 30px; height: 30px; }
-  .standings-table td.dog .player-cell { gap: .4rem; }
+  .standings-table td.dog .player-cell { gap: .4rem; justify-content: center; }
   .standings-table td.dog .dog-thumb { width: 24px; height: 24px; margin-left: 0; }
   .standings-table td.dog .dog-name { margin-left: 0; }
   .standings-table .streak { margin-left: 0; }
