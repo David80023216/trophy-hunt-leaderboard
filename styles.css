@@ -248,24 +248,6 @@ footer {
 .watch { max-width: 860px; margin: 1.4rem auto 0; padding: 0 1rem; }
 .watch h2 { text-align: center; color: var(--gold); margin: 0 0 .4rem; font-size: 1.15rem; letter-spacing: .06em; }
 .watch .board-caption { text-align: center; }
-.player-wrap {
-  position: relative; aspect-ratio: 9 / 16; max-width: 330px; margin: 0 auto;
-  background: #000; border-radius: var(--radius);
-  border: 1px solid var(--line); overflow: hidden;
-}
-.player-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-.watch-actions {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: .8rem; flex-wrap: wrap; margin: .8rem 0 1rem;
-}
-.featured-title { font-weight: 700; color: var(--text); }
-.comment-btn {
-  display: inline-block; background: var(--gold); color: #141414;
-  font-weight: 800; text-decoration: none; padding: .7rem 1.2rem;
-  border-radius: 999px; font-size: .95rem;
-  box-shadow: 0 4px 18px rgba(255, 211, 77, .25);
-}
-.comment-btn:hover { filter: brightness(1.08); }
 .playlist-link {
   font-size: .8rem; font-weight: 700; color: var(--accent); text-decoration: none;
   border: 1px solid var(--line); border-radius: 999px; padding: .25rem .7rem;
@@ -279,14 +261,11 @@ footer {
 }
 .video-grid::-webkit-scrollbar { height: 6px; }
 .video-grid::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
-.shelf-title {
-  margin: 1rem 0 0; font-size: .8rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .06em; opacity: .65;
-}
 .video-card {
-  flex: 0 0 118px; scroll-snap-align: start;
+  flex: 0 0 104px; scroll-snap-align: start;
   background: var(--card); border: 1px solid var(--line);
   border-radius: var(--radius); overflow: hidden;
+  text-decoration: none; color: inherit;
 }
 .video-thumb {
   background: none; border: 0; padding: 0; cursor: pointer;

@@ -109,11 +109,12 @@
     }).join('');
   }
 
+  var PLAYLIST_ID = 'PLXRC36_9f9gA';
   function watchUrl(v) {
-    // Deep-link straight to the pinned comment when we know its ID (&lc=);
-    // otherwise fall back to the video page. There is no URL that opens the
-    // generic comment section — &lc= only works with a real comment ID.
-    var u = 'https://www.youtube.com/watch?v=' + encodeURIComponent(v.video_id);
+    // Video in playlist context, deep-linked to the pinned comment when we
+    // know its ID (&lc=). One tap: comment box ready, full hunt queue behind it.
+    var u = 'https://www.youtube.com/watch?v=' + encodeURIComponent(v.video_id) +
+      '&list=' + PLAYLIST_ID;
     if (v.comment_id) u += '&lc=' + encodeURIComponent(v.comment_id);
     return u;
   }
@@ -123,32 +124,18 @@
     var sec = document.getElementById('watch');
     if (!sec || !vids.length) return;
     sec.hidden = false;
-    function setFeatured(v) {
-      var player = document.getElementById('featured-player');
-      player.src = 'https://www.youtube.com/embed/' + encodeURIComponent(v.video_id) + '?rel=0';
-      document.getElementById('featured-title').textContent =
-        '📺 ' + (v.title || ('Day ' + v.day)) + (v.date ? ' · ' + v.date : '');
-      document.getElementById('featured-comment').href = watchUrl(v);
-    }
-    setFeatured(vids[0]);
     var grid = document.getElementById('video-grid');
     function cardHTML(v, i) {
       var label = v.title || ('Day ' + v.day);
-      return '<div class="video-card">' +
-        '<button type="button" class="video-thumb" data-idx="' + i + '" aria-label="Play ' + esc(label) + '">' +
+      return '<a class="video-card" href="' + esc(watchUrl(v)) + '" target="_blank" rel="noopener" aria-label="Watch ' + esc(label) + ' on YouTube">' +
+        '<span class="video-thumb">' +
           '<img src="https://i.ytimg.com/vi/' + esc(v.video_id) + '/hqdefault.jpg" alt="" loading="lazy" onerror="this.style.display=\'none\'">' +
-        '</button>' +
-        '<div class="video-meta"><span class="video-label">' + esc(label) + '</span>' +
-        '<a class="video-comment" href="' + esc(watchUrl(v)) + '" target="_blank" rel="noopener">💬 Score</a></div>' +
-      '</div>';
+        '</span>' +
+        '<span class="video-meta"><span class="video-label">' + esc(label) + '</span>' +
+        '<span class="video-comment">💬 Score</span></span>' +
+      '</a>';
     }
     grid.innerHTML = vids.map(cardHTML).join('');
-    grid.addEventListener('click', function (ev) {
-      var btn = ev.target && ev.target.closest ? ev.target.closest('.video-thumb') : null;
-      if (!btn) return;
-      var v = vids[Number(btn.getAttribute('data-idx'))];
-      if (v) { setFeatured(v); sec.scrollIntoView(); }
-    });
   }
 
   function applySearch() {
