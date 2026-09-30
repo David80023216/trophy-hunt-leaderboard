@@ -161,19 +161,19 @@ thead th:last-child { text-align: right; }
   padding: 0 1rem 1.2rem;
 }
 
-.prizes h2, .rules h3 { color: var(--gold); letter-spacing: .05em; }
+.prizes h2 { color: var(--gold); letter-spacing: .05em; font-size: 1.15rem; margin: 0 0 .8rem; }
+.rules h3 { color: var(--gold); letter-spacing: .05em; }
 
 .howto-box {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 1rem 1.2rem;
+  padding: .4rem 1.2rem;
   box-shadow: 0 8px 30px rgba(0, 0, 0, .35);
 }
-.howto-box p { margin: .75rem 0; font-size: .95rem; color: var(--text); line-height: 1.5; }
-.howto-box p:first-child { margin-top: 0; }
-.howto-box p:last-child { margin-bottom: 0; }
-.howto-box strong { color: var(--gold); }
+.howto-box p { margin: 0; padding: .7rem 0; border-bottom: 1px solid var(--line); font-size: .95rem; color: var(--text); line-height: 1.5; }
+.howto-box p:last-child { border-bottom: 0; }
+.howto-box strong { display: block; color: var(--gold); margin-bottom: .15rem; }
 .howto-box a { color: var(--accent); }
 
 .prizes .notice, .rules .notice {
@@ -202,6 +202,8 @@ footer {
   .hero { padding: 1.6rem .8rem 1rem; }
   table { font-size: .9rem; }
   .player-cell img { width: 30px; height: 30px; }
+  .howto-box { padding: .2rem 1rem; }
+  .howto-box p { font-size: .92rem; padding: .6rem 0; }
 }
 
 .row-photo-btn {
