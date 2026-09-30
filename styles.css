@@ -80,6 +80,11 @@ main {
   gap: 1.2rem;
 }
 
+/* Prevent grid blowout: grid items default to min-width:auto which lets
+   wide table content force the board (and main) wider than the viewport
+   on mobile, making sibling sections look narrow. */
+main > * { min-width: 0; }
+
 .board {
   background: var(--card);
   border: 1px solid var(--line);
