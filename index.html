@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trophy Hunt — Season 1 Leaderboard</title>
 <meta name="description" content="Official Trophy Hunt Season 1 leaderboard — Top Dog race on Gone To The Dogs.">
-<link rel="stylesheet" href="styles.css?v=1790738362">
+<link rel="stylesheet" href="styles.css?v=1790738780">
 </head>
 <body>
 
@@ -13,6 +13,7 @@
   <h1>🏆 TROPHY HUNT — SEASON 1</h1>
   <p class="subtitle">Top Dog race · Sep 29 – Oct 31 · Gone To The Dogs</p>
   <p><a class="sub-btn" href="https://www.youtube.com/channel/UC4ghQwAZYqXrp6o5o-ZHn-Q?sub_confirmation=1" target="_blank" rel="noopener">🔔 Subscribe</a></p>
+  <p class="countdown" id="countdown"></p>
   <p class="snapshot" id="snapshot">Loading standings…</p>
 </header>
 
@@ -95,11 +96,17 @@
   <p class="notice">📢 You must be <a href="https://www.youtube.com/channel/UC4ghQwAZYqXrp6o5o-ZHn-Q?sub_confirmation=1" target="_blank" rel="noopener">subscribed to <strong>Gone To The Dogs</strong></a> to win.</p>
 </section>
 
-<section class="fortune">
-  <h2>🥠 DOG FORTUNE COOKIE</h2>
-  <p class="board-caption">Crack one for luck — just for fun, no points!</p>
-  <button class="cookie-btn" id="cookie-btn" aria-label="Crack a fortune cookie">🥠</button>
-  <p class="fortune-text" id="fortune-text" hidden></p>
+<section class="daily-fun">
+  <div class="fun-card">
+    <h2>🥠 DOG FORTUNE COOKIE</h2>
+    <p class="board-caption">Crack one for luck — just for fun, no points!</p>
+    <button class="cookie-btn" id="cookie-btn" aria-label="Crack a fortune cookie">🥠</button>
+    <p class="fortune-text" id="fortune-text" hidden></p>
+  </div>
+  <div class="fun-card">
+    <h2>🐶 TODAY'S DOG FACT</h2>
+    <p class="fact-text" id="dog-fact"></p>
+  </div>
 </section>
 
 <footer>
@@ -108,7 +115,7 @@
 
 <script id="th-data" type="application/json">
 {
- "updated_at": "2026-09-29T22:19:47.601580-05:00",
+ "updated_at": "2026-09-29T22:28:42.067682-05:00",
  "season": {
   "name": "Season 1",
   "start": "2026-09-29",
@@ -202,6 +209,6 @@
  }
 }
 </script>
-<script src="app.js?v=1790738362"></script>
+<script src="app.js?v=1790738780"></script>
 </body>
 </html>

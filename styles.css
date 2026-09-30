@@ -249,7 +249,7 @@ footer {
 .watch h2 { text-align: center; color: var(--gold); margin: 0 0 .4rem; font-size: 1.15rem; letter-spacing: .06em; }
 .watch .board-caption { text-align: center; }
 .player-wrap {
-  position: relative; padding-top: 56.25%;
+  position: relative; aspect-ratio: 9 / 16; max-width: 330px; margin: 0 auto;
   background: #000; border-radius: var(--radius);
   border: 1px solid var(--line); overflow: hidden;
 }
@@ -284,7 +284,7 @@ footer {
   text-transform: uppercase; letter-spacing: .06em; opacity: .65;
 }
 .video-card {
-  flex: 0 0 148px; scroll-snap-align: start;
+  flex: 0 0 118px; scroll-snap-align: start;
   background: var(--card); border: 1px solid var(--line);
   border-radius: var(--radius); overflow: hidden;
 }
@@ -292,7 +292,7 @@ footer {
   background: none; border: 0; padding: 0; cursor: pointer;
   display: block; width: 100%;
 }
-.video-thumb img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: #000; }
+.video-thumb img { width: 100%; aspect-ratio: 9/16; object-fit: cover; display: block; background: #000; }
 .video-meta {
   display: flex; align-items: center; justify-content: space-between; gap: .3rem;
   padding: .35rem .5rem .45rem;
@@ -314,9 +314,9 @@ footer {
 
 .prizes .notice a { color: #ff8a9a; font-weight: 700; }
 
-.fortune { max-width: 640px; margin: 0 auto; padding: 0 1rem 1.8rem; text-align: center; }
-.fortune h2 { color: var(--gold); font-size: 1.15rem; letter-spacing: .06em; margin: 0 0 .3rem; }
-.fortune .board-caption { text-align: center; }
+.daily-fun { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 920px; margin: 0 auto; padding: 0 1rem 1.8rem; }
+.fun-card h2 { color: var(--gold); font-size: 1.05rem; letter-spacing: .06em; margin: 0 0 .3rem; }
+.fun-card .board-caption { text-align: center; }
 .cookie-btn { background: none; border: 0; font-size: 3.4rem; cursor: pointer; transition: transform .15s; line-height: 1; }
 .cookie-btn:hover { transform: scale(1.12); }
 .cookie-btn.cracking { animation: crack .5s; }
@@ -331,4 +331,17 @@ footer {
   font-size: 1.05rem; color: var(--text); background: var(--card);
   border: 1px solid var(--gold-dim); border-radius: var(--radius);
   padding: .9rem 1.1rem; margin: .9rem auto 0; max-width: 480px;
+}
+
+.fun-card {
+  background: var(--card); border: 1px solid var(--gold-dim);
+  border-radius: var(--radius); padding: 1.1rem 1rem; text-align: center;
+}
+.fact-text { font-size: 1rem; color: var(--text); margin: .6rem 0 0; line-height: 1.5; }
+.countdown {
+  color: var(--gold); font-weight: 700; font-size: 1.02rem;
+  margin: .55rem 0 0; letter-spacing: .02em;
+}
+@media (max-width: 640px) {
+  .daily-fun { grid-template-columns: 1fr; }
 }

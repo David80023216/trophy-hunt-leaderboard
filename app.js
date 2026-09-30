@@ -219,7 +219,64 @@
     txt.hidden = false;
   }
 
+  var DOG_FACTS = [
+    "A dog's nose print is unique — like a human fingerprint. 👃",
+    "Dogs dream just like we do. Puppies and old dogs dream the most. 💭",
+    "A dog's sense of smell is up to 100,000 times stronger than yours.",
+    "Dogs have three eyelids on each eye. 👀",
+    "The Basenji is the only barkless dog — it yodels instead. 🎶",
+    "Puppies are born with their eyes closed. They open at about two weeks old.",
+    "A Greyhound can outrun a cheetah over a long distance. 🏃",
+    "Dalmatians are born pure white — their spots show up later. 🐾",
+    "The oldest dog on record, Bobi, lived to 31 years old. 🎂",
+    "Dogs can learn more than 150 words and gestures.",
+    "A wagging tail doesn't always mean happy — speed and direction matter. 🐕",
+    "Dogs sweat through their paw pads. 🐾",
+    "The Norwegian Lundehund has six toes on each foot.",
+    "A Bloodhound's sense of smell is so trusted its tracking holds up in court. 🔍",
+    "Newborn puppies spend about 90% of their time sleeping. 😴",
+    "Dogs see better in the dark than humans do, thanks to a reflective eye layer.",
+    "A dog's hearing is about four times more sensitive than yours. 👂",
+    "Newfoundlands have webbed feet and were bred for water rescues. 🌊",
+    "Dogs yawn when you yawn — it's contagious, just like with people. 🥱",
+    "An adult dog has 42 teeth. 🦷",
+    "Chaser the Border Collie learned 1,022 words — the biggest known dog vocabulary. 🧠",
+    "Dogs tilt their heads to pinpoint exactly where a sound comes from. 👂",
+    "The Saluki is one of the oldest dog breeds — going back thousands of years. 🏛️",
+    "Some dogs can sense an oncoming seizure before it happens. 🦠",
+    "A dog's normal body temperature runs 101–102.5°F — warmer than yours. 🌡️",
+    "Puppies start losing their baby teeth at around four months old.",
+    "The Labrador Retriever was America's most popular breed for 31 years straight. 🥇",
+    "Petting a working service dog can distract it from its job — admire from afar. 🦮",
+    "A dog can smell your feelings — stress and fear change your scent. 😎",
+    "Greyhounds hit 45 mph at full sprint — faster than a racehorse over short bursts. 💨",
+  ];
+  function renderDogFact() {
+    var el = document.getElementById('dog-fact');
+    if (!el) return;
+    var now = new Date();
+    var dayOfYear = Math.floor((now - Date.UTC(now.getUTCFullYear(), 0, 0)) / 86400000);
+    el.textContent = DOG_FACTS[dayOfYear % DOG_FACTS.length];
+  }
+  function tickCountdown() {
+    var el = document.getElementById('countdown');
+    if (!el) return;
+    var now = new Date();
+    var chi = new Date(now.toLocaleString('en-US', {timeZone: 'America/Chicago'}));
+    var target = new Date(chi);
+    target.setHours(12, 0, 0, 0);
+    if (chi >= target) target.setDate(target.getDate() + 1);
+    var diff = Math.max(0, target - chi);
+    var h = Math.floor(diff / 3600000);
+    var m = Math.floor(diff % 3600000 / 60000);
+    var s = Math.floor(diff % 60000 / 1000);
+    el.textContent = '\u23F3 Next Trophy Hunt drops in ' + h + 'h ' + m + 'm ' + s + 's';
+  }
+
   renderSpotlight();
+  renderDogFact();
+  tickCountdown();
+  setInterval(tickCountdown, 1000);
   renderStandings();
   renderHistory();
   renderVideos();
