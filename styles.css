@@ -209,23 +209,33 @@ footer {
   .player-cell img { width: 30px; height: 30px; }
   .howto-box { padding: .2rem 1rem; }
   .howto-box p { font-size: .92rem; padding: .6rem 0; }
-  /* Fit the standings table to the phone screen — no side slider.
-     Fixed layout + proportional columns; long names ellipsize. */
-  .standings-table { table-layout: fixed; }
-  .standings-table thead th, .standings-table tbody td { padding: .5rem .35rem; }
-  .standings-table thead th:nth-child(1), .standings-table tbody td:nth-child(1) { width: 11%; }
-  .standings-table thead th:nth-child(2), .standings-table tbody td:nth-child(2) { width: 36%; }
-  .standings-table thead th:nth-child(3), .standings-table tbody td:nth-child(3) { width: 24%; }
-  .standings-table thead th:nth-child(4), .standings-table tbody td:nth-child(4) { width: 12%; }
-  .standings-table thead th:nth-child(5), .standings-table tbody td:nth-child(5) { width: 17%; }
-  .standings-table .player-cell { gap: .35rem; }
-  .standings-table .player-cell img { width: 26px; height: 26px; }
-  .standings-table .player-name, .standings-table .dog-name {
-    display: block; min-width: 0; overflow: hidden;
-    text-overflow: ellipsis; white-space: nowrap;
+  /* Mobile: standings render as cards, not a squished 5-column table.
+     Line 1: rank | avatar + handle | points. Line 2 (when present): dog + streak. */
+  .standings-table { display: block; }
+  .standings-table thead { display: none; }
+  .standings-table tbody { display: block; }
+  .standings-table tbody tr {
+    display: flex; flex-wrap: wrap; align-items: center;
+    gap: .2rem .55rem;
+    background: rgba(255,255,255,.028);
+    border: 1px solid var(--line);
+    border-radius: .8rem;
+    padding: .7rem .85rem;
+    margin: 0 0 .55rem;
   }
-  .standings-table .dog-name { margin-left: .25rem; }
-  .standings-table td.points { font-size: .85rem; }
+  .standings-table tbody td { display: block; border: 0; padding: 0; }
+  .standings-table td.rank { order: 1; width: auto; font-size: 1.2rem; }
+  .standings-table td.player { order: 2; flex: 1 1 0; min-width: 0; }
+  .standings-table td.points { order: 3; width: auto; margin-left: auto; font-size: 1rem; }
+  .standings-table td.dog { order: 4; font-size: .85rem; color: var(--muted); }
+  .standings-table td.streak-cell { order: 5; font-size: .85rem; }
+  .standings-table td.is-empty { display: none; }
+  .standings-table .player-cell { gap: .5rem; }
+  .standings-table .player-cell img { width: 30px; height: 30px; }
+  .standings-table td.dog .player-cell { gap: .4rem; }
+  .standings-table td.dog .dog-thumb { width: 24px; height: 24px; margin-left: 0; }
+  .standings-table td.dog .dog-name { margin-left: 0; }
+  .standings-table .streak { margin-left: 0; }
 }
 
 .row-photo-btn {
