@@ -164,6 +164,7 @@
   }
 
   document.getElementById('player-search').addEventListener('input', applySearch);
+  document.getElementById('cookie-btn').addEventListener('click', crackCookie);
 
   // Click a dog thumbnail to expand it.
   document.addEventListener('click', function (ev) {
@@ -172,6 +173,51 @@
       window.open(t.getAttribute('data-full'), '_blank', 'noopener');
     }
   });
+
+  var FORTUNES = [
+    "A great stick will cross your path this week. 🦴",
+    "Your human is thinking about sharing their fries. Stay close. 🍟",
+    "Bark at the mailman twice for extra luck today. 📬",
+    "A long walk is in your future. Pace yourself. 🐾",
+    "Someone will say 'who's a good dog' — it is you. It was always you. 🐶",
+    "The couch is yours tonight. Claim it early. 🛋️",
+    "A squirrel will test your patience. Forgive the squirrel. 🐿️",
+    "New smells await around the next corner. Sniff boldly. 👃",
+    "Your tail will wag at exactly the right moment today.",
+    "A treat is coming. Act surprised anyway. 🦴",
+    "The vet appointment you fear is not this week. Relax. 🩺",
+    "Dig where your heart tells you. 🕳️",
+    "You will win the staring contest with the cat. 🐱",
+    "An old toy will feel new again today. 🧸",
+    "Your zoomies will peak at golden hour. 🏃",
+    "Someone new will fall in love with your ears. 👂",
+    "The ball will be thrown. Be ready. 🎾",
+    "Nap hard. Dream of bacon. 🥓",
+    "Your humans brag about you when you're not around. 🗣️",
+    "A puddle with your name on it is nearby. 💧",
+    "Today is a good day to sit on a lap that is too small. 🪑",
+    "The doorbell will ring. You already knew. 🔔",
+    "Extra belly rubs are headed your way. Position accordingly. 🤲",
+    "You are the main character today. Act like it. ⭐",
+  ];
+  var fortuneBag = [];
+  function crackCookie() {
+    var btn = document.getElementById('cookie-btn');
+    var txt = document.getElementById('fortune-text');
+    if (!btn || !txt) return;
+    if (!fortuneBag.length) {
+      fortuneBag = FORTUNES.slice();
+      for (var i = fortuneBag.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = fortuneBag[i]; fortuneBag[i] = fortuneBag[j]; fortuneBag[j] = tmp;
+      }
+    }
+    btn.classList.remove('cracking');
+    void btn.offsetWidth;
+    btn.classList.add('cracking');
+    txt.textContent = fortuneBag.pop();
+    txt.hidden = false;
+  }
 
   renderSpotlight();
   renderStandings();

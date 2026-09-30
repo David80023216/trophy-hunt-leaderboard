@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trophy Hunt — Season 1 Leaderboard</title>
 <meta name="description" content="Official Trophy Hunt Season 1 leaderboard — Top Dog race on Gone To The Dogs.">
-<link rel="stylesheet" href="styles.css?v=1790737281">
+<link rel="stylesheet" href="styles.css?v=1790738362">
 </head>
 <body>
 
@@ -95,13 +95,20 @@
   <p class="notice">📢 You must be <a href="https://www.youtube.com/channel/UC4ghQwAZYqXrp6o5o-ZHn-Q?sub_confirmation=1" target="_blank" rel="noopener">subscribed to <strong>Gone To The Dogs</strong></a> to win.</p>
 </section>
 
+<section class="fortune">
+  <h2>🥠 DOG FORTUNE COOKIE</h2>
+  <p class="board-caption">Crack one for luck — just for fun, no points!</p>
+  <button class="cookie-btn" id="cookie-btn" aria-label="Crack a fortune cookie">🥠</button>
+  <p class="fortune-text" id="fortune-text" hidden></p>
+</section>
+
 <footer>
   <p>Trophy Hunt · Gone To The Dogs <img class="channel-logo" src="data:image/jpeg;base64,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" alt="Gone To The Dogs logo"></p>
 </footer>
 
 <script id="th-data" type="application/json">
 {
- "updated_at": "2026-09-29T22:03:53.545193-05:00",
+ "updated_at": "2026-09-29T22:19:47.601580-05:00",
  "season": {
   "name": "Season 1",
   "start": "2026-09-29",
@@ -195,6 +202,6 @@
  }
 }
 </script>
-<script src="app.js?v=1790737265"></script>
+<script src="app.js?v=1790738362"></script>
 </body>
 </html>
