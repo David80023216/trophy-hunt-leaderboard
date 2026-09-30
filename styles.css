@@ -235,6 +235,10 @@ footer {
   .standings-table td.points { grid-area: points; width: auto; font-size: 1rem; text-align: right; }
   .standings-table td.dog { grid-area: dog; font-size: .85rem; color: var(--muted); margin-top: .35rem; }
   .standings-table td.streak-cell { grid-area: streak; font-size: .85rem; justify-self: start; margin-top: .35rem; }
+  /* Line 2 tucks in under the handle: visual shift only, grid tracks unchanged
+     so Ned and the streak stay glued together. */
+  .standings-table td.dog,
+  .standings-table td.streak-cell { position: relative; left: 1.75rem; }
   .standings-table td.is-empty { display: none; }
   .standings-table .player-cell { gap: .5rem; }
   .standings-table .player-cell img { width: 30px; height: 30px; }
@@ -279,7 +283,6 @@ footer {
 .spot-handle { color: var(--gold); font-weight: 600; margin-top: .15rem; }
 .spot-streak { color: var(--muted); margin-top: .25rem; font-size: .92rem; }
 .streak-1 { color: var(--muted); font-size: .85rem; }
-.today { color: var(--accent); font-size: .8rem; font-weight: 600; }
 .dog-name { margin-left: .4rem; font-weight: 600; }
 
 .playlist-link {

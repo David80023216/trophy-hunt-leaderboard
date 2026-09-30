@@ -58,7 +58,6 @@
         '" loading="lazy" title="Click to expand 🐶" onerror="this.style.display=\'none\'">' +
         '<span class="dog-name">' + esc(entry.dog_name || '') + '</span>';
     }
-    var today = entry.today_points ? ' <span class="today">+' + entry.today_points + ' today</span>' : '';
     var hasDog = !!(entry.dog_name || (dog && dog.src));
     var hasStreak = (Number(entry.streak) || 0) >= 1;
     return '<tr data-handle="' + esc(entry.handle.toLowerCase()) + '">' +
@@ -67,7 +66,7 @@
         '<span class="player-name">' + esc(entry.handle) + '</span></span></td>' +
       '<td class="dog' + (hasDog ? '' : ' is-empty') + '"><span class="player-cell">' + dogCell + '</span></td>' +
       '<td class="streak-cell' + (hasStreak ? '' : ' is-empty') + '">' + streakHtml(entry.streak) + '</td>' +
-      '<td class="points">' + entry.season_points + ' pts' + today + '</td>' +
+      '<td class="points">' + entry.season_points + ' pts</td>' +
     '</tr>';
   }
 
