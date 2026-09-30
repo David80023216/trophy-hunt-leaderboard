@@ -163,20 +163,18 @@ thead th:last-child { text-align: right; }
 
 .prizes h2, .rules h3 { color: var(--gold); letter-spacing: .05em; }
 
-.prize-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: .9rem;
-}
-
-.prize-card {
+.howto-box {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 1rem;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, .35);
 }
-.prize-card h3 { margin: 0 0 .4rem; font-size: 1rem; color: var(--gold); }
-.prize-card p { margin: 0; font-size: .92rem; color: var(--text); }
+.howto-box p { margin: .75rem 0; font-size: .95rem; color: var(--text); line-height: 1.5; }
+.howto-box p:first-child { margin-top: 0; }
+.howto-box p:last-child { margin-bottom: 0; }
+.howto-box strong { color: var(--gold); }
+.howto-box a { color: var(--accent); }
 
 .prizes .notice, .rules .notice {
   margin-top: 1rem;
