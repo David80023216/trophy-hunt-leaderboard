@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trophy Hunt — Season 1 Leaderboard</title>
 <meta name="description" content="Official Trophy Hunt Season 1 leaderboard — Top Dog race on Gone To The Dogs.">
-<link rel="stylesheet" href="styles.css?v=1790771574">
+<link rel="stylesheet" href="styles.css?v=1790812915">
 </head>
 <body>
 
@@ -17,6 +17,16 @@
   <p class="hero-links"><a class="playlist-link" href="https://www.youtube.com/playlist?list=PLXRC36_9f9gA" target="_blank" rel="noopener">▶ All hunt videos</a></p>
   <p class="snapshot" id="snapshot">Loading standings…</p>
 </header>
+
+<section class="mission" id="mission" hidden>
+  <h2>🐾 SHELTER MISSION</h2>
+  <div class="mission-card">
+    <div class="mission-big"><span id="mission-subs">—</span> subscribers</div>
+    <div class="mission-dollars">= <strong id="mission-dollars">—</strong> donated to our local animal shelter</div>
+    <div class="mission-bar"><div class="mission-fill" id="mission-fill"></div></div>
+    <p class="mission-note">$1 donated per subscriber · road to <span id="mission-goal">1,000</span> · <span id="mission-updated"></span></p>
+  </div>
+</section>
 
 <section class="spotlight" id="spotlight" hidden>
   <h2>⭐ TODAY'S SPOTLIGHT</h2>
@@ -88,7 +98,7 @@
 
 <script id="th-data" type="application/json">
 {
- "updated_at": "2026-09-30T16:34:47.743464-05:00",
+ "updated_at": "2026-09-30T19:01:56.067595-05:00",
  "season": {
   "name": "Season 1",
   "start": "2026-09-29",
@@ -192,9 +202,17 @@
    "name": "Ned",
    "full": "dogs/full/housemouse17.jpg?v=1790565106"
   }
+ },
+ "mission": {
+  "subscribers": 553,
+  "goal": 1000,
+  "dollars_per_sub": 1,
+  "dollars_raised": 553,
+  "fetched_at": "2026-09-30T19:01:57.849896-05:00",
+  "fetched_epoch": 1790812917.273261
  }
 }
 </script>
-<script src="app.js?v=1790771561"></script>
+<script src="app.js?v=1790812906"></script>
 </body>
 </html>

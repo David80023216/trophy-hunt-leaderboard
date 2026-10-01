@@ -236,7 +236,26 @@
     el.textContent = '\u23F3 Next Trophy Hunt drops in ' + h + 'h ' + m + 'm ' + s + 's';
   }
 
+  function renderMission() {
+    var m = data.mission;
+    var sec = document.getElementById('mission');
+    if (!sec || !m || !m.subscribers) return;
+    sec.hidden = false;
+    var subs = Number(m.subscribers) || 0;
+    var goal = Number(m.goal) || 1000;
+    document.getElementById('mission-subs').textContent = subs.toLocaleString('en-US');
+    document.getElementById('mission-dollars').textContent = '$' + (Number(m.dollars_raised) || subs).toLocaleString('en-US');
+    document.getElementById('mission-goal').textContent = goal.toLocaleString('en-US');
+    document.getElementById('mission-fill').style.width = Math.min(100, subs / goal * 100).toFixed(1) + '%';
+    var upd = document.getElementById('mission-updated');
+    if (m.fetched_at) {
+      var mins = Math.max(0, Math.round((Date.now() - new Date(m.fetched_at).getTime()) / 60000));
+      upd.textContent = 'updated ' + (mins < 60 ? mins + 'm' : Math.floor(mins / 60) + 'h ' + (mins % 60) + 'm') + ' ago';
+    }
+  }
+
   renderSpotlight();
+  renderMission();
   renderDogFact();
   tickCountdown();
   setInterval(tickCountdown, 1000);
