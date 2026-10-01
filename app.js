@@ -310,7 +310,7 @@
     if (has('photo', 'photos', 'picture', 'pic', 'upload', 'submit')) {
       return '📸 Submit a real photo of your dog <a href="' + PHOTO_FORM + '" target="_blank" rel="noopener">through this form</a> → +5 pts every day. Real photos only — no screenshots or stock pics!';
     }
-    if (has('point', 'points', 'earn', 'enter', 'entry', 'play', 'join', 'how do')) {
+    if (has('point', 'points', 'earn', 'enter', 'entry', 'join') || (has('play') && !has('replay'))) {
       return "🐶 Easy! Comment your dog's NAME on any hunt video → +10 pts per comment, up to 3 scoring comments a day. Any other comment → +1 pt once a day. Keep names clean!";
     }
     if (has('prize', 'prizes', 'win', 'winner', 'reward', 'get if')) {
@@ -341,6 +341,9 @@
     }
     if (has('bye')) {
       return "See you at noon for the next hunt! 🏆🐶";
+    }
+    if (has('nail', 'nails', 'toenail', 'vet', 'sick', 'health', 'food', 'feed', 'diet', 'train', 'training', 'bark', 'groom', 'bath', 'walk', 'leash', 'puppy', 'breed', 'teeth', 'ear', 'ears', 'flea', 'tick', 'vaccine', 'medicine', 'poop')) {
+      return "🐶 I'm just the game helper — for health and care stuff, your vet is the real expert! I can help with points, streaks, prizes, and the shelter mission though.";
     }
     return "Hmm, that's beyond my little bot brain! 🤖💭 Drop it in the comments of <a href=\"" + PLAYLIST + '" target="_blank" rel="noopener">today\'s hunt video</a> — the channel answers fast.';
   }
