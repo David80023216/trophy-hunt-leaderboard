@@ -135,6 +135,10 @@ tbody td {
   vertical-align: middle;
 }
 
+/* Spotlight history: center the PLAYER column header over the handle. */
+#history-board th:last-child,
+#history-board td:last-child { text-align: center; }
+
 tbody tr:last-child td { border-bottom: none; }
 tbody tr:hover { background: rgba(77, 163, 255, .06); }
 
