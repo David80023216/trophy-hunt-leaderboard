@@ -254,13 +254,58 @@
     }
   }
 
-  /* ---- Ned's Helper: rule-based FAQ bot. Answers ONLY from the page's
+  /* ---- Pup Helper: rule-based FAQ bot. Answers ONLY from the page's
      own live data (th-data) plus the printed rules. Never invents points,
      players, or standings. Anything else -> video comments. ---- */
-  var HELPER_NAME = "Ned's Helper";
+  var HELPER_NAME = "Pup Helper";
   var PLAYLIST = 'https://www.youtube.com/playlist?list=PLXRC36_9f9gA';
   var SUB_LINK = 'https://www.youtube.com/channel/UC4ghQwAZYqXrp6o5o-ZHn-Q?sub_confirmation=1';
   var PHOTO_FORM = 'https://forms.gle/HEtMitfJZLq7NQPL9';
+
+  /* Dog-care FAQ: safe, vet-consensus answers. Health topics always defer
+     to a vet. Checked AFTER game intents, BEFORE the generic deferral. */
+  var DOG_FAQ = [
+    { k: ['chocolate', 'cocoa'], a: "🍫 Chocolate is toxic to dogs — dark chocolate is the worst. Even small amounts can cause vomiting or worse. If your dog eats any, call your vet right away." },
+    { k: ['grape', 'grapes', 'raisin', 'raisins'], a: "🍇 Grapes and raisins can cause kidney failure in dogs — even a few. If your dog eats any, call your vet immediately." },
+    { k: ['onion', 'onions', 'garlic'], a: "🧅 Onions and garlic (raw, cooked, or powdered) damage dogs’ red blood cells. Keep them far away from your pup!" },
+    { k: ['xylitol', 'sweetener', 'gum', 'birch sugar'], a: "⚠️ Xylitol (birch sugar) — in sugar-free gum and some peanut butters — is extremely toxic to dogs. Always check labels!" },
+    { k: ['toxic', 'poison', 'poisonous', 'bad for dogs', 'dangerous'], a: "🚫 Big no-nos: chocolate, grapes/raisins, onions, garlic, xylitol, macadamia nuts, alcohol, caffeine. When in doubt, don’t share — and call your vet if they grab something!" },
+    { k: ['safe food', 'safe foods', 'safe snack', 'safe snacks', 'good for dogs', 'healthy treat', 'healthy treats'], a: "🥕 Dog-safe snacks: carrots, apple slices (no seeds), blueberries, plain cooked chicken, pumpkin, xylitol-free peanut butter. Treats should stay under 10% of daily calories!" },
+    { k: ['nail', 'nails', 'toenail', 'claw', 'claws'], a: "✂️ Trim nails every 3–4 weeks — if you hear clicking on the floor, they’re too long. Snip small bits at an angle, avoid the pink ‘quick’. Keep styptic powder handy just in case!" },
+    { k: ['bath', 'bathe', 'bathing', 'shampoo'], a: "🛁 Most dogs need a bath every 4–6 weeks (more if they get muddy!). Use dog shampoo — human shampoo dries their skin. Lukewarm water, rinse well!" },
+    { k: ['walk', 'walks', 'walking', 'exercise'], a: "🦮 Most adult dogs need 30–60 minutes of activity daily — high-energy breeds need more. Puppies: short play sessions, about 5 minutes per month of age, twice a day." },
+    { k: ['train', 'training', 'obedience', 'trick', 'tricks'], a: "🎓 Keep sessions short (5–10 min), with lots of treats and praise. Reward what you want — dogs repeat what pays! Always end on a win." },
+    { k: ['bark', 'barks', 'barking'], a: "🔊 Dogs bark from boredom, excitement, or alert. More exercise and mental games cut most nuisance barking. Never yell — they think you’re barking too! 😄" },
+    { k: ['lick', 'licks', 'licking'], a: "👅 Licking is how dogs say ‘I love you’ — and explore the world. Nonstop licking can also mean boredom or tummy trouble, so watch for changes." },
+    { k: ['grass'], a: "🌱 Most dogs nibble grass just because — usually harmless. Frantic grass-eating plus vomiting is worth a vet call." },
+    { k: ['poop', 'stool', 'coprophagia'], a: "💩 Poop-eating is gross but common (especially puppies) — usually habit, not illness. Clean up fast, keep them busy, and ask your vet if it won’t stop." },
+    { k: ['shed', 'shedding', 'brush', 'brushing', 'fur', 'coat'], a: "🪮 Most dogs shed — brushing 2–3 times a week cuts the tumbleweeds way down. Double-coated breeds ‘blow’ their coat twice a year: brush daily then!" },
+    { k: ['teeth', 'tooth', 'dental', 'breath'], a: "🦷 Brush a few times a week with dog toothpaste (never human — fluoride is bad for them). Dental chews help too. Stinky breath that won’t quit = vet visit." },
+    { k: ['flea', 'fleas', 'tick', 'ticks'], a: "🪲 Year-round flea/tick prevention is the move — ask your vet which product fits your dog. Check ears, belly, and between toes after hikes!" },
+    { k: ['vaccine', 'vaccines', 'vaccination', 'shots', 'rabies', 'parvo', 'distemper'], a: "💉 Core vaccines: rabies, distemper, parvo, adenovirus. Puppies start a series around 6–8 weeks. Your vet sets the schedule — keep the records handy!" },
+    { k: ['spay', 'neuter', 'fixed'], a: "✂️ Most vets recommend spaying/neutering around 6 months (large breeds sometimes later). It prevents surprises and some health issues — your vet will time it right." },
+    { k: ['feed', 'feeding', 'meals', 'kibble', 'how much food', 'food amount'], a: "🍽️ Adult dogs: 2 meals a day. Puppies under 6 months: 3–4 small meals. Follow the bag’s guide for your dog’s weight, then adjust with your vet — ribs should be easy to feel, not see." },
+    { k: ['water', 'drink', 'drinking', 'hydration'], a: "💧 Fresh water available all day, every day. Dogs drink roughly 1 oz per pound of body weight daily — way more in heat or after play." },
+    { k: ['new puppy', 'new dog', 'adopt', 'adoption', 'rescue', 'puppy tips'], a: "🐶 New pup checklist: vet visit in the first week, safe chew toys, a crate, puppy food, and patience! Start training on day one — puppies are learning machines." },
+    { k: ['crate'], a: "🏠 A crate should feel like a den, never a punishment. Feed meals in it, keep early sessions short, and never crate longer than they can hold it." },
+    { k: ['anxiety', 'anxious', 'separation', 'home alone'], a: "💛 Separation anxiety: practice short absences, keep goodbyes boring, leave puzzle toys. Bad cases need a trainer or vet — it’s panic, not disobedience." },
+    { k: ['heat', 'hot', 'heatstroke', 'summer'], a: "☀️ Heat kills dogs fast — never leave one in a car. Heatstroke signs: heavy panting, drool, wobbly walking. Cool with water (not ice) and get to a vet ASAP." },
+    { k: ['cold', 'winter', 'snow'], a: "❄️ Short-haired and small dogs feel the cold — coats help below freezing. Wipe paws after walks (road salt stings), and never leave them out shivering." },
+    { k: ['lifespan', 'senior', 'old dog', 'how long do dogs live', 'live'], a: "🐾 Small dogs often live 12–16 years, big dogs 8–12. Senior care: softer beds, shorter walks, vet checkups twice a year. Gray muzzles are distinguished! 🎩" },
+    { k: ['dream', 'dreams', 'dreaming', 'sleep', 'sleeping', 'twitch', 'twitching'], a: "💤 Twitching paws = dreaming! Dogs dream just like us. Adults sleep 12–14 hours a day, puppies up to 20. Let sleeping dogs lie. 😴" },
+    { k: ['head tilt', 'tilts head'], a: "🐶 The head tilt! Usually just curiosity — or they learned it earns treats 😄. Constant tilting or balance trouble = vet check." }
+  ];
+
+  function helperDogFaq(t) {
+    for (var i = 0; i < DOG_FAQ.length; i++) {
+      var keys = DOG_FAQ[i].k;
+      for (var j = 0; j < keys.length; j++) {
+        var w = keys[j].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        if (new RegExp('\\b' + w + '\\b').test(t)) return DOG_FAQ[i].a;
+      }
+    }
+    return null;
+  }
 
   function helperTop(n) {
     var st = (data.standings || []).slice().sort(function (a, b) {
@@ -316,7 +361,7 @@
     if (has('prize', 'prizes', 'win', 'winner', 'reward', 'get if')) {
       return '👑 Monthly Top Dog wins: a dedicated video about YOUR dog + your dog on our channel banner for the month! You must be <a href="' + SUB_LINK + '" target="_blank" rel="noopener">subscribed</a> to win.';
     }
-    if (has('when', 'next', 'round', 'time', 'today', 'daily', 'tomorrow')) {
+    if (has('next', 'round', 'today', 'tomorrow', 'daily', 'noon', 'hunt', 'tonight')) {
       return '🕛 A new Trophy Hunt drops every day at 12:00 PM Central! Watch for the countdown at the top of this page.';
     }
     if (has('shelter', 'donat', 'mission', 'charity', 'money', 'dollar')) {
@@ -342,6 +387,8 @@
     if (has('bye')) {
       return "See you at noon for the next hunt! 🏆🐶";
     }
+    var dogAns = helperDogFaq(t);
+    if (dogAns) return dogAns;
     if (has('nail', 'nails', 'toenail', 'vet', 'sick', 'health', 'food', 'feed', 'diet', 'train', 'training', 'bark', 'groom', 'bath', 'walk', 'leash', 'puppy', 'breed', 'teeth', 'ear', 'ears', 'flea', 'tick', 'vaccine', 'medicine', 'poop')) {
       return "🐶 I'm just the game helper — for health and care stuff, your vet is the real expert! I can help with points, streaks, prizes, and the shelter mission though.";
     }
@@ -375,7 +422,7 @@
     var send = document.getElementById('chat-send');
     var chips = document.getElementById('chat-chips');
     if (!box || !input || !send) return;
-    helperAddMsg("Hey! I'm " + HELPER_NAME + " 🐶 Ask me about the game — or tap a question below!", 'bot');
+    helperAddMsg("Hey! I'm " + HELPER_NAME + " 🐶 Ask me about the game or dog care — or tap a question below!", 'bot');
     send.addEventListener('click', function () { helperAsk(input.value); input.value = ''; });
     input.addEventListener('keydown', function (e) {
       if (e.key === 'Enter') { helperAsk(input.value); input.value = ''; }
