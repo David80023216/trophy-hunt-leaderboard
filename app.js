@@ -254,8 +254,140 @@
     }
   }
 
+  /* ---- Ned's Helper: rule-based FAQ bot. Answers ONLY from the page's
+     own live data (th-data) plus the printed rules. Never invents points,
+     players, or standings. Anything else -> video comments. ---- */
+  var HELPER_NAME = "Ned's Helper";
+  var PLAYLIST = 'https://www.youtube.com/playlist?list=PLXRC36_9f9gA';
+  var SUB_LINK = 'https://www.youtube.com/channel/UC4ghQwAZYqXrp6o5o-ZHn-Q?sub_confirmation=1';
+  var PHOTO_FORM = 'https://forms.gle/HEtMitfJZLq7NQPL9';
+
+  function helperTop(n) {
+    var st = (data.standings || []).slice().sort(function (a, b) {
+      return (b.season_points || 0) - (a.season_points || 0);
+    });
+    return st.slice(0, n);
+  }
+
+  function helperAnswer(q) {
+    var t = (' ' + q.toLowerCase() + ' ');
+    var has = function () {
+      for (var i = 0; i < arguments.length; i++) {
+        var w = arguments[i].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        if (new RegExp('\\b' + w + '\\b').test(t)) return true;
+      }
+      return false;
+    };
+    var st = data.standings || [];
+
+    if (has('hi', 'hello', 'hey', 'yo', 'sup', 'morning', 'evening')) {
+      return "Hey hey! 🐶 I'm " + HELPER_NAME + ". Ask me about points, streaks, prizes, the shelter mission — or tap a question below!";
+    }
+    if (has('ned')) {
+      var s = data.spotlight_today || {};
+      return "🐶 Ned's our community star pup" + (s.dog_name ? " and today's spotlight!" : "!") +
+        " He sits up proudly when he wins. 🏆 Think your dog can take his crown? Enter today's hunt!";
+    }
+    if (has('winning', 'lead', 'leading', 'ahead', 'top dog', 'first place')) {
+      var top = helperTop(3);
+      if (!top.length) return "No players on the board yet — be the first! Comment your dog's name on today's hunt video.";
+      var lines = top.map(function (p, i) {
+        return (i + 1) + '. ' + p.handle + (p.dog_name ? ' (' + p.dog_name + ')' : '') + ' — ' + p.season_points + ' pts';
+      });
+      return "🏆 Right now it's:<br>" + lines.join('<br>') + "<br>Ties are broken by most dog photos, then longest streak.";
+    }
+    if (has('standing', 'board', 'score', 'rank')) {
+      var top6 = helperTop(6);
+      if (!top6.length) return "The board is empty — today's hunt video is your ticket in!";
+      return "📋 Season standings:<br>" + top6.map(function (p, i) {
+        return (i + 1) + '. ' + p.handle + ' — ' + p.season_points + ' pts' +
+          (p.streak >= 2 ? ' 🔥' + p.streak : '');
+      }).join('<br>');
+    }
+    if (has('streak', 'streaks')) {
+      return "🔥 Play every day to build a streak — any scoring day keeps it alive! Bonuses: 3 days +10 · 7 days +25 · 14 days +50 · 30 days +100. Miss a day and it resets.";
+    }
+    if (has('photo', 'photos', 'picture', 'pic', 'upload', 'submit')) {
+      return '📸 Submit a real photo of your dog <a href="' + PHOTO_FORM + '" target="_blank" rel="noopener">through this form</a> → +5 pts every day. Real photos only — no screenshots or stock pics!';
+    }
+    if (has('point', 'points', 'earn', 'enter', 'entry', 'play', 'join', 'how do')) {
+      return "🐶 Easy! Comment your dog's NAME on any hunt video → +10 pts per comment, up to 3 scoring comments a day. Any other comment → +1 pt once a day. Keep names clean!";
+    }
+    if (has('prize', 'prizes', 'win', 'winner', 'reward', 'get if')) {
+      return '👑 Monthly Top Dog wins: a dedicated video about YOUR dog + your dog on our channel banner for the month! You must be <a href="' + SUB_LINK + '" target="_blank" rel="noopener">subscribed</a> to win.';
+    }
+    if (has('when', 'next', 'round', 'time', 'today', 'daily', 'tomorrow')) {
+      return '🕛 A new Trophy Hunt drops every day at 12:00 PM Central! Watch for the countdown at the top of this page.';
+    }
+    if (has('shelter', 'donat', 'mission', 'charity', 'money', 'dollar')) {
+      var m = data.mission || {};
+      var subs = Number(m.subscribers) || 0;
+      return '🐾 Our shelter mission: we donate $1 to our local animal shelter for every subscriber — no cost to you, ever!' +
+        (subs ? ' Right now: <strong>' + subs.toLocaleString('en-US') + ' subscribers = $' + subs.toLocaleString('en-US') + ' raised!</strong>' : '');
+    }
+    if (has('subscrib', 'follow')) {
+      return '🔔 Hit that subscribe button — it adds $1 to the shelter mission AND you must be subscribed to win Top Dog! <a href="' + SUB_LINK + '" target="_blank" rel="noopener">Subscribe here</a>';
+    }
+    if (has('hidden', 'pup', 'easter', 'egg', 'spot')) {
+      return "👀 The hidden pup is just for fun — no points for spotting it! Want points? Comment your dog's name on the video instead. 🐶";
+    }
+    if (has('ned')) {
+      var s = data.spotlight_today || {};
+      return "🐶 Ned's our community star pup" + (s.dog_name ? " and today's spotlight!" : "!") +
+        " He sits up proudly when he wins. 🏆 Think your dog can take his crown? Enter today's hunt!";
+    }
+    if (has('thank', 'thanks', 'thx', 'love', 'cool', 'awesome')) {
+      return "Aww, you're the best! 🐶💛 Tell your dog I said hi.";
+    }
+    if (has('bye')) {
+      return "See you at noon for the next hunt! 🏆🐶";
+    }
+    return "Hmm, that's beyond my little bot brain! 🤖💭 Drop it in the comments of <a href=\"" + PLAYLIST + '" target="_blank" rel="noopener">today\'s hunt video</a> — the channel answers fast.';
+  }
+
+  function helperAddMsg(text, who) {
+    var box = document.getElementById('chat-box');
+    if (!box) return;
+    var div = document.createElement('div');
+    div.className = 'chat-msg chat-' + who;
+    if (who === 'bot') {
+      div.innerHTML = '<span class="chat-name">' + esc(HELPER_NAME) + '</span>' + text;
+    } else {
+      div.textContent = text;
+    }
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function helperAsk(q) {
+    q = (q || '').trim();
+    if (!q) return;
+    helperAddMsg(q, 'user');
+    setTimeout(function () { helperAddMsg(helperAnswer(q), 'bot'); }, 350);
+  }
+
+  function initHelper() {
+    var box = document.getElementById('chat-box');
+    var input = document.getElementById('chat-input');
+    var send = document.getElementById('chat-send');
+    var chips = document.getElementById('chat-chips');
+    if (!box || !input || !send) return;
+    helperAddMsg("Hey! I'm " + HELPER_NAME + " 🐶 Ask me about the game — or tap a question below!", 'bot');
+    send.addEventListener('click', function () { helperAsk(input.value); input.value = ''; });
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { helperAsk(input.value); input.value = ''; }
+    });
+    if (chips) {
+      chips.addEventListener('click', function (e) {
+        var b = e.target.closest('button[data-q]');
+        if (b) helperAsk(b.getAttribute('data-q'));
+      });
+    }
+  }
+
   renderSpotlight();
   renderMission();
+  initHelper();
   renderDogFact();
   tickCountdown();
   setInterval(tickCountdown, 1000);
