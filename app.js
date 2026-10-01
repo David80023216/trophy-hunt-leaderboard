@@ -315,7 +315,7 @@
     return st.slice(0, n);
   }
 
-  var GEMINI_KEY = ''; // AI fallback DISABLED: API keys must never ship in this public repo (2026-09-30, key removed). Rule-based FAQ answers; misses get PUP_AI_FALLBACK.
+  var GEMINI_KEY = ''; // AI fallback DISABLED: API keys must never ship in this public repo (2026-09-30). Rule-based FAQ answers; misses get PUP_AI_FALLBACK. Approved path: Cloudflare Worker proxy holds the key server-side.
   var GEMINI_MODEL = 'gemini-flash-lite-latest';
   var GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/' + GEMINI_MODEL + ':generateContent?key=' + GEMINI_KEY;
   var PUP_SYSTEM = "You are Pup Helper, the friendly chatbot on the Gone To The Dogs Trophy Hunt leaderboard page. Answer questions about the Trophy Hunt dog contest and about real dog care. Keep answers short (1-3 sentences), warm and playful, no hashtags, plain text only (no HTML or markdown). For dog health questions give general info but always say to check with their vet. If asked about current standings, scores, or who is winning, say you don't have live scores and to check the leaderboard table on the page — never invent player names, points, or results. If asked something unrelated to dogs or the contest, politely steer back to dogs.";
