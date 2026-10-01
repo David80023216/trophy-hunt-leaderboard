@@ -470,30 +470,7 @@
     }
   }
 
-  /* Floating Pup Helper chat bubble: opens a bottom sheet, always on screen. */
-  function initChatSheet() {
-    var fab = document.getElementById('chat-fab');
-    var sheet = document.getElementById('chat-sheet');
-    var close = document.getElementById('chat-close');
-    var input = document.getElementById('chat-input');
-    if (!fab || !sheet) return;
-    function openSheet() {
-      sheet.classList.add('open');
-      var box = document.getElementById('chat-box');
-      if (box) box.scrollTop = box.scrollHeight;
-      if (input) setTimeout(function () { input.focus({ preventScroll: true }); }, 350);
-    }
-    function closeSheet() {
-      sheet.classList.remove('open');
-      if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
-    }
-    fab.addEventListener('click', function () {
-      if (sheet.classList.contains('open')) closeSheet(); else openSheet();
-    });
-    if (close) close.addEventListener('click', closeSheet);
-  }
-
-  /* Mobile-app shell: bottom tab bar switches between the three views. */
+  /* Mobile-app shell: bottom tab bar switches between the four views. */
   function initTabs() {
     var btns = document.querySelectorAll('.tabbar button');
     if (!btns.length) return;
@@ -556,7 +533,6 @@
   renderSpotlight();
   renderMission();
   initHelper();
-  initChatSheet();
   renderDogFact();
   tickCountdown();
   setInterval(tickCountdown, 1000);
