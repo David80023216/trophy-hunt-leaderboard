@@ -476,39 +476,6 @@
   renderDogFact();
   tickCountdown();
   setInterval(tickCountdown, 1000);
-
-  /* Random page-dog walker: a pup trots across the bottom of the page at
-     random intervals. Pure delight — no game effect, never blocks taps. */
-  var PAGE_DOGS = ['🐕', '🐕', '🐕', '🐩', '🦮'];
-  function spawnPageDog() {
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if (document.querySelector('.page-dog')) return; // one pup at a time
-    var dir = Math.random() < 0.5 ? 1 : -1; // 1 = left-to-right
-    var el = document.createElement('div');
-    el.className = 'page-dog' + (dir < 0 ? ' flip' : '');
-    el.setAttribute('aria-hidden', 'true');
-    var w = document.createElement('span');
-    w.className = 'walker';
-    w.textContent = PAGE_DOGS[Math.floor(Math.random() * PAGE_DOGS.length)];
-    el.appendChild(w);
-    el.style.bottom = (8 + Math.random() * 40) + 'px';
-    var off = 90;
-    var vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    var from = dir > 0 ? -off : vw + off;
-    var to = dir > 0 ? vw + off : -off;
-    el.style.left = from + 'px';
-    document.body.appendChild(el);
-    var speed = 60 + Math.random() * 70; // px per second
-    var dur = Math.abs(to - from) / speed;
-    void el.offsetWidth; // reflow so the transition runs
-    el.style.transition = 'left ' + dur + 's linear';
-    el.style.left = to + 'px';
-    setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, dur * 1000 + 400);
-  }
-  function schedulePageDog() {
-    setTimeout(function () { spawnPageDog(); schedulePageDog(); }, 15000 + Math.random() * 45000);
-  }
   renderStandings();
   renderHistory();
-  schedulePageDog();
 })();
