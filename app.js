@@ -315,6 +315,43 @@
     return st.slice(0, n);
   }
 
+  var GEMINI_KEY = ''; // AI fallback DISABLED: API keys must never ship in this public repo (2026-09-30, key removed). Rule-based FAQ answers; misses get PUP_AI_FALLBACK.
+  var GEMINI_MODEL = 'gemini-flash-lite-latest';
+  var GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/' + GEMINI_MODEL + ':generateContent?key=' + GEMINI_KEY;
+  var PUP_SYSTEM = "You are Pup Helper, the friendly chatbot on the Gone To The Dogs Trophy Hunt leaderboard page. Answer questions about the Trophy Hunt dog contest and about real dog care. Keep answers short (1-3 sentences), warm and playful, no hashtags, plain text only (no HTML or markdown). For dog health questions give general info but always say to check with their vet. If asked about current standings, scores, or who is winning, say you don't have live scores and to check the leaderboard table on the page — never invent player names, points, or results. If asked something unrelated to dogs or the contest, politely steer back to dogs.";
+  var PUP_AI_FALLBACK = "Hmm, my brain's fuzzy right now! 🤖💭 Try again in a bit, or drop it in the comments of today's hunt video — the channel answers fast.";
+  var pupHistory = [];
+
+  function helperAskAI(q, typingDiv) {
+    var box = document.getElementById('chat-box');
+    var done = function (html) {
+      typingDiv.innerHTML = '<span class="chat-name">' + esc(HELPER_NAME) + '</span>' + html;
+      if (box) box.scrollTop = box.scrollHeight;
+    };
+    var controller = new AbortController();
+    var timer = setTimeout(function () { controller.abort(); }, 20000);
+    pupHistory.push({ role: 'user', parts: [{ text: q }] });
+    if (pupHistory.length > 6) pupHistory = pupHistory.slice(pupHistory.length - 6);
+    fetch(GEMINI_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: PUP_SYSTEM }] },
+        contents: pupHistory.slice(),
+        generationConfig: { maxOutputTokens: 300, temperature: 0.7 }
+      }),
+      signal: controller.signal
+    }).then(function (r) { clearTimeout(timer); return r.json(); })
+    .then(function (d) {
+      var c = d && d.candidates && d.candidates[0];
+      var txt = c && c.content && c.content.parts && c.content.parts[0] && c.content.parts[0].text;
+      if (txt) {
+        pupHistory.push({ role: 'model', parts: [{ text: txt }] });
+        done(esc(txt).replace(/\n/g, '<br>'));
+      } else { done(esc(PUP_AI_FALLBACK)); }
+    }).catch(function () { clearTimeout(timer); done(esc(PUP_AI_FALLBACK)); });
+  }
+
   function helperAnswer(q) {
     var t = (' ' + q.toLowerCase() + ' ');
     var has = function () {
@@ -390,10 +427,7 @@
     }
     var dogAns = helperDogFaq(t);
     if (dogAns) return dogAns;
-    if (has('nail', 'nails', 'toenail', 'vet', 'sick', 'health', 'food', 'feed', 'diet', 'train', 'training', 'bark', 'groom', 'bath', 'walk', 'leash', 'puppy', 'breed', 'teeth', 'ear', 'ears', 'flea', 'tick', 'vaccine', 'medicine', 'poop')) {
-      return "🐶 I'm just the game helper — for health and care stuff, your vet is the real expert! I can help with points, streaks, prizes, and the shelter mission though.";
-    }
-    return "Hmm, that's beyond my little bot brain! 🤖💭 Drop it in the comments of <a href=\"" + PLAYLIST + '" target="_blank" rel="noopener">today\'s hunt video</a> — the channel answers fast.';
+    return null;
   }
 
   function helperAddMsg(text, who) {
@@ -414,7 +448,19 @@
     q = (q || '').trim();
     if (!q) return;
     helperAddMsg(q, 'user');
-    setTimeout(function () { helperAddMsg(helperAnswer(q), 'bot'); }, 350);
+    var canned = helperAnswer(q);
+    if (canned) {
+      setTimeout(function () { helperAddMsg(canned, 'bot'); }, 350);
+      return;
+    }
+    var box = document.getElementById('chat-box');
+    if (!box) return;
+    var div = document.createElement('div');
+    div.className = 'chat-msg chat-bot';
+    div.innerHTML = '<span class="chat-name">' + esc(HELPER_NAME) + '</span><span class="typing">● ● ●</span>';
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+    helperAskAI(q, div);
   }
 
   function initHelper() {
@@ -423,7 +469,7 @@
     var send = document.getElementById('chat-send');
     var chips = document.getElementById('chat-chips');
     if (!box || !input || !send) return;
-    helperAddMsg("Hey! I'm " + HELPER_NAME + " 🐶 Ask me about the game or dog care — or tap a question below!", 'bot');
+    helperAddMsg("Hey! I'm " + HELPER_NAME + " 🐶 Ask me anything about the game or dogs — or tap a question below!", 'bot');
     send.addEventListener('click', function () { helperAsk(input.value); input.value = ''; });
     input.addEventListener('keydown', function (e) {
       if (e.key === 'Enter') { helperAsk(input.value); input.value = ''; }
