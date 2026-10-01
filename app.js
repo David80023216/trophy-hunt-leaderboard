@@ -45,7 +45,7 @@
     st.textContent = s.streak >= 2 ? '🔥 ' + s.streak + '-day streak' : '';
   }
 
-  function rowHtml(entry, rank) {
+  function rowHtml(entry, rank, idx) {
     var avatar = entry.avatar
       ? '<img src="' + esc(entry.avatar) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">'
       : '';
@@ -66,7 +66,7 @@
     return '<tr data-handle="' + esc(entry.handle.toLowerCase()) + '">' +
       '<td class="rank">' + rankBadge(rank) + '</td>' +
       '<td class="player"><span class="player-cell">' + avatar +
-        '<span class="player-name">' + esc(entry.handle) + '</span></span></td>' +
+        '<button type="button" class="player-name check-link" data-idx="' + idx + '" title="See today\'s checklist ✅">' + esc(entry.handle) + '</button></span></td>' +
       '<td class="dog' + ((hasDog || hasStreak) ? '' : ' is-empty') + '"><span class="player-cell">' + line2 + '</span></td>' +
       '<td class="streak-cell' + (hasStreak ? '' : ' is-empty') + '">' + streakHtml(entry.streak) + '</td>' +
       '<td class="points">' + entry.season_points + ' pts</td>' +
@@ -92,7 +92,7 @@
     var rank = 0, lastPts = null;
     tbody.innerHTML = rows.map(function (e, i) {
       if (e.season_points !== lastPts) { rank = i + 1; lastPts = e.season_points; }
-      return rowHtml(e, rank);
+      return rowHtml(e, rank, i);
     }).join('');
     var snap = document.getElementById('snapshot');
     if (data.season) {
@@ -530,6 +530,49 @@
     });
   }
 
+  /* ---- daily checklist modal (tap a player name) ---- */
+  function openChecklist(idx) {
+    var entry = (data.standings || [])[idx];
+    if (!entry || !entry.checklist) return;
+    var c = entry.checklist;
+    document.getElementById('check-title').textContent = entry.handle + ' — today\'s checklist';
+    document.getElementById('check-sub').textContent = c.complete
+      ? (c.bonus_awarded ? 'Full clear! +' + c.bonus_points + ' bonus banked 🎉'
+                         : 'Full clear! +' + c.bonus_points + ' bonus incoming…')
+      : c.available + ' pts still up for grabs today';
+    var html = c.items.map(function (it) {
+      var note = it.note ? ' <span class="check-note">(' + esc(it.note) + ')</span>' : '';
+      return '<li class="' + (it.done ? 'done' : 'pending') + '"><span class="check-mark">' +
+        (it.done ? '✅' : '⭕') + '</span><span class="check-label">' + esc(it.label) + note +
+        '</span><span class="check-pts">+' + it.points + '</span></li>';
+    }).join('');
+    html += '<li class="bonus-row ' + (c.bonus_awarded ? 'done' : 'pending') + '">' +
+      '<span class="check-mark">' + (c.bonus_awarded ? '✅' : '⭐') + '</span>' +
+      '<span class="check-label">Clear everything — full-day bonus</span>' +
+      '<span class="check-pts">+' + c.bonus_points + '</span></li>';
+    document.getElementById('check-list').innerHTML = html;
+    document.getElementById('check-overlay').hidden = false;
+  }
+  function closeChecklist() {
+    document.getElementById('check-overlay').hidden = true;
+  }
+  function initChecklist() {
+    var tbody = document.getElementById('rows-season');
+    tbody.addEventListener('click', function (ev) {
+      var btn = ev.target.closest ? ev.target.closest('.check-link') : null;
+      if (btn && btn.getAttribute('data-idx') !== null) {
+        openChecklist(parseInt(btn.getAttribute('data-idx'), 10));
+      }
+    });
+    document.getElementById('check-close').addEventListener('click', closeChecklist);
+    document.getElementById('check-overlay').addEventListener('click', function (ev) {
+      if (ev.target.id === 'check-overlay') closeChecklist();
+    });
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape') closeChecklist();
+    });
+  }
+
   renderSpotlight();
   renderMission();
   initHelper();
@@ -540,4 +583,5 @@
   renderHistory();
   initTabs();
   renderPupGrid();
+  initChecklist();
 })();
