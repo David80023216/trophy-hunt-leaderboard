@@ -315,12 +315,9 @@
     return st.slice(0, n);
   }
 
-  var GEMINI_KEY = ''; // AI fallback DISABLED: API keys must never ship in this public repo (2026-09-30). Rule-based FAQ answers; misses get PUP_AI_FALLBACK. Approved path: Cloudflare Worker proxy holds the key server-side.
-  var GEMINI_MODEL = 'gemini-flash-lite-latest';
-  var GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/' + GEMINI_MODEL + ':generateContent?key=' + GEMINI_KEY;
-  var PUP_SYSTEM = "You are Pup Helper, the friendly chatbot on the Gone To The Dogs Trophy Hunt leaderboard page. Answer questions about the Trophy Hunt dog contest and about real dog care. Keep answers short (1-3 sentences), warm and playful, no hashtags, plain text only (no HTML or markdown). For dog health questions give general info but always say to check with their vet. If asked about current standings, scores, or who is winning, say you don't have live scores and to check the leaderboard table on the page — never invent player names, points, or results. If asked something unrelated to dogs or the contest, politely steer back to dogs.";
+  var PUP_PROXY_URL = 'https://david80023216--3445f20cbd3611f19e881607ee4eb77e.web.val.run';
+  // Pup Helper's AI brain lives server-side in the proxy above (2026-09-30). No API key ships in this public repo.
   var PUP_AI_FALLBACK = "Hmm, my brain's fuzzy right now! 🤖💭 Try again in a bit, or drop it in the comments of today's hunt video — the channel answers fast.";
-  var pupHistory = [];
 
   function helperAskAI(q, typingDiv) {
     var box = document.getElementById('chat-box');
@@ -330,25 +327,16 @@
     };
     var controller = new AbortController();
     var timer = setTimeout(function () { controller.abort(); }, 20000);
-    pupHistory.push({ role: 'user', parts: [{ text: q }] });
-    if (pupHistory.length > 6) pupHistory = pupHistory.slice(pupHistory.length - 6);
-    fetch(GEMINI_URL, {
+    fetch(PUP_PROXY_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        system_instruction: { parts: [{ text: PUP_SYSTEM }] },
-        contents: pupHistory.slice(),
-        generationConfig: { maxOutputTokens: 300, temperature: 0.7 }
-      }),
+      body: JSON.stringify({ q: q }),
       signal: controller.signal
     }).then(function (r) { clearTimeout(timer); return r.json(); })
     .then(function (d) {
-      var c = d && d.candidates && d.candidates[0];
-      var txt = c && c.content && c.content.parts && c.content.parts[0] && c.content.parts[0].text;
-      if (txt) {
-        pupHistory.push({ role: 'model', parts: [{ text: txt }] });
-        done(esc(txt).replace(/\n/g, '<br>'));
-      } else { done(esc(PUP_AI_FALLBACK)); }
+      var txt = d && d.answer;
+      if (txt) { done(esc(txt).replace(/\n/g, '<br>')); }
+      else { done(esc(PUP_AI_FALLBACK)); }
     }).catch(function () { clearTimeout(timer); done(esc(PUP_AI_FALLBACK)); });
   }
 
