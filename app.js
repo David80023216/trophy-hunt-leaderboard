@@ -233,7 +233,7 @@
     var h = Math.floor(diff / 3600000);
     var m = Math.floor(diff % 3600000 / 60000);
     var s = Math.floor(diff % 60000 / 1000);
-    el.textContent = '\u23F3 Next Trophy Hunt drops in ' + h + 'h ' + m + 'm ' + s + 's';
+    el.textContent = '\u23F3 ' + h + 'h ' + m + 'm ' + s + 's';
   }
 
   function renderMission() {
@@ -470,6 +470,66 @@
     }
   }
 
+  /* Mobile-app shell: bottom tab bar switches between the four views. */
+  function initTabs() {
+    var btns = document.querySelectorAll('.tabbar button');
+    if (!btns.length) return;
+    function show(id) {
+      var views = document.querySelectorAll('.view');
+      for (var i = 0; i < views.length; i++) views[i].classList.toggle('active', views[i].id === id);
+      for (var j = 0; j < btns.length; j++) btns[j].classList.toggle('active', btns[j].getAttribute('data-view') === id);
+      if (window.scrollTo) window.scrollTo(0, 0);
+    }
+    for (var k = 0; k < btns.length; k++) {
+      (function (b) {
+        b.addEventListener('click', function () { show(b.getAttribute('data-view')); });
+      })(btns[k]);
+    }
+  }
+
+  /* Pups tab: gallery of verified player dog photos from the data block.
+     Renders ONLY what the ledger contains — never invents dogs. */
+  function renderPupGrid() {
+    var grid = document.getElementById('pup-grid');
+    var empty = document.getElementById('pup-empty');
+    if (!grid) return;
+    var photos = (data && data.dog_photos) || {};
+    var handles = Object.keys(photos);
+    if (!handles.length) { if (empty) empty.hidden = false; return; }
+    if (empty) empty.hidden = true;
+    grid.innerHTML = '';
+    handles.forEach(function (handle) {
+      var p = photos[handle] || {};
+      var src = p.src || p.full || '';
+      if (!src) return;
+      var card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'pup-card';
+      var img = document.createElement('img');
+      img.loading = 'lazy';
+      img.alt = (p.name || 'Pup') + ' — ' + handle;
+      img.src = src;
+      img.onerror = function () { card.style.display = 'none'; };
+      var cap = document.createElement('div');
+      cap.className = 'pup-cap';
+      var nm = document.createElement('div');
+      nm.className = 'pup-name';
+      nm.textContent = '\uD83D\uDC36 ' + (p.name || 'Mystery pup');
+      var hd = document.createElement('div');
+      hd.className = 'pup-handle';
+      hd.textContent = handle;
+      cap.appendChild(nm);
+      cap.appendChild(hd);
+      card.appendChild(img);
+      card.appendChild(cap);
+      card.addEventListener('click', function () {
+        var full = p.full || p.src;
+        if (full) window.open(full, '_blank', 'noopener');
+      });
+      grid.appendChild(card);
+    });
+  }
+
   renderSpotlight();
   renderMission();
   initHelper();
@@ -478,4 +538,6 @@
   setInterval(tickCountdown, 1000);
   renderStandings();
   renderHistory();
+  initTabs();
+  renderPupGrid();
 })();
