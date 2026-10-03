@@ -525,7 +525,14 @@ body {
   padding: 0; overflow: hidden; cursor: pointer; text-align: left; color: inherit; font-family: inherit;
 }
 .pup-card:active { transform: scale(.97); }
-.pup-card img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: var(--bg2); }
+.pup-card img, .pup-card video { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: var(--bg2); }
+.pup-card { position: relative; }
+.pup-play {
+  position: absolute; top: 38%; left: 50%; transform: translate(-50%, -50%);
+  width: 2.6rem; height: 2.6rem; border-radius: 50%;
+  background: rgba(0,0,0,.55); color: #fff; font-size: 1.1rem; line-height: 2.6rem; text-align: center;
+  pointer-events: none;
+}
 .pup-cap { padding: .55rem .7rem .7rem; }
 .pup-name { font-weight: 700; font-size: .95rem; }
 .pup-handle { color: var(--gold); font-size: .8rem; margin-top: .1rem; }

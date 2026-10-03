@@ -487,46 +487,70 @@
     }
   }
 
-  /* Pups tab: gallery of verified player dog photos from the data block.
-     Renders ONLY what the ledger contains — never invents dogs. */
+  /* Pups tab: gallery of verified player dog photos AND video clips from the
+     data block. Each handle maps to an ARRAY of media items
+     {src, full, name, type ("photo"|"video"), date}; the legacy single-object
+     shape is still accepted. Renders ONLY what the ledger contains — never
+     invents dogs. */
   function renderPupGrid() {
     var grid = document.getElementById('pup-grid');
     var empty = document.getElementById('pup-empty');
     if (!grid) return;
-    var photos = (data && data.dog_photos) || {};
-    var handles = Object.keys(photos);
+    var media = (data && data.dog_photos) || {};
+    var handles = Object.keys(media);
     if (!handles.length) { if (empty) empty.hidden = false; return; }
     if (empty) empty.hidden = true;
     grid.innerHTML = '';
     handles.forEach(function (handle) {
-      var p = photos[handle] || {};
-      var src = p.src || p.full || '';
-      if (!src) return;
-      var card = document.createElement('button');
-      card.type = 'button';
-      card.className = 'pup-card';
-      var img = document.createElement('img');
-      img.loading = 'lazy';
-      img.alt = (p.name || 'Pup') + ' — ' + handle;
-      img.src = src;
-      img.onerror = function () { card.style.display = 'none'; };
-      var cap = document.createElement('div');
-      cap.className = 'pup-cap';
-      var nm = document.createElement('div');
-      nm.className = 'pup-name';
-      nm.textContent = '\uD83D\uDC36 ' + (p.name || 'Mystery pup');
-      var hd = document.createElement('div');
-      hd.className = 'pup-handle';
-      hd.textContent = handle;
-      cap.appendChild(nm);
-      cap.appendChild(hd);
-      card.appendChild(img);
-      card.appendChild(cap);
-      card.addEventListener('click', function () {
-        var full = p.full || p.src;
-        if (full) window.open(full, '_blank', 'noopener');
+      var items = media[handle];
+      if (!items) return;
+      if (!Array.isArray(items)) items = [items]; /* legacy single object */
+      items.forEach(function (p) {
+        p = p || {};
+        var src = p.src || p.full || '';
+        if (!src) return;
+        var isVideo = (p.type === 'video');
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'pup-card' + (isVideo ? ' pup-video' : '');
+        var mediaEl;
+        if (isVideo) {
+          mediaEl = document.createElement('video');
+          mediaEl.src = src;
+          mediaEl.muted = true;
+          mediaEl.playsInline = true;
+          mediaEl.preload = 'metadata';
+          mediaEl.setAttribute('aria-label', (p.name || 'Pup') + ' video — ' + handle);
+          mediaEl.onerror = function () { card.style.display = 'none'; };
+          var badge = document.createElement('span');
+          badge.className = 'pup-play';
+          badge.textContent = '▶';
+          card.appendChild(badge);
+        } else {
+          mediaEl = document.createElement('img');
+          mediaEl.loading = 'lazy';
+          mediaEl.alt = (p.name || 'Pup') + ' — ' + handle;
+          mediaEl.src = src;
+          mediaEl.onerror = function () { card.style.display = 'none'; };
+        }
+        var cap = document.createElement('div');
+        cap.className = 'pup-cap';
+        var nm = document.createElement('div');
+        nm.className = 'pup-name';
+        nm.textContent = '\uD83D\uDC36 ' + (p.name || 'Mystery pup');
+        var hd = document.createElement('div');
+        hd.className = 'pup-handle';
+        hd.textContent = handle + (p.date ? ' · ' + p.date : '');
+        cap.appendChild(nm);
+        cap.appendChild(hd);
+        card.insertBefore(mediaEl, card.firstChild);
+        card.appendChild(cap);
+        card.addEventListener('click', function () {
+          var full = p.full || p.src;
+          if (full) window.open(full, '_blank', 'noopener');
+        });
+        grid.appendChild(card);
       });
-      grid.appendChild(card);
     });
   }
 
