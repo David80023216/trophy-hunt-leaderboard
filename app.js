@@ -316,6 +316,8 @@
   }
 
   var PUP_PROXY_URL = 'https://david80023216--3445f20cbd3611f19e881607ee4eb77e.web.val.run';
+  var PUSH_VAL_URL = 'https://david80023216--b1c69af6c1d211f18bd01607ee4eb77e.web.val.run';
+  var VAPID_PUBLIC = 'BMBS6ae4rXqMhCt7ocFlx2weaNqHlza9NrysRE02leIUKQ-LQw3K6XfFsjnyZ-ivhFFu3N8E8IEo9uAKr8PG8ec';
   // Pup Helper's AI brain lives server-side in the proxy above (2026-09-30). No API key ships in this public repo.
   var PUP_AI_FALLBACK = "Hmm, my brain's fuzzy right now! 🤖💭 Try again in a bit, or drop it in the comments of today's hunt video — the channel answers fast.";
 
@@ -574,6 +576,7 @@
       '<span class="check-mark">' + (c.bonus_awarded ? '✅' : '⭐') + '</span>' +
       '<span class="check-label">Clear everything — full-day bonus</span>' +
       '<span class="check-pts">+' + c.bonus_points + '</span></li>';
+    html += pushRowHtml(entry.handle, !!(c.push_bonus_awarded));
     document.getElementById('check-list').innerHTML = html;
     document.getElementById('check-overlay').hidden = false;
   }
@@ -597,6 +600,91 @@
     });
   }
 
+  /* ---- push notifications: installable-app alerts + 50 pt opt-in ---- */
+  function urlB64ToBytes(s) {
+    s = s.replace(/-/g, '+').replace(/_/g, '/');
+    var bin = atob(s + '==='.slice((s.length + 3) % 4));
+    var b = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i);
+    return b;
+  }
+  function initPush() {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+    navigator.serviceWorker.register('./sw.js').catch(function () {});
+  }
+  function pushState(handle) {
+    try { return localStorage.getItem('th-push-' + handle) || ''; } catch (e) { return ''; }
+  }
+  function setPushState(handle, v) {
+    try { localStorage.setItem('th-push-' + handle, v); } catch (e) {}
+  }
+  function pushRowHtml(handle, awarded) {
+    if (awarded) {
+      return '<li class="bonus-row done"><span class="check-mark">🔔</span>' +
+        '<span class="check-label">Show alerts on — +50 bonus banked</span>' +
+        '<span class="check-pts">+50</span></li>';
+    }
+    var st = pushState(handle);
+    if (st === 'on') {
+      return '<li class="bonus-row done"><span class="check-mark">🔔</span>' +
+        '<span class="check-label">Show alerts on — +50 bonus banked</span>' +
+        '<span class="check-pts">+50</span></li>';
+    }
+    if (st === 'pending') {
+      return '<li class="bonus-row pending"><span class="check-mark">🔔</span>' +
+        '<span class="check-label">Alerts requested — +50 lands on next board refresh</span>' +
+        '<span class="check-pts">+50</span></li>';
+    }
+    return '<li class="bonus-row pending"><span class="check-mark">🔔</span>' +
+      '<span class="check-label">Get show alerts on this device</span>' +
+      '<span class="check-pts">+50</span>' +
+      '<button class="push-btn" data-push-handle="' + esc(handle) + '">Turn on</button></li>';
+  }
+  function initPushButtons() {
+    document.getElementById('check-list').addEventListener('click', function (ev) {
+      var btn = ev.target.closest ? ev.target.closest('[data-push-handle]') : null;
+      if (!btn) return;
+      optInPush(btn.getAttribute('data-push-handle'), btn);
+    });
+  }
+  var liveVapidKey = null;
+  function getVapidKey() {
+    if (liveVapidKey) return Promise.resolve(liveVapidKey);
+    if (PUSH_VAL_URL.indexOf('PLACEHOLDER') >= 0) return Promise.resolve(VAPID_PUBLIC);
+    return fetch(PUSH_VAL_URL + '/').then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (j && j.vapid_public) liveVapidKey = j.vapid_public;
+        return liveVapidKey || VAPID_PUBLIC;
+      }).catch(function () { return VAPID_PUBLIC; });
+  }
+  function optInPush(handle, btn) {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      btn.textContent = 'Not supported'; btn.disabled = true; return;
+    }
+    if (PUSH_VAL_URL.indexOf('PLACEHOLDER') >= 0) {
+      btn.textContent = 'Coming soon'; btn.disabled = true; return;
+    }
+    btn.textContent = 'Requesting…'; btn.disabled = true;
+    Notification.requestPermission().then(function (perm) {
+      if (perm !== 'granted') { btn.textContent = 'Blocked'; return; }
+      return getVapidKey().then(function (vk) {
+        return navigator.serviceWorker.ready.then(function (reg) {
+          return reg.pushManager.subscribe({ userVisibleOnly: true,
+            applicationServerKey: urlB64ToBytes(vk) });
+        });
+      }).then(function (sub) {
+        return fetch(PUSH_VAL_URL + '/subscribe', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ handle: handle, subscription: sub.toJSON() }),
+        }).then(function (r) { return r.json(); });
+      }).then(function (res) {
+        if (res && res.ok) { setPushState(handle, 'pending'); }
+        else { btn.textContent = 'Try again'; btn.disabled = false; return; }
+        var li = btn.closest('li'); if (li) li.outerHTML = pushRowHtml(handle, false);
+      }).catch(function () { btn.textContent = 'Try again'; btn.disabled = false; });
+    });
+  }
+
   renderSpotlight();
   renderMission();
   initHelper();
@@ -608,4 +696,6 @@
   initTabs();
   renderPupGrid();
   initChecklist();
+  initPush();
+  initPushButtons();
 })();
