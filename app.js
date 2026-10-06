@@ -557,9 +557,11 @@
   }
 
   /* ---- daily checklist modal (tap a player name) ---- */
+  var lastCheckIdx = null;
   function openChecklist(idx) {
     var entry = (data.standings || [])[idx];
     if (!entry || !entry.checklist) return;
+    lastCheckIdx = idx;
     var c = entry.checklist;
     document.getElementById('check-title').textContent = entry.handle + ' — today\'s checklist';
     document.getElementById('check-sub').textContent = c.complete
@@ -582,6 +584,31 @@
   }
   function closeChecklist() {
     document.getElementById('check-overlay').hidden = true;
+    lastCheckIdx = null;
+  }
+  // Bounced here from the app frame for the one-tap alert opt-in
+  // (?alerts=@handle): open that player's checklist and spotlight the button.
+  function autoOpenAlerts() {
+    try {
+      var m = /[?&]alerts=([^&]+)/.exec(location.search);
+      if (!m) return;
+      var want = decodeURIComponent(m[1]).toLowerCase();
+      var rows = data.standings || [];
+      for (var i = 0; i < rows.length; i++) {
+        if ((rows[i].handle || '').toLowerCase() === want) {
+          openChecklist(i);
+          if (history.replaceState) history.replaceState(null, '', location.pathname);
+          setTimeout(function () {
+            var b = document.querySelector('[data-push-handle]');
+            if (b) {
+              if (b.scrollIntoView) b.scrollIntoView({ block: 'center' });
+              b.classList.add('push-flash');
+            }
+          }, 350);
+          break;
+        }
+      }
+    } catch (e) {}
   }
   function initChecklist() {
     var tbody = document.getElementById('rows-season');
@@ -648,6 +675,10 @@
     });
   }
   var liveVapidKey = null;
+  var DIRECT_URL = 'https://david80023216.github.io/trophy-hunt-leaderboard/';
+  function isFramed() {
+    try { return window.self !== window.top; } catch (e) { return true; }
+  }
   function getVapidKey() {
     if (liveVapidKey) return Promise.resolve(liveVapidKey);
     if (PUSH_VAL_URL.indexOf('PLACEHOLDER') >= 0) return Promise.resolve(VAPID_PUBLIC);
@@ -663,6 +694,14 @@
     }
     if (PUSH_VAL_URL.indexOf('PLACEHOLDER') >= 0) {
       btn.textContent = 'Coming soon'; btn.disabled = true; return;
+    }
+    // Chrome/Firefox block the notification permission prompt inside
+    // cross-origin iframes (the app-frame leaderboard). Bounce the player to
+    // the direct address for the one-tap opt-in; the subscription is
+    // per-origin so it carries straight back to the frame.
+    if (isFramed() && typeof Notification !== 'undefined' && Notification.permission === 'default') {
+      window.open(DIRECT_URL + '?alerts=' + encodeURIComponent(handle), '_blank');
+      btn.textContent = 'Continue in the new tab'; btn.disabled = true; return;
     }
     btn.textContent = 'Requesting…'; btn.disabled = true;
     Notification.requestPermission().then(function (perm) {
@@ -698,4 +737,12 @@
   initChecklist();
   initPush();
   initPushButtons();
+  autoOpenAlerts();
+  // When the player returns from the opt-in tab, refresh the open checklist
+  // so the new alert state shows without reopening it.
+  window.addEventListener('focus', function () {
+    if (lastCheckIdx !== null && !document.getElementById('check-overlay').hidden) {
+      openChecklist(lastCheckIdx);
+    }
+  });
 })();
