@@ -1,23 +1,57 @@
 /* Trophy Hunt push service worker.
  * - push: shows the notification from the encrypted payload {title, body, url}
  * - notificationclick: opens the leaderboard (or the payload URL)
- * - fetch: minimal cache-first for the app shell so the PWA is installable.
+ * - fetch: NETWORK-FIRST for the page itself (index.html / navigations) so
+ *   standings and the subscriber counter are never served stale; cache-first
+ *   only for static shell assets (js/css/icons/manifest).
+ * 2026-10-07 fix: the old cache-first-for-everything strategy served a
+ * day-old page indefinitely (Shawn caught 576 subs / "updated 27h ago").
  */
-var SHELL_CACHE = 'th-shell-v1';
-var SHELL = ['./', './index.html', './app.js', './styles.css', './manifest.json',
+var SHELL_CACHE = 'th-shell-v2';
+var SHELL_ASSETS = ['./app.js', './styles.css', './manifest.json',
   './icon-192.png', './icon-512.png'];
 
+function isPageRequest(url) {
+  var p = url.pathname;
+  return p === '/' || p.endsWith('/') || p.endsWith('/index.html') ||
+    p.endsWith('trophy-hunt-leaderboard') || p.endsWith('trophy-hunt-leaderboard/');
+}
+
 self.addEventListener('install', function (e) {
-  e.waitUntil(caches.open(SHELL_CACHE).then(function (c) { return c.addAll(SHELL); })
+  e.waitUntil(caches.open(SHELL_CACHE).then(function (c) { return c.addAll(SHELL_ASSETS); })
     .then(function () { return self.skipWaiting(); }).catch(function () {}));
 });
+
 self.addEventListener('activate', function (e) {
-  e.waitUntil(self.clients.claim());
+  e.waitUntil(
+    caches.keys().then(function (keys) {
+      return Promise.all(keys.map(function (k) {
+        if (k !== SHELL_CACHE) return caches.delete(k);
+      }));
+    }).then(function () { return self.clients.claim(); })
+  );
 });
+
 self.addEventListener('fetch', function (e) {
   if (e.request.method !== 'GET') return;
   var u = new URL(e.request.url);
   if (u.origin !== self.location.origin) return;
+
+  if (isPageRequest(u) || e.request.mode === 'navigate') {
+    // NETWORK-FIRST for the page: always try live, fall back to cache offline.
+    e.respondWith(fetch(e.request).then(function (res) {
+      var copy = res.clone();
+      caches.open(SHELL_CACHE).then(function (c) { c.put(e.request, copy); });
+      return res;
+    }).catch(function () {
+      return caches.match(e.request).then(function (hit) {
+        return hit || caches.match('./index.html');
+      });
+    }));
+    return;
+  }
+
+  // CACHE-FIRST for static assets.
   e.respondWith(caches.match(e.request).then(function (hit) {
     return hit || fetch(e.request).then(function (res) {
       var copy = res.clone();
@@ -26,6 +60,7 @@ self.addEventListener('fetch', function (e) {
     }).catch(function () { return caches.match('./index.html'); });
   }));
 });
+
 self.addEventListener('push', function (e) {
   var d = { title: 'Trophy Hunt', body: '', url: 'https://tinyurl.com/trophy-hunt-leaderboard' };
   try { if (e.data) d = Object.assign(d, e.data.json()); } catch (err) {}
@@ -38,6 +73,7 @@ self.addEventListener('push', function (e) {
     renotify: true,
   }));
 });
+
 self.addEventListener('notificationclick', function (e) {
   e.notification.close();
   var url = (e.notification.data && e.notification.data.url) ||
