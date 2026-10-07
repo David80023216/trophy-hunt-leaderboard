@@ -662,6 +662,15 @@
         '<span class="check-label">Alerts requested — +50 lands on next board refresh</span>' +
         '<span class="check-pts">+50</span></li>';
     }
+    // Interim state while the player finishes the opt-in in the new tab
+    // (prevents the framed double-tap loop).
+    try {
+      if (sessionStorage.getItem('th-pushtab-' + handle) && st !== 'on' && !awarded) {
+        return '<li class="bonus-row pending"><span class="check-mark">🔔</span>' +
+          '<span class="check-label">Finish in the new tab — +50 lands on next board refresh</span>' +
+          '<span class="check-pts">+50</span></li>';
+      }
+    } catch (e) {}
     return '<li class="bonus-row pending"><span class="check-mark">🔔</span>' +
       '<span class="check-label">Get show alerts on this device</span>' +
       '<span class="check-pts">+50</span>' +
@@ -700,16 +709,24 @@
     // the direct address for the one-tap opt-in; the subscription is
     // per-origin so it carries straight back to the frame.
     if (isFramed() && typeof Notification !== 'undefined' && Notification.permission === 'default') {
+      var flag = 'th-pushtab-' + handle;
+      try {
+        if (sessionStorage.getItem(flag)) { btn.textContent = 'Check the new tab'; return; }
+        sessionStorage.setItem(flag, '1');
+      } catch (e) {}
       window.open(DIRECT_URL + '?alerts=' + encodeURIComponent(handle), '_blank');
       btn.textContent = 'Continue in the new tab'; btn.disabled = true; return;
     }
     btn.textContent = 'Requesting…'; btn.disabled = true;
     Notification.requestPermission().then(function (perm) {
-      if (perm !== 'granted') { btn.textContent = 'Blocked'; return; }
+      if (perm !== 'granted') { btn.textContent = 'Blocked — allow notifications for this site in your browser settings, then tap Turn on again'; return; }
       return getVapidKey().then(function (vk) {
         return navigator.serviceWorker.ready.then(function (reg) {
-          return reg.pushManager.subscribe({ userVisibleOnly: true,
-            applicationServerKey: urlB64ToBytes(vk) });
+          return reg.pushManager.getSubscription().then(function (existing) {
+            if (existing) return existing;
+            return reg.pushManager.subscribe({ userVisibleOnly: true,
+              applicationServerKey: urlB64ToBytes(vk) });
+          });
         });
       }).then(function (sub) {
         return fetch(PUSH_VAL_URL + '/subscribe', {
@@ -720,6 +737,14 @@
         if (res && res.ok) { setPushState(handle, 'pending'); }
         else { btn.textContent = 'Try again'; btn.disabled = false; return; }
         var li = btn.closest('li'); if (li) li.outerHTML = pushRowHtml(handle, false);
+        // The opt-in tab exists only for the permission step: confirm, then close it.
+        if (/[?&]alerts=/.test(location.search)) {
+          var ov = document.createElement('div');
+          ov.setAttribute('style', 'position:fixed;inset:0;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:18px;z-index:9999;');
+          ov.textContent = "You're in! Show alerts are on — +50 lands on the next board refresh. This tab will close.";
+          document.body.appendChild(ov);
+          setTimeout(function () { window.close(); }, 2500);
+        }
       }).catch(function () { btn.textContent = 'Try again'; btn.disabled = false; });
     });
   }
