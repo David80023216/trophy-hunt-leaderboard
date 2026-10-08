@@ -112,6 +112,22 @@
     }).join('');
   }
 
+  function renderVideos() {
+    var vids = data.videos || [];
+    var list = document.getElementById('video-list');
+    document.getElementById('video-empty').hidden = vids.length !== 0;
+    list.innerHTML = vids.map(function (v) {
+      var url = 'https://www.youtube.com/watch?v=' + encodeURIComponent(v.id);
+      var thumb = 'https://i.ytimg.com/vi/' + encodeURIComponent(v.id) + '/mqdefault.jpg';
+      var date = '';
+      try { date = fmtDay(v.published); } catch (e) { date = v.published || ''; }
+      return '<a class="video-row" href="' + url + '" target="_blank" rel="noopener">' +
+        '<img class="video-thumb" src="' + thumb + '" alt="" loading="lazy">' +
+        '<div class="video-meta"><div class="video-title">' + esc(v.title || 'Untitled') + '</div>' +
+        '<div class="video-date">' + esc(date) + '</div></div></a>';
+    }).join('');
+  }
+
 
   function applySearch() {
     var q = (document.getElementById('player-search').value || '').trim().toLowerCase();
@@ -471,7 +487,7 @@
     }
   }
 
-  /* Mobile-app shell: bottom tab bar switches between the five views. */
+  /* Mobile-app shell: bottom tab bar switches between the six views. */
   function initTabs() {
     var btns = document.querySelectorAll('.tabbar button');
     if (!btns.length) return;
@@ -761,6 +777,7 @@
   setInterval(tickCountdown, 1000);
   renderStandings();
   renderHistory();
+  renderVideos();
   initTabs();
   renderPupGrid();
   initChecklist();

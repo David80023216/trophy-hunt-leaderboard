@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css?v=1791500954">
+<link rel="stylesheet" href="styles.css?v=1791501651">
 </head>
 <body>
 
@@ -92,6 +92,13 @@
     </section>
   </section>
 
+  <section class="view" id="view-videos" aria-label="Videos">
+    <h2 class="view-title">🎬 CONTEST VIDEOS</h2>
+    <p class="board-caption view-sub">Every video since the contest started — newest first. Any comment enters!</p>
+    <div class="video-list" id="video-list"></div>
+    <p class="empty-msg" id="video-empty" hidden>No videos yet.</p>
+  </section>
+
   <section class="view" id="view-pups" aria-label="Pups">
     <h2 class="view-title">🐶 THE PUPS</h2>
     <p class="board-caption view-sub">The verified dogs of Season 1 — tap a pup to see them big.</p>
@@ -152,13 +159,14 @@
   <button type="button" data-view="view-standings" class="active"><span class="tab-ico">🏆</span><span class="tab-label">Standings</span></button>
   <button type="button" data-view="view-pups"><span class="tab-ico">🐶</span><span class="tab-label">Pups</span></button>
   <button type="button" data-view="view-history"><span class="tab-ico">🌟</span><span class="tab-label">History</span></button>
+  <button type="button" data-view="view-videos"><span class="tab-ico">🎬</span><span class="tab-label">Videos</span></button>
   <button type="button" data-view="view-helper"><span class="tab-ico">💬</span><span class="tab-label">Pup Helper</span></button>
   <button type="button" data-view="view-rules"><span class="tab-ico">📜</span><span class="tab-label">Rules</span></button>
 </nav>
 
 <script id="th-data" type="application/json">
 {
- "updated_at": "2026-10-08T18:09:44.178543-05:00",
+ "updated_at": "2026-10-08T18:21:28.916450-05:00",
  "season": {
   "name": "Season 1",
   "start": "2026-09-29",
@@ -719,46 +727,119 @@
  "standings_truncated": false,
  "videos": [
   {
-   "video_id": "nOty-Itnp8k",
-   "date": "2026-10-04",
-   "day": 6,
-   "title": "Day 6",
-   "comment_id": "Ugz4kYanGWSDXAURqAN4AaABAg"
+   "id": "qcXOzS0c6v4",
+   "title": "He heard her voice 🥹",
+   "published": "2026-10-08"
   },
   {
-   "video_id": "6kbJVycaKjA",
-   "date": "2026-10-03",
-   "day": 5,
-   "title": "Day 5",
-   "comment_id": ""
+   "id": "K7YQPr-7Pk8",
+   "title": "He lost his person 🥺",
+   "published": "2026-10-07"
   },
   {
-   "video_id": "G1uGxHAIuGs",
-   "date": "2026-10-02",
-   "day": 4,
-   "title": "Day 4",
-   "comment_id": ""
+   "id": "Pj6rbEOB0wc",
+   "title": "🔥 Ned is on a 2-day streak",
+   "published": "2026-10-07"
   },
   {
-   "video_id": "nG7fmVMShj0",
-   "date": "2026-10-01",
-   "day": 3,
-   "title": "Day 3",
-   "comment_id": "Ugwt1yVOpIsJEjBz1h14AaABAg"
+   "id": "sRDLQCxQuYE",
+   "title": "The stray nobody saw 🥺",
+   "published": "2026-10-06"
   },
   {
-   "video_id": "nr_tOU9W4ho",
-   "date": "2026-09-30",
-   "day": 2,
-   "title": "Day 2",
-   "comment_id": "Ugx1LFB3-YiBYRx45S94AaABAg"
+   "id": "Ws7Pi-LH92E",
+   "title": "What's YOUR dog's name? 👇",
+   "published": "2026-10-06"
   },
   {
-   "video_id": "ovGjgMlsEks",
-   "date": "2026-09-29",
-   "day": 1,
-   "title": "Day 1",
-   "comment_id": "UgwxlRHX6ETD_JBp4WZ4AaABAg"
+   "id": "lWP7g3HrKbA",
+   "title": "Dogs just know 🥺",
+   "published": "2026-10-05"
+  },
+  {
+   "id": "E2ObeoXb1yQ",
+   "title": "The storm came fast 🥺",
+   "published": "2026-10-05"
+  },
+  {
+   "id": "R24VLKXKuNc",
+   "title": "Happiness looks like this 🥹",
+   "published": "2026-10-04"
+  },
+  {
+   "id": "nOty-Itnp8k",
+   "title": "What's YOUR dog's name? 👇",
+   "published": "2026-10-04"
+  },
+  {
+   "id": "ncHXYJVYVvw",
+   "title": "She believes in him 🥺",
+   "published": "2026-10-04"
+  },
+  {
+   "id": "drC5CFD-zjU",
+   "title": "His first day home 🥹",
+   "published": "2026-10-03"
+  },
+  {
+   "id": "6kbJVycaKjA",
+   "title": "Cute Dog Contest 👑 She's 7 Points From Stealing the Crown 😱",
+   "published": "2026-10-03"
+  },
+  {
+   "id": "gMFmIbeWgeU",
+   "title": "He never leaves this spot 🥺",
+   "published": "2026-10-03"
+  },
+  {
+   "id": "vAgdQY7v1NI",
+   "title": "Which one are you taking home? 🐶",
+   "published": "2026-10-02"
+  },
+  {
+   "id": "G1uGxHAIuGs",
+   "title": "🔥 1-Point Race 🏆 — enter YOUR dog 👇",
+   "published": "2026-10-02"
+  },
+  {
+   "id": "kyQi5FMlz0g",
+   "title": "Your dog could win this 🏆",
+   "published": "2026-10-02"
+  },
+  {
+   "id": "nG7fmVMShj0",
+   "title": "1 point decides it 🏆 enter YOUR dog 👇",
+   "published": "2026-10-01"
+  },
+  {
+   "id": "7EWiqogJgqk",
+   "title": "World's smallest bodyguard 😤",
+   "published": "2026-09-30"
+  },
+  {
+   "id": "nr_tOU9W4ho",
+   "title": "Who's Tomorrow's Top Dog? 🏆 Daily Dog Show (Day 2)",
+   "published": "2026-09-30"
+  },
+  {
+   "id": "wyoyigXG52M",
+   "title": "He jumped in WITHOUT thinking 😳",
+   "published": "2026-09-30"
+  },
+  {
+   "id": "N7FIl-m05i8",
+   "title": "He's coming RIGHT at you 😳",
+   "published": "2026-09-29"
+  },
+  {
+   "id": "ovGjgMlsEks",
+   "title": "Who's Tomorrow's Top Dog? 🏆 Daily Dog Show (Day 1)",
+   "published": "2026-09-29"
+  },
+  {
+   "id": "yhab5tPOwC0",
+   "title": "Wait for the DIVE 😤",
+   "published": "2026-09-29"
   }
  ],
  "spotlight_today": {
@@ -863,6 +944,6 @@
   </div>
 </div>
 
-<script src="app.js?v=1791500960"></script>
+<script src="app.js?v=1791501670"></script>
 </body>
 </html>
