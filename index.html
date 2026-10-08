@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css?v=1791502540">
+<link rel="stylesheet" href="styles.css?v=1791503112">
 </head>
 <body>
 
@@ -24,9 +24,19 @@
   </div>
   <div class="appbar-side">
     <div class="countdown-chip" id="countdown">⏳ —</div>
+    <button id="gsi-signin" class="gsi-signin" hidden aria-label="Sign in with Google">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.3H12v4.3h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.6 2.8c2.2-2 3.8-5 3.8-8.6z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 7.9-2.9l-3.8-2.9c-1 .7-2.4 1.2-4.1 1.2-3.2 0-5.9-2.1-6.8-5l-3.8 2.9C3.3 21.3 7.3 24 12 24z"/><path fill="#FBBC05" d="M5.2 14.4c-.2-.7-.4-1.5-.4-2.4s.1-1.7.4-2.4L1.4 6.9C.5 8.6 0 10.2 0 12s.5 3.4 1.4 4.9l3.8-2.5z"/><path fill="#EA4335" d="M12 4.7c1.8 0 3 .8 3.7 1.4l3.3-3.2C17.9 1.1 15.2 0 12 0 7.3 0 3.3 2.7 1.4 6.9l3.8 2.9c.9-2.9 3.6-5.1 6.8-5.1z"/></svg>
+      <span>Sign in</span>
+    </button>
+    <button id="gsi-signout" class="gsi-chip" hidden aria-label="Sign out">
+      <span class="gsi-avatar" id="gsi-avatar">?</span>
+      <span id="gsi-handle">—</span>
+    </button>
     <a class="appbar-sub-btn" href="https://www.youtube.com/channel/UC4ghQwAZYqXrp6o5o-ZHn-Q?sub_confirmation=1" target="_blank" rel="noopener" aria-label="Subscribe to Gone To The Dogs">🔔</a>
   </div>
 </header>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 
 <main class="views">
 
@@ -174,7 +184,7 @@
 
 <script id="th-data" type="application/json">
 {
- "updated_at": "2026-10-08T18:36:44.784494-05:00",
+ "updated_at": "2026-10-08T18:47:27.817879-05:00",
  "season": {
   "name": "Season 1",
   "start": "2026-09-29",
@@ -183,6 +193,7 @@
  "standings": [
   {
    "handle": "@housemouse17",
+   "channel_id": "UCQQA3jkq7oL2T7rubP8TDhA",
    "dog_name": "Ned",
    "avatar": "https://yt3.ggpht.com/1W_lS6p_JaCH4XXwByokBR0-MYCkHeLgjqYpCDYfXb-6AefxUnnhMaRZcugRmxs4FgrkpRzEew=s176-c-k-c0x00ffffff-no-rj",
    "season_points": 78,
@@ -249,6 +260,7 @@
   },
   {
    "handle": "@YOURS.TRULY.JANE27",
+   "channel_id": "UCLJkThkiQILK7-uzw7G-8eg",
    "dog_name": "",
    "avatar": "https://yt3.ggpht.com/7NX_g22DmDT55WKHcg7lG32qz_Qj_6TZlHT6CTr1xxqVYp4cmYomnnnAwAg-imXTStA9T8kC=s176-c-k-c0x00ffffff-no-rj",
    "season_points": 50,
@@ -312,6 +324,7 @@
   },
   {
    "handle": "@AmandaHagins",
+   "channel_id": "UCxpx3YysNehoUIVt5LtWpAQ",
    "dog_name": "Lola",
    "avatar": "",
    "season_points": 27,
@@ -378,6 +391,7 @@
   },
   {
    "handle": "@miguelpescado",
+   "channel_id": "UCkO8lE-4-8F21EN87pbTUUg",
    "dog_name": "",
    "avatar": "https://yt3.ggpht.com/ytc/AIdro_nzciRCnAEpbzq4e2U3hG8DdjaFLB_RIiVtCyuqptANCoY=s176-c-k-c0x00ffffff-no-rj",
    "season_points": 25,
@@ -441,6 +455,7 @@
   },
   {
    "handle": "@Poppywiththesillyd0gies",
+   "channel_id": "UCRxTP61w5H_GmBpx2RVgOpg",
    "dog_name": "",
    "avatar": "https://yt3.ggpht.com/OeW-8XzQxaapgIg1LvDw_Xp3zZETJhhn5CF9Q_1TRVCbZO8f5TJxCBz-6Uz-4JT1en7v4Z0KWA=s176-c-k-c0x00ffffff-no-rj",
    "season_points": 25,
@@ -504,6 +519,7 @@
   },
   {
    "handle": "@v4lee6241",
+   "channel_id": "UChYnzvpsNzPZrjXD-Tabz_Q",
    "dog_name": "Luna",
    "avatar": "",
    "season_points": 11,
@@ -569,6 +585,7 @@
   },
   {
    "handle": "@THEchannel-c8p",
+   "channel_id": "UCNyXAsMBZe328R1vXlGQkhw",
    "dog_name": "",
    "avatar": "https://yt3.ggpht.com/8HUJa36a4QKl93Km3qchzln4rGE8VOtplxyJrmg2Izpe4XRsYJhxidO90sJ7W5FwizOWREAx0g=s176-c-k-c0x00ffffff-no-rj",
    "season_points": 10,
@@ -632,6 +649,7 @@
   },
   {
    "handle": "@jaimiedouble8340",
+   "channel_id": "UCqhu43dy9tVzTP12q6xfK_g",
    "dog_name": "",
    "avatar": "https://yt3.ggpht.com/ytc/AIdro_nnsruDFO1XJcnv_cddH5rjUbyJMc0u0ynaphb_kT8xkwOE=s176-c-k-c0x00ffffff-no-rj",
    "season_points": 2,
@@ -695,6 +713,7 @@
   },
   {
    "handle": "@The-goat-32",
+   "channel_id": "UCse4Gkv8lL6evK2DUEDYKmQ",
    "dog_name": "",
    "avatar": "",
    "season_points": 1,
@@ -978,6 +997,6 @@
   </div>
 </div>
 
-<script src="app.js?v=1791502540"></script>
+<script src="app.js?v=1791503141"></script>
 </body>
 </html>

@@ -154,6 +154,140 @@
   function setMe(h) {
     try { localStorage.setItem('th-me', h || ''); } catch (e) {}
   }
+  function toast(msg) {
+    var t = document.getElementById('toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'toast';
+      t.setAttribute('style', 'position:fixed;left:50%;bottom:76px;transform:translateX(-50%);background:#1c2536;color:#f3f6fb;border:1px solid #2a3348;border-radius:10px;padding:.6rem .9rem;font-size:.85rem;z-index:200;max-width:88vw;text-align:center;box-shadow:0 4px 18px rgba(0,0,0,.45);');
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.display = 'block';
+    clearTimeout(t._h);
+    t._h = setTimeout(function () { t.style.display = 'none'; }, 4200);
+  }
+  /* ---- Google sign-in (Identity Services, youtube.readonly scope) ----
+     Paste the OAuth client id below once the Google Cloud client exists;
+     until then the Sign in button stays hidden and the name picker is the
+     identity path. Flow: popup -> access token -> channels.list(mine=true)
+     -> match channel_id against standings -> setMe(handle). The token is
+     revoked right after the one lookup; only the handle is remembered. */
+  var GOOGLE_CLIENT_ID = '';
+  var gsiTokenClient = null;
+
+  function gsiRemembered() {
+    try {
+      return { handle: localStorage.getItem('th-me') || '', via: localStorage.getItem('th-via') || '' };
+    } catch (e) { return { handle: '', via: '' }; }
+  }
+  function gsiUpdateChrome() {
+    var btn = document.getElementById('gsi-signin');
+    var chip = document.getElementById('gsi-signout');
+    if (!btn || !chip) return;
+    var r = gsiRemembered();
+    var signedViaGoogle = !!(r.handle && r.via === 'google');
+    btn.hidden = !GOOGLE_CLIENT_ID || signedViaGoogle;
+    chip.hidden = !signedViaGoogle;
+    if (signedViaGoogle) {
+      document.getElementById('gsi-handle').textContent = r.handle;
+      document.getElementById('gsi-avatar').textContent = (r.handle.charAt(1) || r.handle.charAt(0) || '?').toUpperCase();
+    }
+  }
+  function gsiFindByChannel(cid) {
+    var st = data.standings || [];
+    for (var i = 0; i < st.length; i++) {
+      if (st[i].channel_id && st[i].channel_id === cid) return st[i];
+    }
+    return null;
+  }
+  function gsiOnToken(resp) {
+    var btn = document.getElementById('gsi-signin');
+    if (!resp || resp.error) {
+      if (btn) { btn.disabled = false; }
+      toast('Sign-in didn\'t complete — tap to try again.');
+      return;
+    }
+    var token = resp.access_token;
+    fetch('https://www.googleapis.com/youtube/v3/channels?part=id,snippet&mine=true', {
+      headers: { Authorization: 'Bearer ' + token }
+    }).then(function (r) { return r.json(); }).then(function (d) {
+      var ch = d && d.items && d.items[0];
+      if (window.google && google.accounts && google.accounts.oauth2) {
+        try { google.accounts.oauth2.revoke(token, function () {}); } catch (e) {}
+      }
+      if (!ch || !ch.id) {
+        toast('That Google account has no YouTube channel yet.');
+        if (btn) { btn.disabled = false; }
+        return;
+      }
+      var match = gsiFindByChannel(ch.id);
+      if (match) {
+        setMe(match.handle);
+        try { localStorage.setItem('th-via', 'google'); } catch (e) {}
+        gsiUpdateChrome();
+        var sel = document.getElementById('me-select');
+        if (sel) sel.value = match.handle;
+        var hint = document.getElementById('me-hint');
+        if (hint) hint.hidden = false;
+        renderVideos();
+        toast('Signed in as ' + match.handle + ' — your stuff loaded automatically.');
+      } else {
+        toast('Signed in, but no Trophy Hunt entries on this YouTube channel yet — comment your dog\'s name on any video to enter!');
+      }
+      if (btn) { btn.disabled = false; }
+    }).catch(function () {
+      if (btn) { btn.disabled = false; }
+      toast('Couldn\'t reach YouTube — check your connection and try again.');
+    });
+  }
+  function initGoogleSignIn() {
+    var btn = document.getElementById('gsi-signin');
+    var chip = document.getElementById('gsi-signout');
+    if (!btn || !chip) return;
+    gsiUpdateChrome();
+    if (!GOOGLE_CLIENT_ID) return; // not configured yet: picker covers identity
+    // Wait for the GIS script (loaded async) before building the token client.
+    var tries = 0;
+    var timer = setInterval(function () {
+      tries++;
+      if (window.google && google.accounts && google.accounts.oauth2) {
+        clearInterval(timer);
+        gsiTokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: GOOGLE_CLIENT_ID,
+          scope: 'https://www.googleapis.com/auth/youtube.readonly',
+          callback: gsiOnToken
+        });
+        btn.hidden = false;
+        btn.addEventListener('click', function () {
+          if (!gsiTokenClient) return;
+          btn.disabled = true;
+          try {
+            // Popup flow: the page itself never redirects. Inside the
+            // leaderboard's iframe wrapper Google still opens its own
+            // window, so sign-in isn't trapped by the frame.
+            gsiTokenClient.requestAccessToken({ prompt: '' });
+          } catch (e) {
+            btn.disabled = false;
+            toast('Your browser blocked the Google sign-in window — allow popups and try again.');
+          }
+        });
+        gsiUpdateChrome();
+      } else if (tries > 40) {
+        clearInterval(timer); // GIS unreachable; picker remains the identity path
+      }
+    }, 250);
+    chip.addEventListener('click', function () {
+      setMe('');
+      try { localStorage.removeItem('th-via'); } catch (e) {}
+      gsiUpdateChrome();
+      var sel = document.getElementById('me-select');
+      if (sel) sel.value = '';
+      var hint = document.getElementById('me-hint');
+      if (hint) hint.hidden = true;
+      renderVideos();
+    });
+  }
   function initMePicker() {
     var sel = document.getElementById('me-select');
     if (!sel) return;
@@ -170,6 +304,8 @@
     document.getElementById('me-hint').hidden = !getMe();
     sel.addEventListener('change', function () {
       setMe(sel.value);
+      try { localStorage.removeItem('th-via'); } catch (e) {}
+      if (typeof gsiUpdateChrome === 'function') gsiUpdateChrome();
       document.getElementById('me-hint').hidden = !sel.value;
       renderVideos();
     });
@@ -825,6 +961,7 @@
   renderStandings();
   renderHistory();
   initMePicker();
+  initGoogleSignIn();
   renderVideos();
   initTabs();
   renderPupGrid();

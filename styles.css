@@ -556,6 +556,28 @@ body {
   background: #ff0033; font-size: 1.1rem; text-decoration: none;
 }
 
+/* Google sign-in (Identity Services; button hidden until an OAuth client id is configured) */
+.gsi-signin {
+  display: inline-flex; align-items: center; gap: .45rem;
+  background: #fff; color: #1f1f1f; border: none; border-radius: 8px;
+  padding: .42rem .8rem; font-size: .8rem; font-weight: 500; cursor: pointer;
+  font-family: Roboto, system-ui, sans-serif; white-space: nowrap;
+}
+.gsi-signin svg { width: 16px; height: 16px; flex: none; }
+.gsi-signin[hidden] { display: none; }
+.gsi-chip {
+  display: inline-flex; align-items: center; gap: .45rem;
+  background: rgba(255, 211, 77, .12); border: 1px solid var(--gold-dim);
+  color: var(--gold); border-radius: 999px; padding: .28rem .7rem .28rem .3rem;
+  font-size: .78rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+}
+.gsi-chip[hidden] { display: none; }
+.gsi-avatar {
+  width: 1.5rem; height: 1.5rem; border-radius: 50%;
+  background: var(--gold); color: #0b0f14; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; font-size: .8rem;
+}
+
 /* Tab views */
 .views { max-width: 860px; margin: 0 auto; padding: .9rem .9rem 1.4rem; }
 .view { display: none; }
