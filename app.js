@@ -173,7 +173,7 @@
      identity path. Flow: popup -> access token -> channels.list(mine=true)
      -> match channel_id against standings -> setMe(handle). The token is
      revoked right after the one lookup; only the handle is remembered. */
-  var GOOGLE_CLIENT_ID = '';
+  var GOOGLE_CLIENT_ID = '344477831008-0khp918onjd0qsvbmnpal8dg5jmjqs1j.apps.googleusercontent.com';
   var gsiTokenClient = null;
 
   function gsiRemembered() {
@@ -187,12 +187,18 @@
     if (!btn || !chip) return;
     var r = gsiRemembered();
     var signedViaGoogle = !!(r.handle && r.via === 'google');
-    btn.hidden = !GOOGLE_CLIENT_ID || signedViaGoogle;
+    var available = !!GOOGLE_CLIENT_ID;
+    btn.hidden = !available || signedViaGoogle;
     chip.hidden = !signedViaGoogle;
     if (signedViaGoogle) {
       document.getElementById('gsi-handle').textContent = r.handle;
       document.getElementById('gsi-avatar').textContent = (r.handle.charAt(1) || r.handle.charAt(0) || '?').toUpperCase();
     }
+    // Videos tab: legend when identified, sign-in nudge when available but signed out.
+    var hint = document.getElementById('me-hint');
+    var prompt = document.getElementById('signin-prompt');
+    if (hint) hint.hidden = !r.handle;
+    if (prompt) prompt.hidden = !(available && !signedViaGoogle);
   }
   function gsiFindByChannel(cid) {
     var st = data.standings || [];
@@ -226,10 +232,6 @@
         setMe(match.handle);
         try { localStorage.setItem('th-via', 'google'); } catch (e) {}
         gsiUpdateChrome();
-        var sel = document.getElementById('me-select');
-        if (sel) sel.value = match.handle;
-        var hint = document.getElementById('me-hint');
-        if (hint) hint.hidden = false;
         renderVideos();
         toast('Signed in as ' + match.handle + ' — your stuff loaded automatically.');
       } else {
@@ -281,35 +283,10 @@
       setMe('');
       try { localStorage.removeItem('th-via'); } catch (e) {}
       gsiUpdateChrome();
-      var sel = document.getElementById('me-select');
-      if (sel) sel.value = '';
-      var hint = document.getElementById('me-hint');
-      if (hint) hint.hidden = true;
       renderVideos();
     });
   }
-  function initMePicker() {
-    var sel = document.getElementById('me-select');
-    if (!sel) return;
-    var seen = {};
-    (data.standings || []).forEach(function (s) {
-      if (s.handle && !seen[s.handle]) {
-        seen[s.handle] = true;
-        var o = document.createElement('option');
-        o.value = s.handle; o.textContent = s.handle;
-        sel.appendChild(o);
-      }
-    });
-    sel.value = getMe();
-    document.getElementById('me-hint').hidden = !getMe();
-    sel.addEventListener('change', function () {
-      setMe(sel.value);
-      try { localStorage.removeItem('th-via'); } catch (e) {}
-      if (typeof gsiUpdateChrome === 'function') gsiUpdateChrome();
-      document.getElementById('me-hint').hidden = !sel.value;
-      renderVideos();
-    });
-  }
+  /* (name picker removed 2026-10-08 — Google sign-in is the identity path) */
 
 
   function applySearch() {
@@ -960,7 +937,6 @@
   setInterval(tickCountdown, 1000);
   renderStandings();
   renderHistory();
-  initMePicker();
   initGoogleSignIn();
   renderVideos();
   initTabs();

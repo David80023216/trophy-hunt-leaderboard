@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css?v=1791503112">
+<link rel="stylesheet" href="styles.css?v=1791503443">
 </head>
 <body>
 
@@ -105,12 +105,7 @@
   <section class="view" id="view-videos" aria-label="Videos">
     <h2 class="view-title">🎬 CONTEST VIDEOS</h2>
     <p class="board-caption view-sub">Every video since the contest started — newest first. Any comment enters!</p>
-    <div class="me-picker" id="me-picker">
-      <label for="me-select">Who are you?</label>
-      <select id="me-select" aria-label="Pick your player name">
-        <option value="">— pick your name —</option>
-      </select>
-    </div>
+    <p class="board-caption view-sub" id="signin-prompt" hidden>Tap <b>Sign in</b> at the top of the page — your ✅ checkmarks and +10 bonuses appear automatically.</p>
     <p class="board-caption view-sub me-hint" id="me-hint" hidden>✅ = entered today · <span class="badge-new">+10</span> = new video bonus waiting · ✓ = already explored</p>
     <div class="video-list" id="video-list"></div>
     <p class="empty-msg" id="video-empty" hidden>No videos yet.</p>
@@ -184,7 +179,7 @@
 
 <script id="th-data" type="application/json">
 {
- "updated_at": "2026-10-08T18:47:27.817879-05:00",
+ "updated_at": "2026-10-08T18:56:30.118574-05:00",
  "season": {
   "name": "Season 1",
   "start": "2026-09-29",
@@ -997,6 +992,6 @@
   </div>
 </div>
 
-<script src="app.js?v=1791503141"></script>
+<script src="app.js?v=1791503479"></script>
 </body>
 </html>

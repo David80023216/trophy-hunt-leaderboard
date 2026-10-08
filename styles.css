@@ -302,14 +302,7 @@ button.player-name.check-link:hover { color: var(--gold); }
 .video-title { font-size: .92rem; font-weight: 600; color: var(--text); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .video-date { font-size: .78rem; color: var(--muted, #9aa4b2); margin-top: .2rem; }
 
-/* Videos tab: identity picker + per-video status badges. */
-.me-picker { max-width: 640px; margin: .8rem auto 0; padding: 0 1rem; display: flex; align-items: center; gap: .6rem; }
-.me-picker label { font-size: .9rem; color: var(--text); font-weight: 600; white-space: nowrap; }
-.me-picker select {
-  flex: 1; padding: .55rem .7rem; border-radius: 10px;
-  background: var(--card); color: var(--text); border: 1px solid var(--line);
-  font-size: .92rem; font-family: inherit;
-}
+/* Videos tab: per-video status badges (identity is Google sign-in now). */
 .me-hint { margin-top: .5rem; }
 .video-row { position: relative; }
 .video-badges { position: absolute; top: .4rem; right: .5rem; display: flex; gap: .3rem; align-items: center; }
