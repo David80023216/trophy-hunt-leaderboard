@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css?v=1791501651">
+<link rel="stylesheet" href="styles.css?v=1791502540">
 </head>
 <body>
 
@@ -95,6 +95,13 @@
   <section class="view" id="view-videos" aria-label="Videos">
     <h2 class="view-title">🎬 CONTEST VIDEOS</h2>
     <p class="board-caption view-sub">Every video since the contest started — newest first. Any comment enters!</p>
+    <div class="me-picker" id="me-picker">
+      <label for="me-select">Who are you?</label>
+      <select id="me-select" aria-label="Pick your player name">
+        <option value="">— pick your name —</option>
+      </select>
+    </div>
+    <p class="board-caption view-sub me-hint" id="me-hint" hidden>✅ = entered today · <span class="badge-new">+10</span> = new video bonus waiting · ✓ = already explored</p>
     <div class="video-list" id="video-list"></div>
     <p class="empty-msg" id="video-empty" hidden>No videos yet.</p>
   </section>
@@ -134,6 +141,7 @@
       <p><strong>🔥 Streaks</strong> — Play consecutive days: 3 days +10 · 7 days +25 · 14 days +50 · 30 days +100. Miss a day and your streak resets.</p>
       <p><strong>📸 Photo bonus</strong> — <a href="https://forms.gle/HEtMitfJZLq7NQPL9">Submit a real photo of your dog</a> → +5 pts every day.</p>
       <p><strong>🎬 Video bonus</strong> — send a real clip of your dog for the show → +15 pts every day. Real clips only, no stock or AI.</p>
+      <p><strong>🧭 Explorer bonus</strong> — First scoring entry on any video → +10 pts, once per video. Check the Videos tab to see which videos still have your bonus waiting!</p>
       <p><strong>✅ Daily checklist</strong> — tap your name in the standings to see what's still up for grabs today. Clear the whole list in one day → +25 bonus.</p>
       <p><strong>👑 Top Dog</strong> — Most Season 1 points wins: a dedicated video about YOUR dog + your dog on our channel banner for the month!</p>
     </div>
@@ -166,7 +174,7 @@
 
 <script id="th-data" type="application/json">
 {
- "updated_at": "2026-10-08T18:21:28.916450-05:00",
+ "updated_at": "2026-10-08T18:36:44.784494-05:00",
  "season": {
   "name": "Season 1",
   "start": "2026-09-29",
@@ -180,6 +188,11 @@
    "season_points": 78,
    "today_points": 0,
    "streak": 2,
+   "videos_today": [],
+   "videos_ever": [
+    "nOty-Itnp8k",
+    "vAgdQY7v1NI"
+   ],
    "photo": "dogs/full/housemouse17.jpg",
    "photo_count": 2,
    "checklist": {
@@ -241,6 +254,8 @@
    "season_points": 50,
    "today_points": 0,
    "streak": 0,
+   "videos_today": [],
+   "videos_ever": [],
    "photo": "",
    "photo_count": 0,
    "checklist": {
@@ -302,6 +317,11 @@
    "season_points": 27,
    "today_points": 0,
    "streak": 1,
+   "videos_today": [],
+   "videos_ever": [
+    "G1uGxHAIuGs",
+    "vAgdQY7v1NI"
+   ],
    "photo": "",
    "photo_count": 0,
    "checklist": {
@@ -363,6 +383,8 @@
    "season_points": 25,
    "today_points": 0,
    "streak": 0,
+   "videos_today": [],
+   "videos_ever": [],
    "photo": "",
    "photo_count": 0,
    "checklist": {
@@ -424,6 +446,8 @@
    "season_points": 25,
    "today_points": 0,
    "streak": 0,
+   "videos_today": [],
+   "videos_ever": [],
    "photo": "",
    "photo_count": 0,
    "checklist": {
@@ -485,6 +509,10 @@
    "season_points": 11,
    "today_points": 0,
    "streak": 1,
+   "videos_today": [],
+   "videos_ever": [
+    "nOty-Itnp8k"
+   ],
    "photo": "",
    "photo_count": 0,
    "checklist": {
@@ -546,6 +574,8 @@
    "season_points": 10,
    "today_points": 0,
    "streak": 0,
+   "videos_today": [],
+   "videos_ever": [],
    "photo": "",
    "photo_count": 0,
    "checklist": {
@@ -607,6 +637,8 @@
    "season_points": 2,
    "today_points": 0,
    "streak": 0,
+   "videos_today": [],
+   "videos_ever": [],
    "photo": "",
    "photo_count": 0,
    "checklist": {
@@ -668,6 +700,8 @@
    "season_points": 1,
    "today_points": 0,
    "streak": 1,
+   "videos_today": [],
+   "videos_ever": [],
    "photo": "",
    "photo_count": 0,
    "checklist": {
@@ -944,6 +978,6 @@
   </div>
 </div>
 
-<script src="app.js?v=1791501670"></script>
+<script src="app.js?v=1791502540"></script>
 </body>
 </html>

@@ -298,9 +298,33 @@ button.player-name.check-link:hover { color: var(--gold); }
 }
 .video-row:active { transform: scale(.98); }
 .video-thumb { flex: 0 0 96px; width: 96px; aspect-ratio: 16/9; border-radius: 8px; object-fit: cover; background: #161d29; }
-.video-meta { min-width: 0; }
+.video-meta { min-width: 0; padding-right: 2.4rem; }
 .video-title { font-size: .92rem; font-weight: 600; color: var(--text); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .video-date { font-size: .78rem; color: var(--muted, #9aa4b2); margin-top: .2rem; }
+
+/* Videos tab: identity picker + per-video status badges. */
+.me-picker { max-width: 640px; margin: .8rem auto 0; padding: 0 1rem; display: flex; align-items: center; gap: .6rem; }
+.me-picker label { font-size: .9rem; color: var(--text); font-weight: 600; white-space: nowrap; }
+.me-picker select {
+  flex: 1; padding: .55rem .7rem; border-radius: 10px;
+  background: var(--card); color: var(--text); border: 1px solid var(--line);
+  font-size: .92rem; font-family: inherit;
+}
+.me-hint { margin-top: .5rem; }
+.video-row { position: relative; }
+.video-badges { position: absolute; top: .4rem; right: .5rem; display: flex; gap: .3rem; align-items: center; }
+.badge-check {
+  width: 1.7rem; height: 1.7rem; border-radius: 50%;
+  background: #22c55e; color: #06130b; font-weight: 800; font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.4);
+}
+.badge-check.dim { background: #3a4356; color: #9aa4b2; }
+.badge-new {
+  background: var(--gold); color: #0b0f14; font-weight: 800; font-size: .78rem;
+  border-radius: 999px; padding: .2rem .55rem; white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,.4);
+}
   margin-top: 1rem;
   background: rgba(255, 211, 77, .08);
   border: 1px solid var(--gold-dim);

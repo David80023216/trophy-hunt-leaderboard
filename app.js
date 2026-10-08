@@ -116,16 +116,63 @@
     var vids = data.videos || [];
     var list = document.getElementById('video-list');
     document.getElementById('video-empty').hidden = vids.length !== 0;
+    var me = getMe();
+    var entry = null;
+    if (me) {
+      var st = data.standings || [];
+      for (var i = 0; i < st.length; i++) {
+        if (st[i].handle === me) { entry = st[i]; break; }
+      }
+    }
+    var today = {}, ever = {};
+    if (entry) {
+      (entry.videos_today || []).forEach(function (v) { today[v] = true; });
+      (entry.videos_ever || []).forEach(function (v) { ever[v] = true; });
+    }
     list.innerHTML = vids.map(function (v) {
       var url = 'https://www.youtube.com/watch?v=' + encodeURIComponent(v.id);
       var thumb = 'https://i.ytimg.com/vi/' + encodeURIComponent(v.id) + '/mqdefault.jpg';
       var date = '';
       try { date = fmtDay(v.published); } catch (e) { date = v.published || ''; }
+      var badges = '';
+      if (entry) {
+        if (today[v.id]) badges = '<span class="badge-check" title="Entered today">✓</span>';
+        else if (!ever[v.id]) badges = '<span class="badge-new" title="Explorer bonus available">+10</span>';
+        else badges = '<span class="badge-check dim" title="Already explored">✓</span>';
+      }
       return '<a class="video-row" href="' + url + '" target="_blank" rel="noopener">' +
         '<img class="video-thumb" src="' + thumb + '" alt="" loading="lazy">' +
         '<div class="video-meta"><div class="video-title">' + esc(v.title || 'Untitled') + '</div>' +
-        '<div class="video-date">' + esc(date) + '</div></div></a>';
+        '<div class="video-date">' + esc(date) + '</div></div>' +
+        (badges ? '<div class="video-badges">' + badges + '</div>' : '') + '</a>';
     }).join('');
+  }
+
+  function getMe() {
+    try { return localStorage.getItem('th-me') || ''; } catch (e) { return ''; }
+  }
+  function setMe(h) {
+    try { localStorage.setItem('th-me', h || ''); } catch (e) {}
+  }
+  function initMePicker() {
+    var sel = document.getElementById('me-select');
+    if (!sel) return;
+    var seen = {};
+    (data.standings || []).forEach(function (s) {
+      if (s.handle && !seen[s.handle]) {
+        seen[s.handle] = true;
+        var o = document.createElement('option');
+        o.value = s.handle; o.textContent = s.handle;
+        sel.appendChild(o);
+      }
+    });
+    sel.value = getMe();
+    document.getElementById('me-hint').hidden = !getMe();
+    sel.addEventListener('change', function () {
+      setMe(sel.value);
+      document.getElementById('me-hint').hidden = !sel.value;
+      renderVideos();
+    });
   }
 
 
@@ -777,6 +824,7 @@
   setInterval(tickCountdown, 1000);
   renderStandings();
   renderHistory();
+  initMePicker();
   renderVideos();
   initTabs();
   renderPupGrid();
