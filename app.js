@@ -105,7 +105,6 @@
   function renderHistory() {
     var hist = data.spotlight_history || [];
     if (!hist.length) return;
-    document.getElementById('history-board').hidden = false;
     var tbody = document.getElementById('rows-history');
     tbody.innerHTML = hist.slice().reverse().map(function (h) {
       return '<tr><td>' + esc(h.date || '') + '</td><td>🐶 ' + esc(h.dog_name || '—') +
@@ -472,7 +471,7 @@
     }
   }
 
-  /* Mobile-app shell: bottom tab bar switches between the four views. */
+  /* Mobile-app shell: bottom tab bar switches between the five views. */
   function initTabs() {
     var btns = document.querySelectorAll('.tabbar button');
     if (!btns.length) return;

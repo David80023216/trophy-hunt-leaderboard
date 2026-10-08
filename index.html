@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css?v=1791500547">
+<link rel="stylesheet" href="styles.css?v=1791500954">
 </head>
 <body>
 
@@ -53,19 +53,19 @@
       </div>
     </section>
 
-    <div class="search-wrap">
-      <input type="search" id="player-search" placeholder="🔍 Search players…" autocomplete="off" aria-label="Search players">
-    </div>
-
     <section class="how-strip" aria-label="How it works">
       <h2>🐶 HOW IT WORKS</h2>
       <ol>
-        <li><strong>Comment your dog's name</strong><span>on any hunt video — earn points every day</span></li>
+        <li><strong>Any comment enters</strong><span>comment on any Gone To The Dogs video — add your dog's name to earn points daily</span></li>
         <li><strong>Keep your streak alive</strong><span>play daily for bonus points, up to +100</span></li>
         <li><strong>Top Dog wins</strong><span>most points by Oct 31 → a video about YOUR dog + banner spot</span></li>
       </ol>
       <button type="button" class="how-rules-link" data-goto-rules>Full rules →</button>
     </section>
+
+    <div class="search-wrap">
+      <input type="search" id="player-search" placeholder="🔍 Search players…" autocomplete="off" aria-label="Search players">
+    </div>
 
     <section class="board">
       <h2>SEASON STANDINGS</h2>
@@ -79,8 +79,12 @@
       <p class="hero-links"><a class="playlist-link" href="https://www.youtube.com/playlist?list=PLXRC36_9f9gA" target="_blank" rel="noopener">▶ All hunt videos</a></p>
     </section>
 
-    <section class="board" id="history-board" hidden>
-      <h2>🌟 SPOTLIGHT HISTORY</h2>
+  </section>
+
+  <section class="view" id="view-history" aria-label="Spotlight history">
+    <h2 class="view-title">🌟 SPOTLIGHT HISTORY</h2>
+    <p class="board-caption view-sub">Every daily spotlight dog of Season 1.</p>
+    <section class="board">
       <div class="table-wrap"><table>
         <thead><tr><th>DATE</th><th>DOG</th><th>PLAYER</th></tr></thead>
         <tbody id="rows-history"></tbody>
@@ -118,8 +122,8 @@
   <section class="view" id="view-rules" aria-label="Rules">
     <h2 class="view-title">📜 HOW TO PLAY</h2>
     <div class="howto-box">
-      <p><strong>🐶 Enter daily</strong> — Comment your dog's NAME on any hunt video. One scoring comment per video per day: 1 video = 10 pts · 2 videos = 25 pts · all 3 = 60 pts. Keep it clean — inappropriate names don't score.</p>
-      <p><strong>💬 Say anything</strong> — Any comment on a hunt video → +1 pt, once a day. Get your name on the board just for showing up! Every day you comment grows your streak — 3 days in a row earns a bonus.</p>
+      <p><strong>🐶 Enter daily</strong> — Comment your dog's NAME on any Gone To The Dogs video. One scoring comment per video per day: 1 video = 10 pts · 2 videos = 25 pts · all 3 = 60 pts. Keep it clean — inappropriate names don't score.</p>
+      <p><strong>💬 Say anything</strong> — Any comment on any Gone To The Dogs video → +1 pt, once a day. Get your name on the board just for showing up! Every day you comment grows your streak — 3 days in a row earns a bonus.</p>
       <p><strong>🔥 Streaks</strong> — Play consecutive days: 3 days +10 · 7 days +25 · 14 days +50 · 30 days +100. Miss a day and your streak resets.</p>
       <p><strong>📸 Photo bonus</strong> — <a href="https://forms.gle/HEtMitfJZLq7NQPL9">Submit a real photo of your dog</a> → +5 pts every day.</p>
       <p><strong>🎬 Video bonus</strong> — send a real clip of your dog for the show → +15 pts every day. Real clips only, no stock or AI.</p>
@@ -147,13 +151,14 @@
 <nav class="tabbar" aria-label="Sections">
   <button type="button" data-view="view-standings" class="active"><span class="tab-ico">🏆</span><span class="tab-label">Standings</span></button>
   <button type="button" data-view="view-pups"><span class="tab-ico">🐶</span><span class="tab-label">Pups</span></button>
+  <button type="button" data-view="view-history"><span class="tab-ico">🌟</span><span class="tab-label">History</span></button>
   <button type="button" data-view="view-helper"><span class="tab-ico">💬</span><span class="tab-label">Pup Helper</span></button>
   <button type="button" data-view="view-rules"><span class="tab-ico">📜</span><span class="tab-label">Rules</span></button>
 </nav>
 
 <script id="th-data" type="application/json">
 {
- "updated_at": "2026-10-08T18:04:22.768900-05:00",
+ "updated_at": "2026-10-08T18:09:44.178543-05:00",
  "season": {
   "name": "Season 1",
   "start": "2026-09-29",
@@ -858,6 +863,6 @@
   </div>
 </div>
 
-<script src="app.js?v=1791500549"></script>
+<script src="app.js?v=1791500960"></script>
 </body>
 </html>
