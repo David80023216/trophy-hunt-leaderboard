@@ -258,6 +258,37 @@ button.player-name.check-link:hover { color: var(--gold); }
 
 .prizes .notice, .rules .notice {
   margin-top: 1rem;
+}
+
+/* Compact "How it works" strip at the top of the standings view. */
+.how-strip {
+  max-width: 640px;
+  margin: 1.2rem auto 0;
+  padding: .9rem 1.1rem 1rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, .35);
+}
+.how-strip h2 { text-align: center; color: var(--gold); margin: 0 0 .5rem; font-size: 1.05rem; letter-spacing: .06em; }
+.how-strip ol { margin: 0; padding: 0; list-style: none; counter-reset: how; }
+.how-strip li { counter-increment: how; display: flex; gap: .7rem; align-items: flex-start; padding: .45rem 0; border-bottom: 1px solid var(--line); font-size: .93rem; color: var(--text); line-height: 1.4; }
+.how-strip li:last-of-type { border-bottom: 0; }
+.how-strip li::before {
+  content: counter(how);
+  flex: 0 0 1.5rem; height: 1.5rem; border-radius: 50%;
+  background: var(--gold); color: #0b0f14; font-weight: 700; font-size: .85rem;
+  display: flex; align-items: center; justify-content: center; margin-top: .05rem;
+}
+.how-strip li strong { display: block; color: var(--text); }
+.how-strip li span { color: var(--muted, #9aa4b2); }
+.how-rules-link {
+  display: block; margin: .6rem auto 0; padding: .45rem 1.2rem;
+  background: transparent; border: 1px solid var(--gold); border-radius: 999px;
+  color: var(--gold); font-size: .9rem; font-weight: 600; cursor: pointer;
+}
+.how-rules-link:active { transform: scale(.97); }
+  margin-top: 1rem;
   background: rgba(255, 211, 77, .08);
   border: 1px solid var(--gold-dim);
   border-radius: var(--radius);

@@ -487,6 +487,11 @@
         b.addEventListener('click', function () { show(b.getAttribute('data-view')); });
       })(btns[k]);
     }
+    /* "Full rules" link in the How-it-works strip jumps to the Rules tab. */
+    var gotoRules = document.querySelectorAll('[data-goto-rules]');
+    for (var g = 0; g < gotoRules.length; g++) {
+      gotoRules[g].addEventListener('click', function () { show('view-rules'); });
+    }
   }
 
   /* Pups tab: gallery of verified player dog photos AND video clips from the
