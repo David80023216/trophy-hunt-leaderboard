@@ -698,36 +698,12 @@ body {
 .tab-ico { font-size: 1.35rem; line-height: 1; }
 .tabbar button.active { color: var(--gold); }
 
-/* Floating trick pup (2026-10-08, Shawn): tap for a random trick. */
-#dog-trick-wrap {
-  position: fixed; right: .8rem; z-index: 59;
-  bottom: calc(var(--tabbar-h) + .8rem + env(safe-area-inset-bottom, 0px));
-  display: flex; flex-direction: column; align-items: flex-end; gap: .35rem;
-}
-#dog-trick-btn {
-  width: min(9rem, 44vw); aspect-ratio: 3 / 4; padding: 0;
-  border-radius: 1.2rem; overflow: hidden;
-  background: rgba(10, 14, 20, .94); border: 2px solid var(--gold);
-  cursor: pointer; display: block;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, .55);
-}
-#dog-trick-btn img { width: 100%; height: 100%; object-fit: cover; display: block; }
-#dog-trick-btn:active { transform: scale(.96); }
-#dog-bubble {
-  background: rgba(10, 14, 20, .96); border: 1px solid var(--line);
-  color: var(--text); font-size: .82rem; padding: .45rem .7rem;
-  border-radius: 1rem; max-width: 11rem; text-align: center;
-}
-#dog-bubble[hidden] { display: none; }
+/* Floating trick pup REMOVED 2026-10-08 (Shawn): it overlapped the My Pup game.
+   Trick keyframes below are reused by the My Pup game image. */
 @keyframes trick-roll { to { transform: rotate(360deg); } }
 @keyframes trick-spin { to { transform: rotate(-360deg); } }
 @keyframes trick-bark { 0%, 100% { transform: scale(1); } 25% { transform: scale(1.28) rotate(-8deg); } 50% { transform: scale(1); } 75% { transform: scale(1.28) rotate(8deg); } }
 @keyframes trick-jump { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-1.5rem); } }
-#dog-trick-btn.trick-roll { animation: trick-roll .7s ease; }
-#dog-trick-btn.trick-spin { animation: trick-spin .7s ease; }
-#dog-trick-btn.trick-bark { animation: trick-bark .5s ease; }
-#dog-trick-btn.trick-jump { animation: trick-jump .55s ease; }
-#dog-trick-btn.trick-nap img { filter: grayscale(.55) brightness(.72); transition: filter .4s ease; }
 
 /* My Pup virtual pet (2026-10-08, Shawn): feed / play / pet / nap your dog.
    Fun-only — no points. State persists per handle in localStorage and fades
