@@ -173,7 +173,11 @@
      identity path. Flow: popup -> access token -> channels.list(mine=true)
      -> match channel_id against standings -> setMe(handle). The token is
      revoked right after the one lookup; only the handle is remembered. */
-  var GOOGLE_CLIENT_ID = '344477831008-0khp918onjd0qsvbmnpal8dg5jmjqs1j.apps.googleusercontent.com';
+  // Google sign-in is BUILT but hidden until Google verification completes
+  // (2026-10-08, Shawn: "I don't want google on page until it actually works").
+  // Restore the client id below to re-enable it for all players.
+  // var GOOGLE_CLIENT_ID = '344477831008-0khp918onjd0qsvbmnpal8dg5jmjqs1j.apps.googleusercontent.com';
+  var GOOGLE_CLIENT_ID = '';
   var gsiTokenClient = null;
 
   function gsiRemembered() {
