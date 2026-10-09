@@ -697,7 +697,9 @@
     var h = Math.floor(diff % 86400000 / 3600000);
     var m = Math.floor(diff % 3600000 / 60000);
     var s = Math.floor(diff % 60000 / 1000);
-    el.textContent = '\u23F3 ' + d + 'd ' + h + 'h ' + m + 'm ' + s + 's';
+    var compact = window.matchMedia && window.matchMedia('(max-width: 600px)').matches;
+    el.textContent = compact ? '\u23F3 ' + d + 'd ' + h + 'h ' + m + 'm'
+                             : '\u23F3 ' + d + 'd ' + h + 'h ' + m + 'm ' + s + 's';
   }
 
   function renderMission() {
