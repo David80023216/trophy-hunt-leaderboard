@@ -312,7 +312,7 @@ button.player-name.check-link:hover { color: var(--gold); }
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 2px 8px rgba(0,0,0,.4);
 }
-.badge-check.dim { background: #3a4356; color: #9aa4b2; }
+.badge-check.dim { background: #a3e635; color: #1a2e05; }
 .badge-new {
   background: var(--gold); color: #0b0f14; font-weight: 800; font-size: .78rem;
   border-radius: 999px; padding: .2rem .55rem; white-space: nowrap;
