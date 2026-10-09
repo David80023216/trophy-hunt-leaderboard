@@ -485,6 +485,22 @@
     });
   }
 
+  /* Lightbox: tap a gallery photo to expand it, tap anywhere to close. */
+  document.addEventListener('click', function (ev) {
+    var t = ev.target;
+    var lb = document.getElementById('lightbox');
+    var img = document.getElementById('lightbox-img');
+    if (!lb || !img) return;
+    if (t && t.classList && t.classList.contains('gallery-item') && t.tagName === 'IMG') {
+      img.src = t.src;
+      lb.hidden = false;
+      document.body.style.overflow = 'hidden';
+    } else if (!lb.hidden && (t === lb || t === img)) {
+      lb.hidden = true;
+      document.body.style.overflow = '';
+    }
+  });
+
   /* ---- Handle claim (no Google needed) ----
      Player types their YouTube @handle; matched against the standings in
      this browser only. Identity is display-only (badges, checkmarks) and
