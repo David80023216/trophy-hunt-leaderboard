@@ -730,3 +730,15 @@ body {
   0%, 100% { box-shadow: none; }
   50% { box-shadow: 0 0 0 3px var(--gold, #ffd34d); }
 }
+
+/* Narrow-phone header: keep the title on one line and let the right-side
+   pills wrap underneath instead of crushing into the title. */
+@media (max-width: 600px) {
+  .appbar { gap: .5rem; padding-left: .7rem; padding-right: .7rem; }
+  .appbar-main { flex: 1 1 auto; }
+  .appbar-title { font-size: 1rem; white-space: nowrap; }
+  .appbar-sub { display: none; }
+  .appbar-side { flex-wrap: wrap; justify-content: flex-end; row-gap: .35rem; column-gap: .45rem; max-width: 62%; }
+  .countdown-chip { font-size: .7rem; padding: .28rem .55rem; }
+  .gsi-chip span:last-child { max-width: 92px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
