@@ -715,7 +715,14 @@ body {
 #mypup-img {
   width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block;
   border-radius: 1.2rem; border: 2px solid var(--gold); background: #0b0f14;
+  cursor: pointer;
 }
+#mypup-video { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 1.2rem; display: block; border: 2px solid var(--gold); background: #0b0f14; }
+#mypup-video[hidden] { display: none; }
+/* Idle "breathing" so the pup feels alive at rest. The trick-animation rules
+   below come after this one so they win while an action plays. */
+@keyframes mypup-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.028); } }
+#mypup-img.idle, #mypup-video.idle { animation: mypup-breathe 4.2s ease-in-out infinite; }
 #mypup-img.trick-roll { animation: trick-roll .7s ease; }
 #mypup-img.trick-spin { animation: trick-spin .7s ease; }
 #mypup-img.trick-bark { animation: trick-bark .5s ease; }

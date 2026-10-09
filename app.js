@@ -1276,28 +1276,52 @@
     var fnd = (typeof meRow === 'function') ? meRow() : null;
     var rw = fnd && fnd.row;
     var dogName = rw && rw.dog_name;
-    var src = '';
+    var photo = '';
+    var vid = '';
     if (rw) {
       var dp = (typeof dogPhotos !== 'undefined' && dogPhotos[rw.handle]) || null;
-      var first = dp ? (Array.isArray(dp) ? dp[0] : dp) : null;
-      src = (first && (first.full || first.src)) || rw.photo || rw.avatar || '';
+      var items = dp ? (Array.isArray(dp) ? dp : [dp]) : [];
+      for (var di = 0; di < items.length; di++) {
+        var it = items[di] || {};
+        var isrc = it.full || it.src || '';
+        if (!isrc) continue;
+        if (!vid && it.type === 'video') vid = isrc;
+        if (!photo) photo = isrc;
+      }
+      if (!photo) photo = rw.photo || rw.avatar || '';
     }
     /* No fake Ned: a brand-new player with no photo and no named dog gets the
        empty state (with entry/upload CTAs) instead of a defaulted pup. */
-    if (!dogName && !src) {
+    if (!dogName && !photo && !vid) {
       game.hidden = true;
       if (empty) empty.hidden = false;
       return;
     }
     var name = dogName || 'Pup';
     var img = document.getElementById('mypup-img');
+    var vel = document.getElementById('mypup-video');
     var ph = document.getElementById('mypup-placeholder');
-    if (src) {
-      if (img.getAttribute('src') !== src) img.src = src;
+    /* A real uploaded video of the player's dog beats a still photo — genuine
+       movement of their real dog. Otherwise the photo idles with a gentle
+       "breathing" loop so the pup feels alive at rest. */
+    if (vid) {
+      if (vel.getAttribute('src') !== vid) vel.src = vid;
+      vel.hidden = false;
+      vel.classList.add('idle');
+      if (vel.paused) { try { var pr = vel.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {} }
+      img.hidden = true;
+      img.classList.remove('idle');
+      if (ph) ph.hidden = true;
+    } else if (photo) {
+      if (img.getAttribute('src') !== photo) img.src = photo;
       img.hidden = false;
+      img.classList.add('idle');
+      if (vel) { vel.hidden = true; vel.classList.remove('idle'); try { vel.pause(); } catch (e) {} }
       if (ph) ph.hidden = true;
     } else {
       img.hidden = true;
+      img.classList.remove('idle');
+      if (vel) { vel.hidden = true; vel.classList.remove('idle'); }
       if (ph) ph.hidden = false;
     }
     img.alt = name;
@@ -1317,6 +1341,38 @@
     pet:   { df: 0,  dh: 15, de: 5,   anim: 'trick-jump', say: '*wags tail happily* 🐾' },
     sleep: { df: -8, dh: 5,  de: 35,  anim: 'trick-nap',  say: 'Zzz… all rested! 💤' }
   };
+  /* Applies one My Pup action: updates stats, plays the reaction animation on
+     the photo (or video), and shows the message bubble. */
+  function mypupAct(game, actName) {
+    var act = MYPUP_ACTS[actName];
+    if (!act) return;
+    var handle = game && game.dataset.handle;
+    if (!handle) return;
+    var st = mypupLoad(handle);
+    st.food = Math.max(0, Math.min(100, st.food + act.df));
+    st.happy = Math.max(0, Math.min(100, st.happy + act.dh));
+    st.energy = Math.max(0, Math.min(100, st.energy + act.de));
+    mypupSave(st);
+    mypupSetBar('stat-food', st.food);
+    mypupSetBar('stat-happy', st.happy);
+    mypupSetBar('stat-energy', st.energy);
+    var img = document.getElementById('mypup-img');
+    img.classList.remove('trick-bark', 'trick-roll', 'trick-spin', 'trick-jump', 'trick-nap', 'idle');
+    void img.offsetWidth; /* restart the animation */
+    if (act.anim) img.classList.add(act.anim);
+    clearTimeout(img._mptr);
+    img._mptr = setTimeout(function () {
+      img.classList.remove('trick-bark', 'trick-roll', 'trick-spin', 'trick-jump', 'trick-nap');
+      if (!img.hidden) img.classList.add('idle');
+    }, 800);
+    var bub = document.getElementById('mypup-bubble');
+    bub.textContent = act.say;
+    bub.hidden = false;
+    clearTimeout(img._mpt);
+    img._mpt = setTimeout(function () { bub.hidden = true; }, 2200);
+    document.getElementById('mypup-mood').textContent = mypupMood(game.dataset.dogname || 'Pup', st);
+  }
+  var mypupBound = false;
   function initMyPup() {
     if (mypupBound) return;
     mypupBound = true;
@@ -1339,32 +1395,16 @@
         (function (b) {
           b.addEventListener('click', function () {
             var game = document.getElementById('mypup-game');
-            var handle = game && game.dataset.handle;
-            if (!handle) return;
-            var act = MYPUP_ACTS[b.getAttribute('data-act')];
-            if (!act) return;
-            var st = mypupLoad(handle);
-            st.food = Math.max(0, Math.min(100, st.food + act.df));
-            st.happy = Math.max(0, Math.min(100, st.happy + act.dh));
-            st.energy = Math.max(0, Math.min(100, st.energy + act.de));
-            mypupSave(st);
-            mypupSetBar('stat-food', st.food);
-            mypupSetBar('stat-happy', st.happy);
-            mypupSetBar('stat-energy', st.energy);
-            var img = document.getElementById('mypup-img');
-            img.classList.remove('trick-bark', 'trick-roll', 'trick-spin', 'trick-jump', 'trick-nap');
-            void img.offsetWidth; /* restart the animation */
-            if (act.anim) img.classList.add(act.anim);
-            var bub = document.getElementById('mypup-bubble');
-            bub.textContent = act.say;
-            bub.hidden = false;
-            clearTimeout(img._mpt);
-            img._mpt = setTimeout(function () { bub.hidden = true; }, 2200);
-            document.getElementById('mypup-mood').textContent = mypupMood(game.dataset.dogname || 'Pup', st);
+            mypupAct(game, b.getAttribute('data-act'));
           });
         })(btns[i]);
       }
     }
+    /* Tapping the pup itself is a pet. */
+    var pimg = document.getElementById('mypup-img');
+    if (pimg) pimg.addEventListener('click', function () {
+      mypupAct(document.getElementById('mypup-game'), 'pet');
+    });
     renderMyPup();
   }
 
