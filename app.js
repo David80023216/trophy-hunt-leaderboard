@@ -223,6 +223,7 @@
     var prompt = document.getElementById('signin-prompt');
     if (hint) hint.hidden = !r.handle;
     if (prompt) prompt.hidden = identified;
+    if (typeof renderMyPup === 'function') renderMyPup();
   }
   function gsiFindByChannel(cid) {
     var st = data.standings || [];
@@ -956,6 +957,7 @@
       var views = document.querySelectorAll('.view');
       for (var i = 0; i < views.length; i++) views[i].classList.toggle('active', views[i].id === id);
       for (var j = 0; j < btns.length; j++) btns[j].classList.toggle('active', btns[j].getAttribute('data-view') === id);
+      if (id === 'view-pups' && typeof renderMyPup === 'function') renderMyPup();
       if (window.scrollTo) window.scrollTo(0, 0);
     }
     for (var k = 0; k < btns.length; k++) {
@@ -1281,6 +1283,119 @@
     });
   }
 
+  /* ---- My Pup virtual pet (2026-10-08, Shawn): feed / play / pet / nap ----
+     Fun-only, no points. Per-handle state in localStorage; stats fade while
+     away so there's a reason to come back. */
+  var mypupBound = false;
+  function mypupLoad(handle) {
+    var key = 'th-mypup-' + String(handle).toLowerCase();
+    var st = null;
+    try { st = JSON.parse(localStorage.getItem(key)); } catch (e) {}
+    if (!st || typeof st.food !== 'number') st = { food: 70, happy: 70, energy: 70, at: Date.now() };
+    var hrs = Math.max(0, (Date.now() - (st.at || Date.now())) / 3600000);
+    if (hrs > 0.02) {
+      st.food = Math.max(0, Math.round(st.food - hrs * 6));
+      st.happy = Math.max(0, Math.round(st.happy - hrs * 5));
+      st.energy = Math.min(100, Math.round(st.energy + hrs * 4)); /* naps while away */
+    }
+    st._key = key;
+    return st;
+  }
+  function mypupSave(st) {
+    st.at = Date.now();
+    try { localStorage.setItem(st._key, JSON.stringify({ food: st.food, happy: st.happy, energy: st.energy, at: st.at })); } catch (e) {}
+  }
+  function mypupSetBar(id, v) {
+    var el = document.getElementById(id);
+    if (el) el.style.width = Math.max(0, Math.min(100, v)) + '%';
+  }
+  function mypupMood(name, st) {
+    var m;
+    if (st.food < 30) m = 'is getting hungry… 🍖';
+    else if (st.happy < 30) m = 'wants some attention 🥺';
+    else if (st.energy < 30) m = 'is getting sleepy 😴';
+    else if (st.food > 70 && st.happy > 70 && st.energy > 70) m = 'is living their best life! 🌟';
+    else m = 'is doing great! 🐶';
+    return name + ' ' + m;
+  }
+  function renderMyPup() {
+    var signedOut = document.getElementById('mypup-signedout');
+    var game = document.getElementById('mypup-game');
+    if (!signedOut || !game) return;
+    var handle = (typeof getMe === 'function') ? getMe() : '';
+    signedOut.hidden = !!handle;
+    game.hidden = !handle;
+    if (!handle) return;
+    var fnd = (typeof meRow === 'function') ? meRow() : null;
+    var rw = fnd && fnd.row;
+    var name = (rw && rw.dog_name) || 'Pup';
+    var src = '';
+    if (rw) {
+      var dp = (typeof dogPhotos !== 'undefined' && dogPhotos[rw.handle]) || null;
+      var first = dp ? (Array.isArray(dp) ? dp[0] : dp) : null;
+      src = (first && (first.full || first.src)) || rw.photo || rw.avatar || '';
+    }
+    if (!src) src = 'dogs/full/housemouse17.jpg';
+    var img = document.getElementById('mypup-img');
+    if (img.getAttribute('src') !== src) img.src = src;
+    img.alt = name;
+    document.getElementById('mypup-name').textContent = '🐶 ' + name;
+    game.dataset.handle = handle;
+    game.dataset.dogname = name;
+    var st = mypupLoad(handle);
+    mypupSave(st);
+    mypupSetBar('stat-food', st.food);
+    mypupSetBar('stat-happy', st.happy);
+    mypupSetBar('stat-energy', st.energy);
+    document.getElementById('mypup-mood').textContent = mypupMood(name, st);
+  }
+  var MYPUP_ACTS = {
+    feed:  { df: 30, dh: 5,  de: 0,   anim: 'trick-bark', say: 'Yum! *crunch crunch* 🦴' },
+    play:  { df: -8, dh: 25, de: -12, anim: 'trick-spin', say: 'Wheee! That was fun! 🎾' },
+    pet:   { df: 0,  dh: 15, de: 5,   anim: 'trick-jump', say: '*wags tail happily* 🐾' },
+    sleep: { df: -8, dh: 5,  de: 35,  anim: 'trick-nap',  say: 'Zzz… all rested! 💤' }
+  };
+  function initMyPup() {
+    if (mypupBound) return;
+    mypupBound = true;
+    var sbtn = document.getElementById('mypup-signin-btn');
+    if (sbtn) sbtn.addEventListener('click', function () { showClaimSheet(); });
+    var wrap = document.querySelector('.mypup-actions');
+    if (wrap) {
+      var btns = wrap.querySelectorAll('button[data-act]');
+      for (var i = 0; i < btns.length; i++) {
+        (function (b) {
+          b.addEventListener('click', function () {
+            var game = document.getElementById('mypup-game');
+            var handle = game && game.dataset.handle;
+            if (!handle) return;
+            var act = MYPUP_ACTS[b.getAttribute('data-act')];
+            if (!act) return;
+            var st = mypupLoad(handle);
+            st.food = Math.max(0, Math.min(100, st.food + act.df));
+            st.happy = Math.max(0, Math.min(100, st.happy + act.dh));
+            st.energy = Math.max(0, Math.min(100, st.energy + act.de));
+            mypupSave(st);
+            mypupSetBar('stat-food', st.food);
+            mypupSetBar('stat-happy', st.happy);
+            mypupSetBar('stat-energy', st.energy);
+            var img = document.getElementById('mypup-img');
+            img.classList.remove('trick-bark', 'trick-roll', 'trick-spin', 'trick-jump', 'trick-nap');
+            void img.offsetWidth; /* restart the animation */
+            if (act.anim) img.classList.add(act.anim);
+            var bub = document.getElementById('mypup-bubble');
+            bub.textContent = act.say;
+            bub.hidden = false;
+            clearTimeout(img._mpt);
+            img._mpt = setTimeout(function () { bub.hidden = true; }, 2200);
+            document.getElementById('mypup-mood').textContent = mypupMood(game.dataset.dogname || 'Pup', st);
+          });
+        })(btns[i]);
+      }
+    }
+    renderMyPup();
+  }
+
   renderSpotlight();
   renderMission();
   initHelper();
@@ -1297,6 +1412,7 @@
   renderVideos();
   initTabs();
   renderPupGrid();
+  initMyPup();
   initChecklist();
   initPush();
   initPushButtons();

@@ -729,6 +729,45 @@ body {
 #dog-trick-btn.trick-jump { animation: trick-jump .55s ease; }
 #dog-trick-btn.trick-nap img { filter: grayscale(.55) brightness(.72); transition: filter .4s ease; }
 
+/* My Pup virtual pet (2026-10-08, Shawn): feed / play / pet / nap your dog.
+   Fun-only — no points. State persists per handle in localStorage and fades
+   while away so there's a reason to come back. */
+.mypup-signedout { text-align: center; padding: 2.5rem 1rem; color: var(--text); }
+.mypup-big { font-size: 3rem; margin: 0 0 .5rem; }
+#mypup-game { max-width: 26rem; margin: 0 auto; padding-bottom: 1rem; }
+.mypup-stage { position: relative; }
+#mypup-img {
+  width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block;
+  border-radius: 1.2rem; border: 2px solid var(--gold); background: #0b0f14;
+}
+#mypup-img.trick-roll { animation: trick-roll .7s ease; }
+#mypup-img.trick-spin { animation: trick-spin .7s ease; }
+#mypup-img.trick-bark { animation: trick-bark .5s ease; }
+#mypup-img.trick-jump { animation: trick-jump .55s ease; }
+#mypup-img.trick-nap { filter: grayscale(.55) brightness(.72); }
+.mypup-bubble {
+  position: absolute; top: .7rem; left: 50%; transform: translateX(-50%);
+  background: rgba(10, 14, 20, .94); border: 1px solid var(--line);
+  color: var(--text); font-size: .88rem; padding: .5rem .8rem; border-radius: 1rem;
+  white-space: nowrap; max-width: 94%; overflow: hidden; text-overflow: ellipsis;
+}
+.mypup-bubble[hidden] { display: none; }
+.mypup-name { font-size: 1.35rem; font-weight: 800; text-align: center; margin: .7rem 0 .1rem; color: var(--text); }
+.mypup-mood { text-align: center; color: var(--muted); font-size: .95rem; margin-bottom: .9rem; }
+.mstat { display: flex; align-items: center; gap: .6rem; margin-bottom: .5rem; }
+.mstat-label { width: 5.2rem; flex: none; font-size: .9rem; color: var(--text); }
+.mbar { flex: 1; height: .7rem; background: rgba(255, 255, 255, .08); border-radius: 1rem; overflow: hidden; }
+.mfill { height: 100%; border-radius: 1rem; background: linear-gradient(90deg, var(--gold), #ff9d3c); transition: width .4s ease; }
+.mypup-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; margin: 1rem 0 .6rem; }
+.mypup-actions button {
+  background: rgba(255, 211, 77, .08); border: 1px solid var(--line); border-radius: .9rem;
+  color: var(--text); font-size: 1.5rem; padding: .55rem 0 .4rem; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: .15rem; font-family: inherit;
+}
+.mypup-actions button span { font-size: .72rem; font-weight: 700; color: var(--muted); }
+.mypup-actions button:active { transform: scale(.93); }
+.mypup-note { text-align: center; }
+
 /* Pups gallery */
 .pup-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .8rem; margin-top: .6rem; }
 .pup-card {
