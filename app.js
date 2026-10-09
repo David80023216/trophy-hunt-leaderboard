@@ -729,7 +729,7 @@
 
   var PUP_PROXY_URL = 'https://david80023216--3445f20cbd3611f19e881607ee4eb77e.web.val.run';
   var PUSH_VAL_URL = 'https://david80023216--b1c69af6c1d211f18bd01607ee4eb77e.web.val.run';
-  var UPLOAD_VAL_URL = 'UPLOAD_VAL_PLACEHOLDER'; // set to the trophy-hunt-uploads val web URL once deployed
+  var UPLOAD_VAL_URL = 'https://david80023216--7ebf5deac37c11f1a7fb1607ee4eb77e.web.val.run'; // trophy-hunt-uploads val (profile photo/video storage + moderation queue)
   var VAPID_PUBLIC = 'BMBS6ae4rXqMhCt7ocFlx2weaNqHlza9NrysRE02leIUKQ-LQw3K6XfFsjnyZ-ivhFFu3N8E8IEo9uAKr8PG8ec';
   // Pup Helper's AI brain lives server-side in the proxy above (2026-09-30). No API key ships in this public repo.
   var PUP_AI_FALLBACK = "Hmm, my brain's fuzzy right now! 🤖💭 Try again in a bit, or drop it in the comments of today's hunt video — the channel answers fast.";
