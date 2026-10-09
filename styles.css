@@ -731,14 +731,17 @@ body {
   50% { box-shadow: 0 0 0 3px var(--gold, #ffd34d); }
 }
 
-/* Narrow-phone header: keep the title on one line and let the right-side
-   pills wrap underneath instead of crushing into the title. */
+/* Narrow-phone header: two tidy rows — title on top, pills in one
+   toolbar row underneath. Never crush or ragged-wrap. */
 @media (max-width: 600px) {
-  .appbar { gap: .5rem; padding-left: .7rem; padding-right: .7rem; }
-  .appbar-main { flex: 1 1 auto; }
-  .appbar-title { font-size: 1rem; white-space: nowrap; }
+  .appbar { flex-wrap: wrap; row-gap: .45rem; padding-left: .7rem; padding-right: .7rem; }
+  .appbar-main { flex: 1 1 100%; }
+  .appbar-title { font-size: 1.05rem; white-space: nowrap; }
   .appbar-sub { display: none; }
-  .appbar-side { flex-wrap: wrap; justify-content: flex-end; row-gap: .35rem; column-gap: .45rem; max-width: 62%; }
-  .countdown-chip { font-size: .7rem; padding: .28rem .55rem; }
-  .gsi-chip span:last-child { max-width: 92px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .appbar-side { flex: 1 1 100%; max-width: none; justify-content: flex-start; flex-wrap: nowrap; gap: .5rem; }
+  .countdown-chip { font-size: .72rem; padding: .3rem .6rem; flex: none; }
+  .gsi-chip { flex: 1 1 auto; min-width: 0; }
+  .gsi-chip span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .name-claim { flex: none; }
+  .appbar-sub-btn { flex: none; }
 }
