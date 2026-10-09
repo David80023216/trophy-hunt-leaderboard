@@ -1230,9 +1230,62 @@
     });
   }
 
+  /* ---- floating trick pup (2026-10-08, Shawn): tap for a random trick ---- */
+  function initDogTricks() {
+    var btn = document.getElementById('dog-trick-btn');
+    var bubble = document.getElementById('dog-bubble');
+    if (!btn || !bubble) return;
+    var audioCtx = null;
+    function barkSound() {
+      try {
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        var t0 = audioCtx.currentTime;
+        [0, 0.18].forEach(function (off) {
+          var o = audioCtx.createOscillator();
+          var g = audioCtx.createGain();
+          o.type = 'sawtooth';
+          o.frequency.setValueAtTime(420, t0 + off);
+          o.frequency.exponentialRampToValueAtTime(140, t0 + off + 0.14);
+          g.gain.setValueAtTime(0.0001, t0 + off);
+          g.gain.exponentialRampToValueAtTime(0.25, t0 + off + 0.02);
+          g.gain.exponentialRampToValueAtTime(0.0001, t0 + off + 0.15);
+          o.connect(g); g.connect(audioCtx.destination);
+          o.start(t0 + off); o.stop(t0 + off + 0.16);
+        });
+      } catch (e) { /* audio unavailable: stay silent */ }
+    }
+    var tricks = [
+      { emoji: '🐶', anim: 'trick-bark', say: 'Woof woof! 🐾', sound: true },
+      { emoji: '🐕', anim: '', say: '*sits politely* 🎖️' },
+      { emoji: '🐶', anim: 'trick-roll', say: '*rolls over!* 🌀' },
+      { emoji: '🐶', anim: 'trick-spin', say: '*does a spin!* ✨' },
+      { emoji: '🐶', anim: 'trick-jump', say: '*jumps for joy!* 🎉' },
+      { emoji: '🐩', anim: '', say: '*begs for a treat* 🦴' },
+      { emoji: '😴', anim: '', say: '*takes a quick nap…* 💤' }
+    ];
+    var last = -1, hideT = null;
+    btn.addEventListener('click', function () {
+      var i;
+      do { i = Math.floor(Math.random() * tricks.length); } while (i === last);
+      last = i;
+      var tr = tricks[i];
+      btn.textContent = tr.emoji;
+      btn.classList.remove('trick-bark', 'trick-roll', 'trick-spin', 'trick-jump');
+      void btn.offsetWidth; /* restart the animation */
+      if (tr.anim) btn.classList.add(tr.anim);
+      bubble.textContent = tr.say;
+      bubble.hidden = false;
+      if (tr.sound) barkSound();
+      clearTimeout(hideT);
+      hideT = setTimeout(function () { bubble.hidden = true; }, 2600);
+    });
+  }
+
   renderSpotlight();
   renderMission();
   initHelper();
+  initDogTricks();
   renderDogFact();
   tickCountdown();
   setInterval(tickCountdown, 1000);
