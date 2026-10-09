@@ -784,10 +784,23 @@
   // Pup Helper's AI brain lives server-side in the proxy above (2026-09-30). No API key ships in this public repo.
   var PUP_AI_FALLBACK = "Hmm, my brain's fuzzy right now! 🤖💭 Try again in a bit, or drop it in the comments of today's hunt video — the channel answers fast.";
 
+  /* Soft funnel nudges appended to dog-care answers (2026-10-08, Shawn):
+     every nudge still feeds the algorithm-neutral game without spamming. */
+  var PUP_NUDGES = [
+    "🐶 <em>While you're here — today's hunt is live! Comment your dog's NAME on any Gone To The Dogs video to enter.</em>",
+    "📸 <em>Psst — an easy +25 pts a day: sign in, tap your name above, and upload a real photo of your dog.</em>"
+  ];
+  var pupNudgeIdx = 0;
+  function pupNudge() {
+    var n = PUP_NUDGES[pupNudgeIdx % PUP_NUDGES.length];
+    pupNudgeIdx++;
+    return '<br><br>' + n;
+  }
+
   function helperAskAI(q, typingDiv) {
     var box = document.getElementById('chat-box');
     var done = function (html) {
-      typingDiv.innerHTML = '<span class="chat-name">' + esc(HELPER_NAME) + '</span>' + html;
+      typingDiv.innerHTML = '<span class="chat-name">' + esc(HELPER_NAME) + '</span>' + html + pupNudge();
       if (box) box.scrollTop = box.scrollHeight;
     };
     var controller = new AbortController();
@@ -879,7 +892,7 @@
       return "See you at noon for the next hunt! 🏆🐶";
     }
     var dogAns = helperDogFaq(t);
-    if (dogAns) return dogAns;
+    if (dogAns) return dogAns + pupNudge();
     return null;
   }
 
