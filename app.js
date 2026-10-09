@@ -949,7 +949,7 @@
     }
   }
 
-  /* Mobile-app shell: bottom tab bar switches between the six views. */
+  /* Mobile-app shell: bottom tab bar switches between the eight views. */
   function initTabs() {
     var btns = document.querySelectorAll('.tabbar button');
     if (!btns.length) return;
@@ -958,6 +958,8 @@
       for (var i = 0; i < views.length; i++) views[i].classList.toggle('active', views[i].id === id);
       for (var j = 0; j < btns.length; j++) btns[j].classList.toggle('active', btns[j].getAttribute('data-view') === id);
       if (id === 'view-pups' && typeof renderMyPup === 'function') renderMyPup();
+      if (id === 'view-den' && typeof renderDen === 'function') renderDen();
+      if (id === 'view-showdown' && typeof renderShowdown === 'function') renderShowdown();
       if (window.scrollTo) window.scrollTo(0, 0);
     }
     for (var k = 0; k < btns.length; k++) {
@@ -1309,6 +1311,16 @@
     var av = MYPUP_AVATARS[String(handle).toLowerCase()] || null;
     var avVid = av && av.video;
     var avImg = av && av.img;
+    /* Level + evolution tier from the player's REAL hunt data.
+       Levels run on LIFETIME points (Shawn 2026-10-08): the pup's level never
+       resets — it stays where it is when a new season begins. */
+    var pts = (rw && (rw.lifetime_points || rw.season_points)) || 0;
+    var rank = (fnd && fnd.rank) || 0;
+    var info = mypupLevelInfo(pts);
+    var tier = Math.min(info.level, 8);
+    var tierVid = (av && av.tiers && av.tiers[tier - 1]) || avVid;
+    var stage = game.querySelector('.mypup-stage');
+    if (stage) stage.classList.toggle('legend-aura', tier >= 8);
     function mypupShowVideo(src, poster) {
       if (vel.getAttribute('src') !== src) vel.src = src;
       if (poster && vel.getAttribute('poster') !== poster) vel.poster = poster;
@@ -1326,7 +1338,7 @@
       if (vel) { vel.hidden = true; vel.classList.remove('idle'); try { vel.pause(); } catch (e) {} }
       if (ph) ph.hidden = true;
     }
-    if (avVid) mypupShowVideo(avVid, avImg || photo);
+    if (tierVid) mypupShowVideo(tierVid, avImg || photo);
     else if (vid) mypupShowVideo(vid, photo);
     else if (avImg || photo) mypupShowPhoto(avImg || photo);
     else {
@@ -1339,18 +1351,13 @@
     document.getElementById('mypup-name').textContent = '🐶 ' + name;
     game.dataset.handle = handle;
     game.dataset.dogname = name;
-    /* Level + achievements from the player's REAL hunt data.
-       Levels run on LIFETIME points (Shawn 2026-10-08): the pup's level never
-       resets — it stays where it is when a new season begins. */
-    var pts = (rw && (rw.lifetime_points || rw.season_points)) || 0;
-    var rank = (fnd && fnd.rank) || 0;
-    var info = mypupLevelInfo(pts);
     document.getElementById('mypup-level').innerHTML =
       '<span class="lvl-badge">Lv ' + info.level + '</span>' + info.title;
     var fill = document.getElementById('mypup-progress-fill');
     if (fill) fill.style.width = Math.round(info.into / 25 * 100) + '%';
     document.getElementById('mypup-progress-label').textContent =
-      info.into + ' / 25 pts — ' + info.need + ' more to Level ' + (info.level + 1);
+      info.into + ' / 25 pts — ' + info.need + ' more to Level ' + (info.level + 1) +
+      (tier < 8 && MYPUP_EVO_GEAR[tier + 1] ? ' ✨ evolves: ' + MYPUP_EVO_GEAR[tier + 1] : '');
     var achWrap = document.getElementById('mypup-achievements');
     if (achWrap) {
       var achs = mypupAchievements(rw, rank);
@@ -1364,24 +1371,176 @@
       }
       achWrap.innerHTML = html;
     }
-    /* Level-up celebration when the player returns stronger. */
+    /* Evolution celebration when the player returns stronger: the pup's look
+       transforms at every new tier. */
     var lkey = 'th-mypup-level-' + String(handle).toLowerCase();
     var lastLvl = 0;
     try { lastLvl = parseInt(localStorage.getItem(lkey) || '0', 10) || 0; } catch (e) {}
     if (lastLvl > 0 && info.level > lastLvl) {
       var bub2 = document.getElementById('mypup-bubble');
-      bub2.textContent = '🎉 LEVEL UP! ' + name + ' is now Level ' + info.level + ' ' + info.title + '!';
+      var gear = MYPUP_EVO_GEAR[Math.min(info.level, 8)];
+      if (tierVid && tierVid !== avVid && gear) {
+        bub2.textContent = '✨ EVOLUTION! ' + name + ' became a Level ' + info.level +
+          ' ' + info.title + ' — check out ' + gear + '!';
+      } else {
+        bub2.textContent = '🎉 LEVEL UP! ' + name + ' is now Level ' + info.level + ' ' + info.title + '!';
+      }
       bub2.hidden = false;
       clearTimeout(img._mplvl);
-      img._mplvl = setTimeout(function () { bub2.hidden = true; }, 3500);
+      img._mplvl = setTimeout(function () { bub2.hidden = true; }, 4000);
     }
     try { localStorage.setItem(lkey, String(info.level)); } catch (e) {}
   }
   /* Avatar pups: cartoon likeness of the player's actual dog, with real
      movement (animated video). Keyed by lowercase handle. New avatars are
      generated when a player uploads their dog's photo. */
+  /* Pup Showdown tab: weekly auto bracket, rendered from the data block.
+     Just for fun — no contest points; the champion gets the golden cup. */
+  function findStandingsRow(handle) {
+    var st = data.standings || [];
+    for (var i = 0; i < st.length; i++) {
+      if (String(st[i].handle).toLowerCase() === String(handle).toLowerCase()) return { row: st[i], rank: i + 1 };
+    }
+    return null;
+  }
+  function renderShowdown() {
+    var wrap = document.getElementById('showdown-bracket');
+    if (!wrap) return;
+    var sd = data.showdown || {};
+    if (!sd.active) {
+      wrap.innerHTML = '<p class="board-caption">⚔️ The Showdown needs at least two scoring pups — it starts automatically once the hunt heats up. Keep earning points!</p>';
+      return;
+    }
+    function pupCell(p, won) {
+      if (!p) return '<div class="sd-pup bye"><span>BYE week</span></div>';
+      return '<div class="sd-pup' + (won ? ' won' : '') + '">' +
+        '<span class="sd-seed">#' + p.seed + '</span> ' +
+        '<span class="sd-dog">' + esc(p.dog_name || 'Pup') + '</span> ' +
+        '<span class="sd-handle">' + esc(p.handle) + '</span>' +
+        '<span class="sd-pts">' + p.week_pts + ' pts this week</span></div>';
+    }
+    var html = '';
+    if (sd.champion) {
+      var cf = findStandingsRow(sd.champion);
+      var cname = cf ? (cf.row.dog_name || 'Pup') : 'Pup';
+      html += '<div class="sd-champ">🏆 <strong>' + esc(cname) + '</strong> (' + esc(sd.champion) + ') is this week\u2019s <strong>Showdown Champion!</strong></div>';
+    } else {
+      html += '<div class="sd-live">🔴 LIVE — week of ' + esc(sd.week_start || '') + ' · winners decided by points earned this week</div>';
+    }
+    var rounds = sd.rounds || [];
+    for (var r = 0; r < rounds.length; r++) {
+      html += '<h3 class="sd-round">' + esc(rounds[r].name) + '</h3><div class="sd-matchups">';
+      var ms = rounds[r].matchups || [];
+      for (var m = 0; m < ms.length; m++) {
+        var mu = ms[m];
+        html += '<div class="sd-matchup">' +
+          pupCell(mu.a, mu.winner === (mu.a && mu.a.handle)) +
+          pupCell(mu.b, mu.b && mu.winner === mu.b.handle) + '</div>';
+      }
+      html += '</div>';
+    }
+    html += '<p class="board-caption">Just for fun — no contest points. The champion\u2019s pup wears a golden aura and a golden cup lands in their Den.</p>';
+    wrap.innerHTML = html;
+  }
+  /* The Den tab: each pup's own doghouse, decorated with the achievements
+     they've actually earned. Visit any pup's den from the picker. */
+  var DEN_DECOR = [
+    { key: 'First Entry', icon: '🐾', cls: 'deco-mat', label: 'Paw-print doormat' },
+    { key: 'Picture Pup', icon: '🖼️', cls: 'deco-frame', label: 'Framed photo' },
+    { key: 'Movie Star', icon: '📺', cls: 'deco-tv', label: 'Pup TV' },
+    { key: 'Explorer', icon: '🗺️', cls: 'deco-map', label: 'Explorer map' },
+    { key: 'Trailblazer', icon: '🌍', cls: 'deco-globe', label: 'Trailblazer globe' },
+    { key: 'On a Roll', icon: '🔥', cls: 'deco-torch', label: 'Streak torch' },
+    { key: 'Week Warrior', icon: '⭐', cls: 'deco-star', label: 'Week Warrior star' },
+    { key: 'Full Clear', icon: '🎏', cls: 'deco-banner', label: 'Full-clear banner' },
+    { key: 'Top 3', icon: '🥉', cls: 'deco-medal', label: 'Top-3 medal' },
+    { key: 'Top Dog', icon: '👑', cls: 'deco-crown', label: 'Top Dog crown' }
+  ];
+  function renderDen() {
+    var sel = document.getElementById('den-player');
+    var wrap = document.getElementById('den-scene-wrap');
+    var shelf = document.getElementById('den-shelf');
+    if (!sel || !wrap) return;
+    var st = data.standings || [];
+    if (!sel.options.length) {
+      for (var i = 0; i < st.length; i++) {
+        var o = document.createElement('option');
+        o.value = st[i].handle;
+        o.textContent = (st[i].dog_name || 'Pup') + ' (' + st[i].handle + ')';
+        sel.appendChild(o);
+      }
+      var me = '';
+      try { me = localStorage.getItem('th-me') || ''; } catch (e) {}
+      var picked = false;
+      for (var j = 0; j < sel.options.length; j++) {
+        if (String(sel.options[j].value).toLowerCase() === String(me).toLowerCase()) { sel.selectedIndex = j; picked = true; break; }
+      }
+      if (!picked && sel.options.length) sel.selectedIndex = 0;
+      sel.addEventListener('change', renderDen);
+    }
+    var f = findStandingsRow(sel.value);
+    if (!f) { wrap.innerHTML = '<p class="board-caption">No pups yet.</p>'; return; }
+    var achs = mypupAchievements(f.row, f.rank);
+    var won = {};
+    for (var a = 0; a < achs.length; a++) if (achs[a].won) won[achs[a].name] = true;
+    var sd = data.showdown || {};
+    var isChamp = sd.active && sd.champion &&
+      String(sd.champion).toLowerCase() === String(f.row.handle).toLowerCase();
+    var decos = '';
+    for (var d = 0; d < DEN_DECOR.length; d++) {
+      var dd = DEN_DECOR[d];
+      if (won[dd.key]) decos += '<div class="den-deco ' + dd.cls + '" title="' + esc(dd.label) + '">' + dd.icon + '</div>';
+    }
+    if (isChamp) decos += '<div class="den-deco deco-cup" title="Showdown Champion">🏆</div>';
+    var dogName = f.row.dog_name || 'Pup';
+    var nDeco = 0;
+    for (var k in won) if (won.hasOwnProperty(k)) nDeco++;
+    wrap.innerHTML =
+      '<div class="den-scene">' +
+        '<div class="den-house"><div class="den-roof"></div>' +
+        '<div class="den-wall"><div class="den-door"></div>' +
+        '<div class="den-name">' + esc(dogName) + '</div></div></div>' +
+        decos +
+      '</div>' +
+      '<p class="den-caption">' + esc(dogName) + '\u2019s den · ' +
+      (nDeco + (isChamp ? 1 : 0)) + ' decorations earned</p>';
+    if (shelf) {
+      var sh = '';
+      for (var s2 = 0; s2 < achs.length; s2++) {
+        sh += '<div class="mypup-ach ' + (achs[s2].won ? 'won' : 'locked') + ' den-ach">' +
+          '<div class="ach-ico">' + (achs[s2].won ? achs[s2].icon : '🔒') + '</div>' +
+          '<div class="ach-name">' + achs[s2].name + '</div></div>';
+      }
+      if (isChamp) sh += '<div class="mypup-ach won den-ach"><div class="ach-ico">🏆</div><div class="ach-name">Showdown Champ</div></div>';
+      shelf.innerHTML = sh;
+    }
+  }
+  /* Avatar pups: cartoon likeness of the player's actual dog, with real
+     movement (animated video). Keyed by lowercase handle. `tiers` holds one
+     idle video per evolution tier (1=Pup … 7=Alpha); tier 8 (Legend) reuses
+     the Alpha video with a golden aura overlay. New avatars are generated
+     when a player uploads their dog's photo. */
   var MYPUP_AVATARS = {
-    '@housemouse17': { img: 'dogs/avatar/housemouse17.png', video: 'dogs/avatar/housemouse17-idle.mp4' }
+    '@housemouse17': {
+      img: 'dogs/avatar/housemouse17.png',
+      video: 'dogs/avatar/housemouse17-idle.mp4',
+      tiers: [
+        'dogs/avatar/housemouse17-idle.mp4',
+        'dogs/avatar/housemouse17-t2-idle.mp4',
+        'dogs/avatar/housemouse17-t3-idle.mp4',
+        'dogs/avatar/housemouse17-t4-idle.mp4',
+        'dogs/avatar/housemouse17-t5-idle.mp4',
+        'dogs/avatar/housemouse17-t6-idle.mp4',
+        'dogs/avatar/housemouse17-t7-idle.mp4',
+        'dogs/avatar/housemouse17-t7-idle.mp4'
+      ]
+    }
+  };
+  /* Evolution flavor: what each tier's new look is. */
+  var MYPUP_EVO_GEAR = {
+    2: 'a scout bandana', 3: 'an explorer cape', 4: 'a tracker collar',
+    5: 'a ranger hat', 6: 'a champion medal', 7: 'an alpha aura',
+    8: 'LEGENDARY golden light'
   };
   /* Tapping the pup is pure affection: a happy wiggle and a sweet bubble.
      (The old Feed/Play/Pet/Nap stat actions were retired 2026-10-08 when the

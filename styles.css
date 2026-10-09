@@ -836,3 +836,91 @@ body {
   .name-claim { flex: none; }
   .appbar-sub-btn { flex: none; }
 }
+
+/* ---- Pup Evolution: Legend golden aura (2026-10-08) ---- */
+.mypup-stage.legend-aura::after {
+  content: '✨';
+  position: absolute; inset: -14px;
+  display: flex; align-items: flex-start; justify-content: flex-end;
+  font-size: 2rem; pointer-events: none;
+  animation: aura-twinkle 1.6s ease-in-out infinite;
+}
+.mypup-stage.legend-aura video, .mypup-stage.legend-aura img {
+  border-radius: 18px;
+  box-shadow: 0 0 24px 6px rgba(255, 200, 60, .85), 0 0 60px 14px rgba(255, 160, 30, .45);
+  animation: aura-pulse 2.4s ease-in-out infinite;
+}
+@keyframes aura-pulse {
+  0%, 100% { box-shadow: 0 0 22px 5px rgba(255,200,60,.8), 0 0 55px 12px rgba(255,160,30,.4); }
+  50% { box-shadow: 0 0 34px 10px rgba(255,215,90,.95), 0 0 80px 20px rgba(255,170,40,.55); }
+}
+@keyframes aura-twinkle { 0%, 100% { opacity: .4; transform: scale(.9); } 50% { opacity: 1; transform: scale(1.15); } }
+
+/* ---- Pup Showdown bracket (2026-10-08) ---- */
+.sd-live, .sd-champ {
+  border-radius: 12px; padding: .7rem .9rem; margin: .6rem 0;
+  font-size: .95rem; text-align: center;
+}
+.sd-live { background: #2a1215; border: 1px solid #7a2b2b; color: #ffb3b3; }
+.sd-champ { background: #2e230f; border: 1px solid #a8842c; color: #ffe9a8; font-size: 1.02rem; }
+.sd-round { margin: 1rem 0 .4rem; font-size: 1rem; letter-spacing: .04em; }
+.sd-matchups { display: grid; gap: .55rem; }
+.sd-matchup {
+  display: grid; grid-template-columns: 1fr 1fr; gap: .55rem;
+  background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.09);
+  border-radius: 12px; padding: .55rem;
+}
+.sd-pup {
+  border-radius: 9px; padding: .5rem .6rem; font-size: .85rem;
+  background: rgba(255,255,255,.04); border: 1px solid transparent;
+  display: flex; flex-wrap: wrap; gap: .25rem .5rem; align-items: baseline;
+}
+.sd-pup.won { border-color: #e8b64c; background: rgba(232,182,76,.1); }
+.sd-pup.bye { opacity: .45; font-style: italic; justify-content: center; }
+.sd-seed { font-weight: 700; color: #e8b64c; }
+.sd-dog { font-weight: 700; }
+.sd-handle { opacity: .65; font-size: .78rem; }
+.sd-pts { margin-left: auto; font-variant-numeric: tabular-nums; color: #ffd98a; }
+
+/* ---- The Den (2026-10-08) ---- */
+.den-picker-row { display: flex; align-items: center; gap: .5rem; justify-content: center; margin: .4rem 0 .8rem; }
+.den-picker-label { font-size: .9rem; opacity: .8; }
+.den-select {
+  font-size: 1rem; padding: .45rem .7rem; border-radius: 10px;
+  background: #1c1c22; color: #fff; border: 1px solid rgba(255,255,255,.18);
+  max-width: 16rem;
+}
+.den-scene {
+  position: relative; height: 300px; border-radius: 16px; overflow: hidden;
+  background: linear-gradient(#7ec8f7 0%, #aee3ff 55%, #8fd694 55%, #6fbf73 100%);
+  border: 1px solid rgba(255,255,255,.12); margin-bottom: .4rem;
+}
+.den-house { position: absolute; left: 50%; bottom: 34px; transform: translateX(-50%); width: 190px; }
+.den-roof {
+  width: 0; height: 0; margin: 0 auto;
+  border-left: 105px solid transparent; border-right: 105px solid transparent;
+  border-bottom: 70px solid #8a4b2a;
+}
+.den-wall { position: relative; width: 170px; margin: -6px auto 0; height: 120px; background: #b06a3b; border-radius: 6px 6px 0 0; }
+.den-door {
+  position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+  width: 64px; height: 88px; background: #4a2c17; border-radius: 32px 32px 0 0;
+}
+.den-name {
+  position: absolute; top: 8px; left: 0; right: 0; text-align: center;
+  font-weight: 800; color: #fff8e8; text-shadow: 0 1px 3px rgba(0,0,0,.6); font-size: .95rem;
+}
+.den-deco { position: absolute; font-size: 1.9rem; filter: drop-shadow(0 2px 3px rgba(0,0,0,.45)); }
+.deco-mat { left: 50%; bottom: 8px; transform: translateX(-50%); }
+.deco-frame { left: 12%; top: 34%; }
+.deco-tv { right: 10%; top: 30%; }
+.deco-map { left: 8%; bottom: 60px; }
+.deco-globe { right: 8%; bottom: 56px; }
+.deco-torch { left: 22%; top: 12%; }
+.deco-star { right: 22%; top: 10%; }
+.deco-banner { left: 50%; top: 4%; transform: translateX(-50%); }
+.deco-medal { left: 30%; bottom: 44px; }
+.deco-crown { right: 30%; bottom: 100px; font-size: 2.2rem; }
+.deco-cup { left: 50%; bottom: 110px; transform: translateX(-50%); font-size: 2.4rem; animation: aura-twinkle 1.8s ease-in-out infinite; }
+.den-caption { text-align: center; font-size: .9rem; opacity: .85; margin: .2rem 0 .8rem; }
+.den-ach .ach-desc { display: none; }
