@@ -971,3 +971,16 @@ body {
   border-radius: 10px; padding: .4rem .8rem; font-size: .88rem; cursor: pointer;
   opacity: .9; margin-bottom: .2rem;
 }
+
+/* ---- Avatar picker (2026-10-08: pick a cartoon pup instead of the emoji) ---- */
+.mypup-picker { margin: .6rem 0; }
+.mypup-picker-title { text-align: center; font-weight: 700; color: #ffe9a8; margin: 0 0 .5rem; }
+.mypup-picker-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+.mypup-choice {
+  background: #1c1811; border: 2px solid rgba(255,255,255,.14); border-radius: 12px;
+  padding: .35rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: .2rem;
+}
+.mypup-choice img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; display: block; }
+.mypup-choice span { font-size: .68rem; color: #ffe9a8; font-weight: 600; }
+.mypup-choice:active { transform: scale(.96); border-color: #a8842c; }
+.mypup-change-wrap { text-align: center; margin: .3rem 0 0; }

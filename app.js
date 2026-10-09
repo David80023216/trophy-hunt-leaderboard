@@ -1345,6 +1345,10 @@
       img.hidden = true;
       img.classList.remove('idle');
       if (ph) ph.hidden = true;
+      var pk = document.getElementById('mypup-picker');
+      if (pk) pk.hidden = true;
+      var cw = document.getElementById('mypup-change-wrap');
+      if (cw) cw.hidden = true;
     }
     function mypupShowPhoto(src) {
       if (img.getAttribute('src') !== src) img.src = src;
@@ -1352,15 +1356,64 @@
       img.classList.add('idle');
       if (vel) { vel.hidden = true; vel.classList.remove('idle'); try { vel.pause(); } catch (e) {} }
       if (ph) ph.hidden = true;
+      /* Only offer "change avatar" when the photo IS a picked avatar, not a
+         real uploaded photo. */
+      var cw2 = document.getElementById('mypup-change-wrap');
+      var isPicked = false;
+      try {
+        var meH = (typeof getMe === 'function') ? getMe() : '';
+        isPicked = !!meH && localStorage.getItem('th-avatar-' + String(meH).toLowerCase()) === src;
+      } catch (e) {}
+      if (cw2) cw2.hidden = !isPicked;
+      var pk2 = document.getElementById('mypup-picker');
+      if (pk2) pk2.hidden = true;
     }
     if (tierVid) mypupShowVideo(tierVid, avImg || photo);
     else if (vid) mypupShowVideo(vid, photo);
     else if (avImg || photo) mypupShowPhoto(avImg || photo);
     else {
-      img.hidden = true;
-      img.classList.remove('idle');
-      if (vel) { vel.hidden = true; vel.classList.remove('idle'); }
-      if (ph) ph.hidden = false;
+      /* No video/photo: pickable avatar (Shawn 2026-10-08) instead of the
+         emoji placeholder. Choice persists per-handle in localStorage. */
+      var chosen = mypupChosenAvatar(handle);
+      var picker = document.getElementById('mypup-picker');
+      var changeWrap = document.getElementById('mypup-change-wrap');
+      if (chosen) {
+        if (picker) picker.hidden = true;
+        if (changeWrap) changeWrap.hidden = false;
+        mypupShowPhoto(chosen);
+      } else {
+        img.hidden = true;
+        img.classList.remove('idle');
+        if (vel) { vel.hidden = true; vel.classList.remove('idle'); }
+        if (ph) ph.hidden = true;
+        if (changeWrap) changeWrap.hidden = true;
+        if (picker) {
+          picker.hidden = false;
+          var grid = document.getElementById('mypup-picker-grid');
+          if (grid && !grid.dataset.built) {
+            grid.dataset.built = '1';
+            MYPUP_AVATAR_CHOICES.forEach(function (c) {
+              var b = document.createElement('button');
+              b.type = 'button';
+              b.className = 'mypup-choice';
+              b.setAttribute('aria-label', c.label);
+              var im = document.createElement('img');
+              im.src = c.src;
+              im.alt = c.label;
+              im.loading = 'lazy';
+              b.appendChild(im);
+              var lb = document.createElement('span');
+              lb.textContent = c.label;
+              b.appendChild(lb);
+              b.addEventListener('click', function () {
+                try { localStorage.setItem('th-avatar-' + String(handle).toLowerCase(), c.src); } catch (e) {}
+                renderMyPup();
+              });
+              grid.appendChild(b);
+            });
+          }
+        }
+      }
     }
     img.alt = name;
     document.getElementById('mypup-name').textContent = '🐶 ' + name;
@@ -1526,6 +1579,21 @@
       shelf.innerHTML = sh;
     }
   }
+  /* Pickable avatars (Shawn 2026-10-08): when a player has no photo/video,
+     they choose one of these cartoon pups instead of the emoji placeholder.
+     Stored per-handle in localStorage as th-avatar-<handle>. */
+  var MYPUP_AVATAR_CHOICES = [
+    { id: 'lab',      label: 'Labrador',        src: 'dogs/avatar/choices/choice-lab.webp' },
+    { id: 'frenchie', label: 'French Bulldog',  src: 'dogs/avatar/choices/choice-frenchie.webp' },
+    { id: 'beagle',   label: 'Beagle',          src: 'dogs/avatar/choices/choice-beagle.webp' },
+    { id: 'husky',    label: 'Husky',           src: 'dogs/avatar/choices/choice-husky.webp' },
+    { id: 'poodle',   label: 'Poodle',          src: 'dogs/avatar/choices/choice-poodle.webp' },
+    { id: 'shepherd', label: 'German Shepherd', src: 'dogs/avatar/choices/choice-shepherd.webp' }
+  ];
+  function mypupChosenAvatar(handle) {
+    try { return localStorage.getItem('th-avatar-' + String(handle).toLowerCase()) || ''; }
+    catch (e) { return ''; }
+  }
   /* Avatar pups: cartoon likeness of the player's actual dog, with real
      movement (animated video). Keyed by lowercase handle. `tiers` holds one
      idle video per evolution tier (1=Pup … 7=Alpha); tier 8 (Legend) reuses
@@ -1592,6 +1660,16 @@
     if (upBtn) upBtn.addEventListener('click', function () {
       if (getMe()) openProfile();
       else showClaimSheet();
+    });
+    /* Avatar picker: change button clears the saved choice so the picker
+       shows again (Shawn 2026-10-08). */
+    var chBtn = document.getElementById('mypup-change-btn');
+    if (chBtn) chBtn.addEventListener('click', function () {
+      var me = (typeof getMe === 'function') ? getMe() : '';
+      try { localStorage.removeItem('th-avatar-' + String(me).toLowerCase()); } catch (e) {}
+      var grid = document.getElementById('mypup-picker-grid');
+      if (grid) grid.dataset.built = '';
+      if (typeof renderMyPup === 'function') renderMyPup();
     });
     /* Tapping the pup itself is a pet. */
     ['mypup-img', 'mypup-video'].forEach(function (id) {
