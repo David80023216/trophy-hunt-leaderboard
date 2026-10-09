@@ -1250,7 +1250,7 @@
       return false;
     }
     var vids = (rw && rw.videos_ever) || [];
-    var pts = (rw && rw.season_points) || 0;
+    var pts = (rw && (rw.lifetime_points || rw.season_points)) || 0;
     var streak = (rw && rw.streak) || 0;
     var photos = (rw && rw.photo_count) || 0;
     return [
@@ -1339,8 +1339,10 @@
     document.getElementById('mypup-name').textContent = '🐶 ' + name;
     game.dataset.handle = handle;
     game.dataset.dogname = name;
-    /* Level + achievements from the player's REAL hunt data. */
-    var pts = (rw && rw.season_points) || 0;
+    /* Level + achievements from the player's REAL hunt data.
+       Levels run on LIFETIME points (Shawn 2026-10-08): the pup's level never
+       resets — it stays where it is when a new season begins. */
+    var pts = (rw && (rw.lifetime_points || rw.season_points)) || 0;
     var rank = (fnd && fnd.rank) || 0;
     var info = mypupLevelInfo(pts);
     document.getElementById('mypup-level').innerHTML =
