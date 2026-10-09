@@ -954,3 +954,20 @@ body {
 }
 #mypup-achievements .mypup-ach.locked .ach-ico { filter: grayscale(1) brightness(.55); }
 #mypup-achievements .mypup-ach.locked .ach-ico { font-size: 1.6rem; }
+
+/* ---- My Pup hub links + back buttons (2026-10-08: Den/Showdown live under My Pup) ---- */
+.mypup-links { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin: 1rem 0 .4rem; }
+.mypup-link-btn {
+  display: flex; align-items: center; justify-content: center; gap: .5rem;
+  font-size: 1.35rem; padding: .8rem .5rem; border-radius: 14px;
+  background: linear-gradient(180deg, #2b2417, #1c1811);
+  border: 1px solid #a8842c; color: #ffe9a8; cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0,0,0,.4);
+}
+.mypup-link-btn span { font-size: .92rem; font-weight: 700; }
+.mypup-link-btn:active { transform: scale(.97); }
+.back-btn {
+  background: none; border: 1px solid rgba(255,255,255,.22); color: #fff;
+  border-radius: 10px; padding: .4rem .8rem; font-size: .88rem; cursor: pointer;
+  opacity: .9; margin-bottom: .2rem;
+}

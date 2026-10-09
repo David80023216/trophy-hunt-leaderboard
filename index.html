@@ -14,7 +14,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css?v=1791518412">
+<link rel="stylesheet" href="styles.css?v=1791518530">
 </head>
 <body>
 
@@ -188,11 +188,16 @@
       </div>
       <h3 class="mypup-ach-title">🏅 Achievements</h3>
       <div class="mypup-ach-grid" id="mypup-achievements"></div>
+      <div class="mypup-links">
+        <button type="button" class="mypup-link-btn" data-goto="view-den">🏠<span>Visit the Den</span></button>
+        <button type="button" class="mypup-link-btn" data-goto="view-showdown">⚔️<span>Pup Showdown</span></button>
+      </div>
       <p class="board-caption mypup-note">Your pup levels up with YOUR Trophy Hunt points — and levels never reset between seasons. Comment, upload, and keep your streak alive!</p>
     </div>
   </section>
 
   <section class="view" id="view-den" aria-label="The Den">
+    <p><button type="button" class="back-btn" data-goto="view-pups">← My Pup</button></p>
     <h2 class="view-title">🏠 THE DEN</h2>
     <p class="board-caption view-sub">Every pup's own doghouse — decorated with the achievements they've actually earned. Visit any pup's den!</p>
     <p class="den-picker-row"><label for="den-player" class="den-picker-label">Visiting:</label> <select id="den-player" class="den-select"></select></p>
@@ -202,6 +207,7 @@
   </section>
 
   <section class="view" id="view-showdown" aria-label="Pup Showdown">
+    <p><button type="button" class="back-btn" data-goto="view-pups">← My Pup</button></p>
     <h2 class="view-title">⚔️ PUP SHOWDOWN</h2>
     <p class="board-caption view-sub">A weekly bracket where the top 8 pups face off head-to-head — most points earned this week wins each matchup. The champion's pup glows gold all week.</p>
     <div id="showdown-bracket"></div>
@@ -257,8 +263,6 @@
 <nav class="tabbar" aria-label="Sections">
   <button type="button" data-view="view-standings" class="active"><span class="tab-ico">🏆</span><span class="tab-label">Standings</span></button>
   <button type="button" data-view="view-pups"><span class="tab-ico">🐶</span><span class="tab-label">My Pup</span></button>
-  <button type="button" data-view="view-den"><span class="tab-ico">🏠</span><span class="tab-label">Den</span></button>
-  <button type="button" data-view="view-showdown"><span class="tab-ico">⚔️</span><span class="tab-label">Showdown</span></button>
   <button type="button" data-view="view-history"><span class="tab-ico">🌟</span><span class="tab-label">History</span></button>
   <button type="button" data-view="view-videos"><span class="tab-ico">🎬</span><span class="tab-label">Videos</span></button>
   <button type="button" data-view="view-helper"><span class="tab-ico">💬</span><span class="tab-label">Pup Helper</span></button>
@@ -267,7 +271,7 @@
 
 <script id="th-data" type="application/json">
 {
- "updated_at": "2026-10-08T22:59:03.377444-05:00",
+ "updated_at": "2026-10-08T23:01:58.522138-05:00",
  "season": {
   "name": "Season 1",
   "start": "2026-09-29",
@@ -1196,6 +1200,6 @@
   <img id="lightbox-img" alt="Expanded photo">
 </div>
 
-<script src="app.js?v=1791518307"></script>
+<script src="app.js?v=1791518525"></script>
 </body>
 </html>

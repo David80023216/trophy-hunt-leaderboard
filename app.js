@@ -972,6 +972,15 @@
     for (var g = 0; g < gotoRules.length; g++) {
       gotoRules[g].addEventListener('click', function () { show('view-rules'); });
     }
+    /* In-view navigation: My Pup links to the Den and Showdown views, which
+       live under My Pup instead of the tab bar (Shawn 2026-10-08: the tab
+       bar was getting cluttered). */
+    var gotoBtns = document.querySelectorAll('[data-goto]');
+    for (var q = 0; q < gotoBtns.length; q++) {
+      (function (b) {
+        b.addEventListener('click', function () { show(b.getAttribute('data-goto')); });
+      })(gotoBtns[q]);
+    }
   }
 
   /* Pups tab: gallery of verified player dog photos AND video clips from the
