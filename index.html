@@ -14,7 +14,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css?v=1791586623">
+<link rel="stylesheet" href="styles.css?v=1791586834">
 </head>
 <body>
 
@@ -158,7 +158,7 @@
 
   <section class="view" id="view-pups" aria-label="My Pup">
     <h2 class="view-title">🐶 MY PUP</h2>
-    <p class="board-caption view-sub">Your pup grows with your hunt — earn points, evolve through 8 forms, unlock achievements, and decorate your Den!</p>
+    <p class="board-caption view-sub">Your pup grows with your hunt — earn points, evolve through 8 forms, unlock achievements, decorate your Den, and unlock the Pup Studio at Lv 10!</p>
     <div id="mypup-signedout" class="mypup-signedout" hidden>
       <p class="mypup-big">🐾</p>
       <p>Sign in with your YouTube handle to meet your pup!</p>
@@ -195,6 +195,7 @@
       <div class="mypup-ach-grid" id="mypup-achievements"></div>
       <div class="mypup-links">
         <button type="button" class="mypup-link-btn" data-goto="view-den">🏠<span>Visit the Den</span></button>
+        <button type="button" class="mypup-link-btn" id="mypup-studio-btn" data-goto="view-studio">🎨<span>Pup Studio</span></button>
       </div>
       <p class="board-caption mypup-note">Your pup levels up with YOUR Trophy Hunt points — and levels never reset between seasons. Comment, upload, and keep your streak alive!</p>
     </div>
@@ -208,6 +209,13 @@
     <div id="den-scene-wrap"></div>
     <h3 class="mypup-ach-title">🎖️ Trophy Shelf</h3>
     <div class="mypup-ach-grid" id="den-shelf"></div>
+  </section>
+
+  <section class="view" id="view-studio" aria-label="Pup Studio">
+    <p><button type="button" class="back-btn" data-goto="view-pups">← My Pup</button></p>
+    <h2 class="view-title">🎨 PUP STUDIO</h2>
+    <p class="board-caption view-sub">The Level 10 reward — restyle your pup with fur tints and stage backdrops. Saved on this device.</p>
+    <div id="studio-wrap"></div>
   </section>
 
   <section class="view" id="view-helper" aria-label="Pup Helper">
@@ -268,7 +276,7 @@
 
 <script id="th-data" type="application/json">
 {
- "updated_at": "2026-10-09T17:57:23.787037-05:00",
+ "updated_at": "2026-10-09T18:08:04.306998-05:00",
  "season": {
   "name": "Season 1",
   "start": "2026-09-29",
@@ -1229,6 +1237,6 @@
   <img id="lightbox-img" alt="Expanded photo">
 </div>
 
-<script src="app.js?v=1791586613"></script>
+<script src="app.js?v=1791587033"></script>
 </body>
 </html>

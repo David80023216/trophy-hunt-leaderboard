@@ -959,6 +959,7 @@
       for (var j = 0; j < btns.length; j++) btns[j].classList.toggle('active', btns[j].getAttribute('data-view') === id);
       if (id === 'view-pups' && typeof renderMyPup === 'function') renderMyPup();
       if (id === 'view-den' && typeof renderDen === 'function') renderDen();
+      if (id === 'view-studio' && typeof renderStudio === 'function') renderStudio();
       if (window.scrollTo) window.scrollTo(0, 0);
     }
     for (var k = 0; k < btns.length; k++) {
@@ -1420,6 +1421,18 @@
     game.dataset.dogname = name;
     document.getElementById('mypup-level').innerHTML =
       '<span class="lvl-badge">Lv ' + info.level + '</span>' + info.title;
+    /* Pup Studio button shows its locked state until level 10 (Shawn 2026-10-09). */
+    var psub = document.getElementById('mypup-studio-btn');
+    if (psub) {
+      if (info.level >= PUPSTUDIO_UNLOCK_LEVEL) {
+        psub.classList.remove('locked');
+        psub.innerHTML = '🎨<span>Pup Studio</span>';
+      } else {
+        psub.classList.add('locked');
+        psub.innerHTML = '🔒<span>Pup Studio · Lv ' + PUPSTUDIO_UNLOCK_LEVEL + '</span>';
+      }
+    }
+    applyPupStudio(handle);
     var fill = document.getElementById('mypup-progress-fill');
     if (fill) fill.style.width = Math.round(info.into / 25 * 100) + '%';
     document.getElementById('mypup-progress-label').textContent =
@@ -1456,6 +1469,9 @@
       clearTimeout(img._mplvl);
       img._mplvl = setTimeout(function () { bub2.hidden = true; }, 4000);
     }
+    if (lastLvl > 0 && lastLvl < PUPSTUDIO_UNLOCK_LEVEL && info.level >= PUPSTUDIO_UNLOCK_LEVEL) {
+      toast('🎨 Pup Studio unlocked! Tap Pup Studio in My Pup to restyle your pup.');
+    }
     try { localStorage.setItem(lkey, String(info.level)); } catch (e) {}
   }
   /* Avatar pups: cartoon likeness of the player's actual dog, with real
@@ -1468,6 +1484,130 @@
       if (String(st[i].handle).toLowerCase() === String(handle).toLowerCase()) return { row: st[i], rank: i + 1 };
     }
     return null;
+  }
+  /* ---- Pup Studio (Shawn 2026-10-09): the level-10 reward. The pup becomes
+     customizable — fur tints + stage backdrops, saved per player on this
+     device. Filters apply to any avatar/photo/video, so there's no
+     per-avatar alignment pain (the thing that killed overlaid accessories). */
+  var PUPSTUDIO_UNLOCK_LEVEL = 10;
+  var PUPSTUDIO_TINTS = [
+    { id: 'natural',  label: 'Natural',  filter: 'none',                                                         sw: 'linear-gradient(135deg,#c9a06a,#8a5a2e)' },
+    { id: 'midnight', label: 'Midnight', filter: 'brightness(0.62) contrast(1.15) sepia(0.25) hue-rotate(185deg) saturate(1.6)', sw: 'linear-gradient(135deg,#0b1026,#274b73)' },
+    { id: 'golden',   label: 'Golden',   filter: 'sepia(0.55) saturate(2.1) brightness(1.08) hue-rotate(-18deg)', sw: 'linear-gradient(135deg,#ffe9a8,#e8a13c)' },
+    { id: 'frost',    label: 'Frost',    filter: 'brightness(1.28) saturate(0.35) hue-rotate(190deg)',             sw: 'linear-gradient(135deg,#e8f6ff,#9fd4f5)' },
+    { id: 'rosy',     label: 'Rosy',     filter: 'sepia(0.35) saturate(1.9) hue-rotate(305deg) brightness(1.05)', sw: 'linear-gradient(135deg,#ffc7dd,#f06a9c)' },
+    { id: 'shadow',   label: 'Shadow',   filter: 'brightness(0.38) contrast(1.35) saturate(0.7)',                  sw: 'linear-gradient(135deg,#050505,#3a3a3a)' },
+    { id: 'candy',    label: 'Candy',    filter: 'saturate(2.4) hue-rotate(285deg) brightness(1.06)',             sw: 'linear-gradient(135deg,#ff8af0,#7a4dff)' },
+    { id: 'royal',    label: 'Royal',    filter: 'sepia(0.45) saturate(1.6) hue-rotate(235deg) brightness(0.92)', sw: 'linear-gradient(135deg,#3d2a8f,#c9a227)' }
+  ];
+  var PUPSTUDIO_BACKDROPS = [
+    { id: 'default', label: 'Daybreak',     css: '',                                                              sw: 'linear-gradient(135deg,#0b0f14,#1c2536)' },
+    { id: 'sunset',  label: 'Sunset',       css: 'linear-gradient(160deg,#3a1f3d 0%,#b34a2e 55%,#f2a54a 100%)',    sw: 'linear-gradient(135deg,#3a1f3d,#f2a54a)' },
+    { id: 'night',   label: 'Starry Night', css: 'linear-gradient(180deg,#060a18 0%,#101b3d 60%,#1d2c5e 100%)',    sw: 'linear-gradient(135deg,#060a18,#1d2c5e)' },
+    { id: 'meadow',  label: 'Meadow',       css: 'linear-gradient(180deg,#7ec8f7 0%,#a8e6a1 55%,#5da85f 100%)',    sw: 'linear-gradient(135deg,#7ec8f7,#5da85f)' },
+    { id: 'velvet',  label: 'Velvet',       css: 'linear-gradient(160deg,#2a1a4d 0%,#5b2a86 55%,#c9a227 130%)',     sw: 'linear-gradient(135deg,#2a1a4d,#c9a227)' }
+  ];
+  function pupStudioKey(handle) { return 'th-pupstyle-' + String(handle || '').toLowerCase(); }
+  function pupStudioGet(handle) {
+    var d = { tint: 'natural', backdrop: 'default' };
+    try {
+      var raw = localStorage.getItem(pupStudioKey(handle));
+      if (raw) {
+        var p = JSON.parse(raw);
+        if (p && typeof p === 'object') { if (p.tint) d.tint = p.tint; if (p.backdrop) d.backdrop = p.backdrop; }
+      }
+    } catch (e) {}
+    return d;
+  }
+  function pupStudioSet(handle, patch) {
+    try { localStorage.setItem(pupStudioKey(handle), JSON.stringify(Object.assign(pupStudioGet(handle), patch))); } catch (e) {}
+  }
+  function pupStudioTint(tid) {
+    for (var i = 0; i < PUPSTUDIO_TINTS.length; i++) if (PUPSTUDIO_TINTS[i].id === tid) return PUPSTUDIO_TINTS[i];
+    return PUPSTUDIO_TINTS[0];
+  }
+  function pupStudioBackdrop(bid) {
+    for (var i = 0; i < PUPSTUDIO_BACKDROPS.length; i++) if (PUPSTUDIO_BACKDROPS[i].id === bid) return PUPSTUDIO_BACKDROPS[i];
+    return PUPSTUDIO_BACKDROPS[0];
+  }
+  function pupStudioLevel() {
+    var fnd = (typeof meRow === 'function') ? meRow() : null;
+    var rw = fnd && fnd.row;
+    var pts = (rw && (rw.lifetime_points || rw.season_points)) || 0;
+    return mypupLevelInfo(pts).level;
+  }
+  /* Apply a player's saved studio style to the My Pup stage. */
+  function applyPupStudio(handle) {
+    var st = pupStudioGet(handle);
+    var t = pupStudioTint(st.tint);
+    var b = pupStudioBackdrop(st.backdrop);
+    var filt = t.filter === 'none' ? '' : t.filter;
+    var img = document.getElementById('mypup-img');
+    var vel = document.getElementById('mypup-video');
+    if (img) img.style.filter = filt;
+    if (vel) vel.style.filter = filt;
+    var stage = document.querySelector('#mypup-game .mypup-stage');
+    if (stage) {
+      if (b.css) { stage.style.background = b.css; stage.style.padding = '.6rem'; stage.style.borderRadius = '1.4rem'; }
+      else { stage.style.background = ''; stage.style.padding = ''; stage.style.borderRadius = ''; }
+    }
+  }
+  function renderStudio() {
+    var wrap = document.getElementById('studio-wrap');
+    if (!wrap) return;
+    var handle = (typeof getMe === 'function') ? getMe() : '';
+    var lvl = pupStudioLevel();
+    if (!handle || lvl < PUPSTUDIO_UNLOCK_LEVEL) {
+      wrap.innerHTML = '<div class="studio-locked">🔒 <strong>Pup Studio unlocks at Level ' + PUPSTUDIO_UNLOCK_LEVEL + '.</strong><br>' +
+        'Your pup is Level ' + lvl + ' — keep earning hunt points to unlock fur tints and stage backdrops!</div>';
+      return;
+    }
+    var st = pupStudioGet(handle);
+    var previewSrc = '';
+    try {
+      var _mi = document.getElementById('mypup-img');
+      var _mv = document.getElementById('mypup-video');
+      if (_mi && !_mi.hidden && _mi.getAttribute('src')) previewSrc = _mi.getAttribute('src');
+      else if (_mv && !_mv.hidden && _mv.getAttribute('poster')) previewSrc = _mv.getAttribute('poster');
+      if (!previewSrc && typeof mypupChosenAvatar === 'function') previewSrc = mypupChosenAvatar(handle) || '';
+      if (!previewSrc && typeof MYPUP_AVATAR_CHOICES !== 'undefined' && MYPUP_AVATAR_CHOICES.length) previewSrc = MYPUP_AVATAR_CHOICES[0].src;
+    } catch (e) {}
+    var t0 = pupStudioTint(st.tint);
+    var html = '';
+    if (previewSrc) {
+      html += '<div class="studio-preview"><img id="studio-preview-img" src="' + esc(previewSrc) + '" alt="Pup preview"' +
+        (t0.filter !== 'none' ? ' style="filter:' + esc(t0.filter) + '"' : '') + '></div>';
+    }
+    html += '<h3 class="studio-sec-title">✨ Fur tint</h3><div class="studio-swatches">';
+    for (var i = 0; i < PUPSTUDIO_TINTS.length; i++) {
+      var t = PUPSTUDIO_TINTS[i];
+      html += '<button type="button" class="studio-swatch' + (st.tint === t.id ? ' sel' : '') + '" data-tint="' + t.id + '"' +
+        ' aria-label="' + esc(t.label) + '"><span style="background:' + t.sw + '"></span>' + esc(t.label) + '</button>';
+    }
+    html += '</div><h3 class="studio-sec-title">🌅 Stage backdrop</h3><div class="studio-swatches">';
+    for (var j = 0; j < PUPSTUDIO_BACKDROPS.length; j++) {
+      var b = PUPSTUDIO_BACKDROPS[j];
+      html += '<button type="button" class="studio-swatch' + (st.backdrop === b.id ? ' sel' : '') + '" data-backdrop="' + b.id + '"' +
+        ' aria-label="' + esc(b.label) + '"><span style="background:' + b.sw + '"></span>' + esc(b.label) + '</button>';
+    }
+    html += '</div><p class="board-caption">Styles save on this device and show on your pup everywhere.</p>';
+    wrap.innerHTML = html;
+    function wire(sel, attr, key) {
+      var btns = wrap.querySelectorAll('[' + sel + ']');
+      for (var k = 0; k < btns.length; k++) {
+        (function (el) {
+          el.addEventListener('click', function () {
+            var patch = {};
+            patch[key] = el.getAttribute(attr);
+            pupStudioSet(handle, patch);
+            applyPupStudio(handle);
+            renderStudio();
+          });
+        })(btns[k]);
+      }
+    }
+    wire('data-tint', 'data-tint', 'tint');
+    wire('data-backdrop', 'data-backdrop', 'backdrop');
   }
   /* The Den tab: each pup's own doghouse. The scene stays clean — the pup's
      real photo on the wall — and every earned achievement becomes a tile on
@@ -1509,11 +1649,20 @@
       if (achs[m].won) medals += '<div class="den-medal" title="' + esc(achs[m].name) + '">' + achs[m].icon + '</div>';
     }
     if (!medals) medals = '<div class="den-medals-empty">Earn achievements to hang medals here!</div>';
-    /* Resident portrait: the pup's real uploaded photo on the doghouse wall. */
+    /* Resident portrait: the pup's real uploaded photo on the doghouse wall;
+       without one, the pup's cartoon avatar — the 🐶 emoji placeholder is
+       retired (Shawn 2026-10-09). */
+    var hl = String(f.row.handle).toLowerCase();
     var plist = (data.dog_photos && data.dog_photos[f.row.handle]) || [];
     var p0 = plist.length ? plist[0] : null;
-    var portrait = p0
-      ? '<img class="den-resident" src="' + esc(p0.src || p0.full || '') + '" alt="' + esc(dogName) + '" loading="lazy" onerror="this.style.display=\'none\'">'
+    var portraitSrc = p0 ? (p0.src || p0.full || '') : '';
+    if (!portraitSrc) {
+      var av = (typeof MYPUP_AVATARS !== 'undefined') ? (MYPUP_AVATARS[hl] || null) : null;
+      portraitSrc = (av && av.img) || mypupChosenAvatar(f.row.handle) ||
+        ((typeof MYPUP_AVATAR_CHOICES !== 'undefined' && MYPUP_AVATAR_CHOICES.length) ? MYPUP_AVATAR_CHOICES[0].src : '');
+    }
+    var portrait = portraitSrc
+      ? '<img class="den-resident" src="' + esc(portraitSrc) + '" alt="' + esc(dogName) + '" loading="lazy" onerror="this.style.display=\'none\'">'
       : '<div class="den-resident den-resident-empty">🐶</div>';
     wrap.innerHTML =
       '<div class="den-scene">' + portrait +
@@ -1522,6 +1671,12 @@
       '</div>' +
       '<p class="den-caption">' + esc(dogName) + '\u2019s den · ' +
       nDeco + ' decorations earned</p>';
+    /* The viewed pup wears their own saved Pup Studio tint. */
+    var dres = wrap.querySelector('.den-resident');
+    if (dres && dres.tagName === 'IMG') {
+      var vtf = pupStudioTint(pupStudioGet(f.row.handle).tint).filter;
+      dres.style.filter = vtf === 'none' ? '' : vtf;
+    }
     if (shelf) {
       var sh = '';
       for (var s2 = 0; s2 < achs.length; s2++) {
