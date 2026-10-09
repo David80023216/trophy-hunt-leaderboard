@@ -1600,6 +1600,9 @@
      the Alpha video with a golden aura overlay. New avatars are generated
      when a player uploads their dog's photo. */
   var MYPUP_AVATARS = {
+    '@amandahagins': {
+      img: 'dogs/avatar/lola.png'
+    },
     '@housemouse17': {
       img: 'dogs/avatar/housemouse17.png',
       video: 'dogs/avatar/housemouse17-idle.mp4',
