@@ -1254,6 +1254,19 @@
     var into = pts % 25;
     return { level: lvl, title: title, into: into, need: 25 - into, pts: pts };
   }
+  /* Pup Showdown unlock (Shawn 2026-10-09): the weekly bracket unlocks at
+     pup level 10 (250 lifetime points) — a progression reward for hunters
+     who keep earning. */
+  var SHOWDOWN_UNLOCK_LEVEL = 10;
+  function mypupShowdownLevel() {
+    var fnd = (typeof meRow === 'function') ? meRow() : null;
+    var rw = fnd && fnd.row;
+    var pts = (rw && (rw.lifetime_points || rw.season_points)) || 0;
+    return mypupLevelInfo(pts).level;
+  }
+  function mypupShowdownUnlocked() {
+    return mypupShowdownLevel() >= SHOWDOWN_UNLOCK_LEVEL;
+  }
   function mypupAchievements(rw, rank) {
     var cl = (rw && rw.checklist && rw.checklist.items) || [];
     function itemDone(key) {
@@ -1421,6 +1434,17 @@
     game.dataset.dogname = name;
     document.getElementById('mypup-level').innerHTML =
       '<span class="lvl-badge">Lv ' + info.level + '</span>' + info.title;
+    /* Showdown link shows its locked state until level 10 (Shawn 2026-10-09). */
+    var sdBtn = document.getElementById('mypup-showdown-btn');
+    if (sdBtn) {
+      if (info.level >= SHOWDOWN_UNLOCK_LEVEL) {
+        sdBtn.classList.remove('locked');
+        sdBtn.innerHTML = '⚔️<span>Pup Showdown</span>';
+      } else {
+        sdBtn.classList.add('locked');
+        sdBtn.innerHTML = '🔒<span>Pup Showdown · Lv ' + SHOWDOWN_UNLOCK_LEVEL + '</span>';
+      }
+    }
     var fill = document.getElementById('mypup-progress-fill');
     if (fill) fill.style.width = Math.round(info.into / 25 * 100) + '%';
     document.getElementById('mypup-progress-label').textContent =
@@ -1474,6 +1498,12 @@
   function renderShowdown() {
     var wrap = document.getElementById('showdown-bracket');
     if (!wrap) return;
+    /* Locked until the signed-in pup reaches level 10 (Shawn 2026-10-09). */
+    if (!mypupShowdownUnlocked()) {
+      wrap.innerHTML = '<div class="sd-locked">🔒 <strong>Pup Showdown unlocks at Level ' + SHOWDOWN_UNLOCK_LEVEL + '.</strong><br>' +
+        'Your pup is Level ' + mypupShowdownLevel() + ' — keep earning hunt points to enter the weekly bracket!</div>';
+      return;
+    }
     var sd = data.showdown || {};
     if (!sd.active) {
       wrap.innerHTML = '<p class="board-caption">⚔️ The Showdown needs at least two scoring pups — it starts automatically once the hunt heats up. Keep earning points!</p>';
