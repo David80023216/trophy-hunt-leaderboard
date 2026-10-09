@@ -200,24 +200,22 @@
     if (identified) {
       document.getElementById('gsi-handle').textContent = r.handle;
       var bare = r.handle.replace(/^@/, '');
-      document.getElementById('gsi-avatar').textContent = (bare.charAt(0) || '?').toUpperCase();
-    }
-    /* Big top-right avatar: player's dog photo when known, else initial. */
-    var ab = document.getElementById('avatar-btn');
-    if (ab) {
-      ab.hidden = !identified;
-      if (identified) {
-        var ai = document.getElementById('avatar-img');
-        var fnd = (typeof meRow === 'function') ? meRow() : null;
-        var rw = fnd && fnd.row;
-        var src = '';
-        if (rw) {
-          var dp = (typeof dogPhotos !== 'undefined' && dogPhotos[rw.handle]) || null;
-          src = (dp && dp.full) || rw.photo || rw.avatar || '';
-        }
-        var initial = (r.handle.replace(/^@/, '').charAt(0) || '?').toUpperCase();
-        if (src) { ai.src = src; ai.style.display = ''; ab.classList.remove('show-initial'); }
-        else { ai.removeAttribute('src'); ai.style.display = 'none'; ab.classList.add('show-initial'); ab.setAttribute('data-initial', initial); }
+      /* Pill avatar: player's dog photo when known, else initial. */
+      var avEl = document.getElementById('gsi-avatar');
+      var fnd = (typeof meRow === 'function') ? meRow() : null;
+      var rw = fnd && fnd.row;
+      var src = '';
+      if (rw) {
+        var dp = (typeof dogPhotos !== 'undefined' && dogPhotos[rw.handle]) || null;
+        src = (dp && dp.full) || rw.photo || rw.avatar || '';
+      }
+      if (src) {
+        avEl.textContent = '';
+        var aim = document.createElement('img');
+        aim.src = src; aim.alt = '';
+        avEl.appendChild(aim);
+      } else {
+        avEl.textContent = (bare.charAt(0) || '?').toUpperCase();
       }
     }
     // Videos tab: legend when identified, sign-in nudge when available but signed out.
@@ -368,8 +366,6 @@
     var forget = document.getElementById('profile-forget');
     var sheet = document.getElementById('profile-sheet');
     if (chip) chip.addEventListener('click', openProfile);
-    var ab = document.getElementById('avatar-btn');
-    if (ab) ab.addEventListener('click', openProfile);
     if (close) close.addEventListener('click', hideProfile);
     if (sheet) sheet.addEventListener('click', function (e) {
       if (e.target === sheet) hideProfile();
