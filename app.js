@@ -1265,24 +1265,41 @@
   }
   function renderMyPup() {
     var signedOut = document.getElementById('mypup-signedout');
+    var empty = document.getElementById('mypup-empty');
     var game = document.getElementById('mypup-game');
     if (!signedOut || !game) return;
     var handle = (typeof getMe === 'function') ? getMe() : '';
     signedOut.hidden = !!handle;
+    if (empty) empty.hidden = true;
     game.hidden = !handle;
     if (!handle) return;
     var fnd = (typeof meRow === 'function') ? meRow() : null;
     var rw = fnd && fnd.row;
-    var name = (rw && rw.dog_name) || 'Ned';
+    var dogName = rw && rw.dog_name;
     var src = '';
     if (rw) {
       var dp = (typeof dogPhotos !== 'undefined' && dogPhotos[rw.handle]) || null;
       var first = dp ? (Array.isArray(dp) ? dp[0] : dp) : null;
       src = (first && (first.full || first.src)) || rw.photo || rw.avatar || '';
     }
-    if (!src) src = 'dogs/full/housemouse17.jpg';
+    /* No fake Ned: a brand-new player with no photo and no named dog gets the
+       empty state (with entry/upload CTAs) instead of a defaulted pup. */
+    if (!dogName && !src) {
+      game.hidden = true;
+      if (empty) empty.hidden = false;
+      return;
+    }
+    var name = dogName || 'Pup';
     var img = document.getElementById('mypup-img');
-    if (img.getAttribute('src') !== src) img.src = src;
+    var ph = document.getElementById('mypup-placeholder');
+    if (src) {
+      if (img.getAttribute('src') !== src) img.src = src;
+      img.hidden = false;
+      if (ph) ph.hidden = true;
+    } else {
+      img.hidden = true;
+      if (ph) ph.hidden = false;
+    }
     img.alt = name;
     document.getElementById('mypup-name').textContent = '🐶 ' + name;
     game.dataset.handle = handle;
@@ -1305,6 +1322,16 @@
     mypupBound = true;
     var sbtn = document.getElementById('mypup-signin-btn');
     if (sbtn) sbtn.addEventListener('click', function () { showClaimSheet(); });
+    var nameBtn = document.getElementById('mypup-name-btn');
+    if (nameBtn) nameBtn.addEventListener('click', function () {
+      var vtab = document.querySelector('.tabbar button[data-view="view-videos"]');
+      if (vtab) vtab.click();
+    });
+    var upBtn = document.getElementById('mypup-upload-btn');
+    if (upBtn) upBtn.addEventListener('click', function () {
+      if (getMe()) openProfile();
+      else showClaimSheet();
+    });
     var wrap = document.querySelector('.mypup-actions');
     if (wrap) {
       var btns = wrap.querySelectorAll('button[data-act]');
@@ -1333,7 +1360,7 @@
             bub.hidden = false;
             clearTimeout(img._mpt);
             img._mpt = setTimeout(function () { bub.hidden = true; }, 2200);
-            document.getElementById('mypup-mood').textContent = mypupMood(game.dataset.dogname || 'Ned', st);
+            document.getElementById('mypup-mood').textContent = mypupMood(game.dataset.dogname || 'Pup', st);
           });
         })(btns[i]);
       }

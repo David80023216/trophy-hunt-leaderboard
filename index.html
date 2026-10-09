@@ -14,7 +14,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css?v=1791514935">
+<link rel="stylesheet" href="styles.css?v=1791515094">
 </head>
 <body>
 
@@ -164,10 +164,20 @@
       <p>Sign in with your YouTube handle to meet your pup!</p>
       <p><button class="sub-btn" id="mypup-signin-btn">Sign In / Sign Up</button></p>
     </div>
+    <div id="mypup-empty" class="mypup-signedout" hidden>
+      <p class="mypup-big">🐶</p>
+      <p><strong>Your pup hasn't been introduced yet!</strong></p>
+      <p>Comment your dog's NAME on any hunt video, or upload their photo to meet them here.</p>
+      <p>
+        <button class="sub-btn" id="mypup-name-btn">🐶 Enter today's hunt</button>
+        <button class="sub-btn" id="mypup-upload-btn">📸 Upload photo (+25 pts)</button>
+      </p>
+    </div>
     <div id="mypup-game" hidden>
       <div class="mypup-stage">
         <div id="mypup-bubble" class="mypup-bubble" hidden></div>
         <img id="mypup-img" alt="Your pup">
+        <div id="mypup-placeholder" class="mypup-placeholder" hidden>🐶</div>
       </div>
       <div class="mypup-name" id="mypup-name"></div>
       <div class="mypup-mood" id="mypup-mood"></div>
@@ -244,7 +254,7 @@
 
 <script id="th-data" type="application/json">
 {
- "updated_at": "2026-10-08T21:52:57.541595-05:00",
+ "updated_at": "2026-10-08T22:04:33.864666-05:00",
  "season": {
   "name": "Season 1",
   "start": "2026-09-29",
@@ -1061,6 +1071,6 @@
   <img id="lightbox-img" alt="Expanded photo">
 </div>
 
-<script src="app.js?v=1791514956"></script>
+<script src="app.js?v=1791515103"></script>
 </body>
 </html>

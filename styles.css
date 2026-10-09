@@ -743,6 +743,12 @@ body {
 .mypup-actions button span { font-size: .72rem; font-weight: 700; color: var(--muted); }
 .mypup-actions button:active { transform: scale(.93); }
 .mypup-note { text-align: center; }
+.mypup-placeholder {
+  font-size: 5rem; text-align: center; padding: 2.2rem 1rem;
+  border: 2px dashed var(--line); border-radius: 1.2rem; background: rgba(255, 255, 255, .02);
+}
+.mypup-placeholder[hidden] { display: none; }
+#mypup-empty .sub-btn { margin: .25rem; }
 
 /* Pups gallery */
 .pup-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .8rem; margin-top: .6rem; }
