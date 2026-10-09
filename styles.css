@@ -856,39 +856,6 @@ body {
 }
 @keyframes aura-twinkle { 0%, 100% { opacity: .4; transform: scale(.9); } 50% { opacity: 1; transform: scale(1.15); } }
 
-/* ---- Pup Showdown bracket (2026-10-08) ---- */
-.sd-live, .sd-champ {
-  border-radius: 12px; padding: .7rem .9rem; margin: .6rem 0;
-  font-size: .95rem; text-align: center;
-}
-.sd-live { background: #2a1215; border: 1px solid #7a2b2b; color: #ffb3b3; }
-.sd-champ { background: #2e230f; border: 1px solid #a8842c; color: #ffe9a8; font-size: 1.02rem; }
-/* Locked state: Showdown unlocks at pup level 10 (Shawn 2026-10-09). */
-.sd-locked {
-  text-align: center; padding: 2.2rem 1.2rem; font-size: .98rem; line-height: 1.7;
-  background: #1c2333; border: 1px dashed #4a5878; border-radius: 14px; color: #c9d4ea;
-}
-.sd-locked strong { color: #ffe9a8; }
-.mypup-link-btn.locked { opacity: .65; }
-.sd-round { margin: 1rem 0 .4rem; font-size: 1rem; letter-spacing: .04em; }
-.sd-matchups { display: grid; gap: .55rem; }
-.sd-matchup {
-  display: grid; grid-template-columns: 1fr 1fr; gap: .55rem;
-  background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.09);
-  border-radius: 12px; padding: .55rem;
-}
-.sd-pup {
-  border-radius: 9px; padding: .5rem .6rem; font-size: .85rem;
-  background: rgba(255,255,255,.04); border: 1px solid transparent;
-  display: flex; flex-wrap: wrap; gap: .25rem .5rem; align-items: baseline;
-}
-.sd-pup.won { border-color: #e8b64c; background: rgba(232,182,76,.1); }
-.sd-pup.bye { opacity: .45; font-style: italic; justify-content: center; }
-.sd-seed { font-weight: 700; color: #e8b64c; }
-.sd-dog { font-weight: 700; }
-.sd-handle { opacity: .65; font-size: .78rem; }
-.sd-pts { margin-left: auto; font-variant-numeric: tabular-nums; color: #ffd98a; }
-
 /* ---- The Den (2026-10-08; scene redesigned: no overlaid decorations) ---- */
 .den-picker-row { display: flex; align-items: center; gap: .5rem; justify-content: center; margin: .4rem 0 .8rem; }
 .den-picker-label { font-size: .9rem; opacity: .8; }
@@ -962,7 +929,7 @@ body {
 #mypup-achievements .mypup-ach.locked .ach-ico { filter: grayscale(1) brightness(.55); }
 #mypup-achievements .mypup-ach.locked .ach-ico { font-size: 1.6rem; }
 
-/* ---- My Pup hub links + back buttons (2026-10-08: Den/Showdown live under My Pup) ---- */
+/* ---- My Pup hub links + back buttons (2026-10-08: Den lives under My Pup) ---- */
 .mypup-links { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin: 1rem 0 .4rem; }
 .mypup-link-btn {
   display: flex; align-items: center; justify-content: center; gap: .5rem;

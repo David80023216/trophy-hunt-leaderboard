@@ -959,7 +959,6 @@
       for (var j = 0; j < btns.length; j++) btns[j].classList.toggle('active', btns[j].getAttribute('data-view') === id);
       if (id === 'view-pups' && typeof renderMyPup === 'function') renderMyPup();
       if (id === 'view-den' && typeof renderDen === 'function') renderDen();
-      if (id === 'view-showdown' && typeof renderShowdown === 'function') renderShowdown();
       if (window.scrollTo) window.scrollTo(0, 0);
     }
     for (var k = 0; k < btns.length; k++) {
@@ -972,8 +971,8 @@
     for (var g = 0; g < gotoRules.length; g++) {
       gotoRules[g].addEventListener('click', function () { show('view-rules'); });
     }
-    /* In-view navigation: My Pup links to the Den and Showdown views, which
-       live under My Pup instead of the tab bar (Shawn 2026-10-08: the tab
+    /* In-view navigation: My Pup links to the Den view, which
+       lives under My Pup instead of the tab bar (Shawn 2026-10-08: the tab
        bar was getting cluttered). */
     var gotoBtns = document.querySelectorAll('[data-goto]');
     for (var q = 0; q < gotoBtns.length; q++) {
@@ -1254,19 +1253,6 @@
     var into = pts % 25;
     return { level: lvl, title: title, into: into, need: 25 - into, pts: pts };
   }
-  /* Pup Showdown unlock (Shawn 2026-10-09): the weekly bracket unlocks at
-     pup level 10 (250 lifetime points) — a progression reward for hunters
-     who keep earning. */
-  var SHOWDOWN_UNLOCK_LEVEL = 10;
-  function mypupShowdownLevel() {
-    var fnd = (typeof meRow === 'function') ? meRow() : null;
-    var rw = fnd && fnd.row;
-    var pts = (rw && (rw.lifetime_points || rw.season_points)) || 0;
-    return mypupLevelInfo(pts).level;
-  }
-  function mypupShowdownUnlocked() {
-    return mypupShowdownLevel() >= SHOWDOWN_UNLOCK_LEVEL;
-  }
   function mypupAchievements(rw, rank) {
     var cl = (rw && rw.checklist && rw.checklist.items) || [];
     function itemDone(key) {
@@ -1434,17 +1420,6 @@
     game.dataset.dogname = name;
     document.getElementById('mypup-level').innerHTML =
       '<span class="lvl-badge">Lv ' + info.level + '</span>' + info.title;
-    /* Showdown link shows its locked state until level 10 (Shawn 2026-10-09). */
-    var sdBtn = document.getElementById('mypup-showdown-btn');
-    if (sdBtn) {
-      if (info.level >= SHOWDOWN_UNLOCK_LEVEL) {
-        sdBtn.classList.remove('locked');
-        sdBtn.innerHTML = '⚔️<span>Pup Showdown</span>';
-      } else {
-        sdBtn.classList.add('locked');
-        sdBtn.innerHTML = '🔒<span>Pup Showdown · Lv ' + SHOWDOWN_UNLOCK_LEVEL + '</span>';
-      }
-    }
     var fill = document.getElementById('mypup-progress-fill');
     if (fill) fill.style.width = Math.round(info.into / 25 * 100) + '%';
     document.getElementById('mypup-progress-label').textContent =
@@ -1486,59 +1461,13 @@
   /* Avatar pups: cartoon likeness of the player's actual dog, with real
      movement (animated video). Keyed by lowercase handle. New avatars are
      generated when a player uploads their dog's photo. */
-  /* Pup Showdown tab: weekly auto bracket, rendered from the data block.
-     Just for fun — no contest points; the champion gets the golden cup. */
+  /* Pup Showdown REMOVED 2026-10-09 (Shawn: "I don't like the showdown"). */
   function findStandingsRow(handle) {
     var st = data.standings || [];
     for (var i = 0; i < st.length; i++) {
       if (String(st[i].handle).toLowerCase() === String(handle).toLowerCase()) return { row: st[i], rank: i + 1 };
     }
     return null;
-  }
-  function renderShowdown() {
-    var wrap = document.getElementById('showdown-bracket');
-    if (!wrap) return;
-    /* Locked until the signed-in pup reaches level 10 (Shawn 2026-10-09). */
-    if (!mypupShowdownUnlocked()) {
-      wrap.innerHTML = '<div class="sd-locked">🔒 <strong>Pup Showdown unlocks at Level ' + SHOWDOWN_UNLOCK_LEVEL + '.</strong><br>' +
-        'Your pup is Level ' + mypupShowdownLevel() + ' — keep earning hunt points to enter the weekly bracket!</div>';
-      return;
-    }
-    var sd = data.showdown || {};
-    if (!sd.active) {
-      wrap.innerHTML = '<p class="board-caption">⚔️ The Showdown needs at least two scoring pups — it starts automatically once the hunt heats up. Keep earning points!</p>';
-      return;
-    }
-    function pupCell(p, won) {
-      if (!p) return '<div class="sd-pup bye"><span>BYE week</span></div>';
-      return '<div class="sd-pup' + (won ? ' won' : '') + '">' +
-        '<span class="sd-seed">#' + p.seed + '</span> ' +
-        '<span class="sd-dog">' + esc(p.dog_name || 'Pup') + '</span> ' +
-        '<span class="sd-handle">' + esc(p.handle) + '</span>' +
-        '<span class="sd-pts">' + p.week_pts + ' pts this week</span></div>';
-    }
-    var html = '';
-    if (sd.champion && sd.decided) {
-      var cf = findStandingsRow(sd.champion);
-      var cname = cf ? (cf.row.dog_name || 'Pup') : 'Pup';
-      html += '<div class="sd-champ">🏆 <strong>' + esc(cname) + '</strong> (' + esc(sd.champion) + ') is this week\u2019s <strong>Showdown Champion!</strong></div>';
-    } else {
-      html += '<div class="sd-live">🔴 LIVE — week of ' + esc(sd.week_start || '') + ' · winners decided by points earned this week</div>';
-    }
-    var rounds = sd.rounds || [];
-    for (var r = 0; r < rounds.length; r++) {
-      html += '<h3 class="sd-round">' + esc(rounds[r].name) + '</h3><div class="sd-matchups">';
-      var ms = rounds[r].matchups || [];
-      for (var m = 0; m < ms.length; m++) {
-        var mu = ms[m];
-        html += '<div class="sd-matchup">' +
-          pupCell(mu.a, mu.winner === (mu.a && mu.a.handle)) +
-          pupCell(mu.b, mu.b && mu.winner === mu.b.handle) + '</div>';
-      }
-      html += '</div>';
-    }
-    html += '<p class="board-caption">Just for fun — no contest points. The champion\u2019s pup wears a golden aura and a golden cup lands in their Den.</p>';
-    wrap.innerHTML = html;
   }
   /* The Den tab: each pup's own doghouse. The scene stays clean — the pup's
      real photo on the wall — and every earned achievement becomes a tile on
@@ -1571,9 +1500,6 @@
     var achs = mypupAchievements(f.row, f.rank);
     var won = {};
     for (var a = 0; a < achs.length; a++) if (achs[a].won) won[achs[a].name] = true;
-    var sd = data.showdown || {};
-    var isChamp = sd.active && sd.decided && sd.champion &&
-      String(sd.champion).toLowerCase() === String(f.row.handle).toLowerCase();
     var dogName = f.row.dog_name || 'Pup';
     var nDeco = 0;
     for (var k in won) if (won.hasOwnProperty(k)) nDeco++;
@@ -1582,7 +1508,6 @@
     for (var m = 0; m < achs.length; m++) {
       if (achs[m].won) medals += '<div class="den-medal" title="' + esc(achs[m].name) + '">' + achs[m].icon + '</div>';
     }
-    if (isChamp) medals += '<div class="den-medal den-medal-gold" title="Showdown Champion">🏆</div>';
     if (!medals) medals = '<div class="den-medals-empty">Earn achievements to hang medals here!</div>';
     /* Resident portrait: the pup's real uploaded photo on the doghouse wall. */
     var plist = (data.dog_photos && data.dog_photos[f.row.handle]) || [];
@@ -1596,7 +1521,7 @@
         '<div class="den-nameplate">' + esc(dogName) + '\u2019s Den</div>' +
       '</div>' +
       '<p class="den-caption">' + esc(dogName) + '\u2019s den · ' +
-      (nDeco + (isChamp ? 1 : 0)) + ' decorations earned</p>';
+      nDeco + ' decorations earned</p>';
     if (shelf) {
       var sh = '';
       for (var s2 = 0; s2 < achs.length; s2++) {
@@ -1605,7 +1530,6 @@
           '<div class="ach-name">' + achs[s2].name + '</div>' +
           '<div class="ach-desc">' + achs[s2].desc + '</div></div>';
       }
-      if (isChamp) sh += '<div class="mypup-ach won den-ach"><div class="ach-ico">🏆</div><div class="ach-name">Showdown Champ</div><div class="ach-desc">Won the weekly bracket</div></div>';
       shelf.innerHTML = sh;
     }
   }

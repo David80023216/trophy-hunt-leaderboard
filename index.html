@@ -14,7 +14,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css?v=1791581877">
+<link rel="stylesheet" href="styles.css?v=1791586623">
 </head>
 <body>
 
@@ -158,7 +158,7 @@
 
   <section class="view" id="view-pups" aria-label="My Pup">
     <h2 class="view-title">🐶 MY PUP</h2>
-    <p class="board-caption view-sub">Your pup grows with your hunt — earn points, evolve through 8 forms, unlock achievements, battle in the Showdown (unlocks at Lv 10), and decorate your Den!</p>
+    <p class="board-caption view-sub">Your pup grows with your hunt — earn points, evolve through 8 forms, unlock achievements, and decorate your Den!</p>
     <div id="mypup-signedout" class="mypup-signedout" hidden>
       <p class="mypup-big">🐾</p>
       <p>Sign in with your YouTube handle to meet your pup!</p>
@@ -195,7 +195,6 @@
       <div class="mypup-ach-grid" id="mypup-achievements"></div>
       <div class="mypup-links">
         <button type="button" class="mypup-link-btn" data-goto="view-den">🏠<span>Visit the Den</span></button>
-        <button type="button" class="mypup-link-btn" id="mypup-showdown-btn" data-goto="view-showdown">⚔️<span>Pup Showdown</span></button>
       </div>
       <p class="board-caption mypup-note">Your pup levels up with YOUR Trophy Hunt points — and levels never reset between seasons. Comment, upload, and keep your streak alive!</p>
     </div>
@@ -209,13 +208,6 @@
     <div id="den-scene-wrap"></div>
     <h3 class="mypup-ach-title">🎖️ Trophy Shelf</h3>
     <div class="mypup-ach-grid" id="den-shelf"></div>
-  </section>
-
-  <section class="view" id="view-showdown" aria-label="Pup Showdown">
-    <p><button type="button" class="back-btn" data-goto="view-pups">← My Pup</button></p>
-    <h2 class="view-title">⚔️ PUP SHOWDOWN</h2>
-    <p class="board-caption view-sub">A weekly bracket where the top 8 pups face off head-to-head — most points earned this week wins each matchup. The champion's pup glows gold all week.</p>
-    <div id="showdown-bracket"></div>
   </section>
 
   <section class="view" id="view-helper" aria-label="Pup Helper">
@@ -276,7 +268,7 @@
 
 <script id="th-data" type="application/json">
 {
- "updated_at": "2026-10-09T16:42:11.042992-05:00",
+ "updated_at": "2026-10-09T17:57:23.787037-05:00",
  "season": {
   "name": "Season 1",
   "start": "2026-09-29",
@@ -1209,183 +1201,13 @@
    }
   ]
  },
- "showdown": {
-  "active": true,
-  "week_start": "2026-10-05",
-  "week_end": "2026-10-11",
-  "seeds": [
-   {
-    "handle": "@housemouse17",
-    "dog_name": "Ned",
-    "seed": 1,
-    "trail_pts": 37,
-    "week_pts": 0
-   },
-   {
-    "handle": "@AmandaHagins",
-    "dog_name": "Lola",
-    "seed": 2,
-    "trail_pts": 27,
-    "week_pts": 1
-   },
-   {
-    "handle": "@v4lee6241",
-    "dog_name": "Luna",
-    "seed": 3,
-    "trail_pts": 11,
-    "week_pts": 0
-   },
-   {
-    "handle": "@gilmanerycastillosandoval9681",
-    "dog_name": "Pup",
-    "seed": 4,
-    "trail_pts": 5,
-    "week_pts": 5
-   },
-   {
-    "handle": "@janyarkhudhur2141",
-    "dog_name": "Pup",
-    "seed": 5,
-    "trail_pts": 5,
-    "week_pts": 5
-   },
-   {
-    "handle": "@The-goat-32",
-    "dog_name": "Pup",
-    "seed": 6,
-    "trail_pts": 1,
-    "week_pts": 0
-   }
-  ],
-  "rounds": [
-   {
-    "name": "Quarterfinals",
-    "matchups": [
-     {
-      "a": {
-       "handle": "@housemouse17",
-       "dog_name": "Ned",
-       "trail_pts": 37,
-       "week_pts": 0,
-       "seed": 1
-      },
-      "b": {
-       "handle": "@The-goat-32",
-       "dog_name": "Pup",
-       "trail_pts": 1,
-       "week_pts": 0,
-       "seed": 6
-      },
-      "winner": "@housemouse17",
-      "bye": false
-     },
-     {
-      "a": {
-       "handle": "@AmandaHagins",
-       "dog_name": "Lola",
-       "trail_pts": 27,
-       "week_pts": 1,
-       "seed": 2
-      },
-      "b": {
-       "handle": "@janyarkhudhur2141",
-       "dog_name": "Pup",
-       "trail_pts": 5,
-       "week_pts": 5,
-       "seed": 5
-      },
-      "winner": "@janyarkhudhur2141",
-      "bye": false
-     },
-     {
-      "a": {
-       "handle": "@v4lee6241",
-       "dog_name": "Luna",
-       "trail_pts": 11,
-       "week_pts": 0,
-       "seed": 3
-      },
-      "b": {
-       "handle": "@gilmanerycastillosandoval9681",
-       "dog_name": "Pup",
-       "trail_pts": 5,
-       "week_pts": 5,
-       "seed": 4
-      },
-      "winner": "@gilmanerycastillosandoval9681",
-      "bye": false
-     }
-    ]
-   },
-   {
-    "name": "Semifinals",
-    "matchups": [
-     {
-      "a": {
-       "handle": "@housemouse17",
-       "dog_name": "Ned",
-       "trail_pts": 37,
-       "week_pts": 0,
-       "seed": 1
-      },
-      "b": {
-       "handle": "@janyarkhudhur2141",
-       "dog_name": "Pup",
-       "trail_pts": 5,
-       "week_pts": 5,
-       "seed": 2
-      },
-      "winner": "@janyarkhudhur2141",
-      "bye": false
-     },
-     {
-      "a": {
-       "handle": "@gilmanerycastillosandoval9681",
-       "dog_name": "Pup",
-       "trail_pts": 5,
-       "week_pts": 5,
-       "seed": 3
-      },
-      "b": null,
-      "winner": "@gilmanerycastillosandoval9681",
-      "bye": true
-     }
-    ]
-   },
-   {
-    "name": "Final",
-    "matchups": [
-     {
-      "a": {
-       "handle": "@janyarkhudhur2141",
-       "dog_name": "Pup",
-       "trail_pts": 5,
-       "week_pts": 5,
-       "seed": 1
-      },
-      "b": {
-       "handle": "@gilmanerycastillosandoval9681",
-       "dog_name": "Pup",
-       "trail_pts": 5,
-       "week_pts": 5,
-       "seed": 2
-      },
-      "winner": "@janyarkhudhur2141",
-      "bye": false
-     }
-    ]
-   }
-  ],
-  "champion": "@janyarkhudhur2141",
-  "decided": false
- },
  "mission": {
-  "subscribers": 601,
+  "subscribers": 602,
   "goal": 1000,
   "dollars_per_sub": 1,
-  "dollars_raised": 601,
-  "fetched_at": "2026-10-09T21:13:46.459317+00:00",
-  "fetched_epoch": 1791580425.7237837
+  "dollars_raised": 602,
+  "fetched_at": "2026-10-09T22:53:53.771344+00:00",
+  "fetched_epoch": 1791586433.2768207
  }
 }
 </script>
@@ -1407,6 +1229,6 @@
   <img id="lightbox-img" alt="Expanded photo">
 </div>
 
-<script src="app.js?v=1791581871"></script>
+<script src="app.js?v=1791586613"></script>
 </body>
 </html>
