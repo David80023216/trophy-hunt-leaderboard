@@ -1601,7 +1601,8 @@
      when a player uploads their dog's photo. */
   var MYPUP_AVATARS = {
     '@amandahagins': {
-      img: 'dogs/avatar/lola.png'
+      img: 'dogs/avatar/lola.png',
+      video: 'dogs/avatar/lola-idle.mp4'
     },
     '@housemouse17': {
       img: 'dogs/avatar/housemouse17.png',
