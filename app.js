@@ -465,6 +465,11 @@
     inp.addEventListener('change', function () {
       if (inp.files && inp.files[0]) uploadProfileFile(inp.files[0]);
     });
+    var cta = document.getElementById('pups-upload-cta');
+    if (cta) cta.addEventListener('click', function () {
+      if (getMe()) openProfile();
+      else showClaimSheet();
+    });
   }
 
   /* ---- Handle claim (no Google needed) ----
@@ -672,7 +677,7 @@
   var HELPER_NAME = "Pup Helper";
   var PLAYLIST = 'https://www.youtube.com/playlist?list=PLXRC36_9f9gA';
   var SUB_LINK = 'https://www.youtube.com/channel/UC4ghQwAZYqXrp6o5o-ZHn-Q?sub_confirmation=1';
-  var PHOTO_FORM = 'https://forms.gle/HEtMitfJZLq7NQPL9';
+  // (photo uploads moved into player profiles 2026-10-08 — the Google Form is retired)
 
   /* Dog-care FAQ: safe, vet-consensus answers. Health topics always defer
      to a vet. Checked AFTER game intents, BEFORE the generic deferral. */
@@ -794,7 +799,7 @@
       return "🔥 Play every day to build a streak — any scoring day keeps it alive! Bonuses: 3 days +10 · 7 days +25 · 14 days +50 · 30 days +100. Miss a day and it resets.";
     }
     if (has('photo', 'photos', 'picture', 'pic', 'upload', 'submit')) {
-      return '📸 Submit a real photo of your dog <a href="' + PHOTO_FORM + '" target="_blank" rel="noopener">through this form</a> → +5 pts every day. Real photos only — no screenshots or stock pics!';
+      return '📸 Sign in with your YouTube handle, tap your name, and add a real photo of your dog → +5 pts every day. Real photos only — no screenshots or stock pics!';
     }
     if (has('point', 'points', 'earn', 'enter', 'entry', 'join') || (has('play') && !has('replay'))) {
       return "🐶 Easy! Comment your dog's NAME on any hunt video → +10 pts per comment, up to 3 scoring comments a day. Any other comment → +1 pt once a day. Keep names clean!";
