@@ -621,14 +621,21 @@ body {
 /* Profile gallery + uploads */
 .profile-gallery-head { color: var(--gold); font-size: .82rem; font-weight: 700; margin-bottom: .4rem; }
 .profile-gallery {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: .4rem;
-  margin-bottom: .8rem; min-height: 3.4rem;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: .35rem;
+  margin-bottom: .8rem; min-height: 3rem;
 }
 .gallery-empty { grid-column: 1 / -1; color: var(--muted); font-size: .78rem; text-align: center; padding: .8rem 0; }
 .gallery-item {
   aspect-ratio: 1; object-fit: cover; width: 100%; border-radius: 8px;
-  border: 1px solid var(--line); background: #0b0f14;
+  border: 1px solid var(--line); background: #0b0f14; cursor: zoom-in;
 }
+/* Lightbox: tap a gallery photo to see it big */
+.lightbox {
+  position: fixed; inset: 0; z-index: 200; background: rgba(0, 0, 0, .92);
+  display: flex; align-items: center; justify-content: center; cursor: zoom-out;
+}
+.lightbox[hidden] { display: none; }
+.lightbox img { max-width: 94vw; max-height: 92vh; border-radius: 10px; }
 .profile-upload { display: flex; align-items: center; gap: .6rem; margin-bottom: .9rem; }
 .upload-btn {
   background: rgba(255, 211, 77, .14); color: var(--gold); border: 1px solid var(--gold-dim);
