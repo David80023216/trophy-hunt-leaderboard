@@ -1486,12 +1486,8 @@
       ? '<img class="den-resident" src="' + esc(p0.src || p0.full || '') + '" alt="' + esc(dogName) + '" loading="lazy" onerror="this.style.display=\'none\'">'
       : '<div class="den-resident den-resident-empty">🐶</div>';
     wrap.innerHTML =
-      '<div class="den-scene">' +
-        '<div class="den-house"><div class="den-roof"></div>' +
-        '<div class="den-wall">' + portrait +
-        '<div class="den-door"></div>' +
-        '<div class="den-name">' + esc(dogName) + '</div></div></div>' +
-        '<div class="den-bone">🦴</div>' +
+      '<div class="den-scene">' + portrait +
+        '<div class="den-nameplate">' + esc(dogName) + '\u2019s Den</div>' +
       '</div>' +
       '<p class="den-caption">' + esc(dogName) + '\u2019s den · ' +
       (nDeco + (isChamp ? 1 : 0)) + ' decorations earned</p>';
