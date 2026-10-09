@@ -705,13 +705,14 @@ body {
   display: flex; flex-direction: column; align-items: flex-end; gap: .35rem;
 }
 #dog-trick-btn {
-  width: 3.4rem; height: 3.4rem; border-radius: 50%;
-  font-size: 1.9rem; line-height: 1; padding: 0;
+  width: min(9rem, 44vw); aspect-ratio: 3 / 4; padding: 0;
+  border-radius: 1.2rem; overflow: hidden;
   background: rgba(10, 14, 20, .94); border: 2px solid var(--gold);
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; display: block;
   box-shadow: 0 4px 18px rgba(0, 0, 0, .55);
 }
-#dog-trick-btn:active { transform: scale(.9); }
+#dog-trick-btn img { width: 100%; height: 100%; object-fit: cover; display: block; }
+#dog-trick-btn:active { transform: scale(.96); }
 #dog-bubble {
   background: rgba(10, 14, 20, .96); border: 1px solid var(--line);
   color: var(--text); font-size: .82rem; padding: .45rem .7rem;
@@ -726,6 +727,7 @@ body {
 #dog-trick-btn.trick-spin { animation: trick-spin .7s ease; }
 #dog-trick-btn.trick-bark { animation: trick-bark .5s ease; }
 #dog-trick-btn.trick-jump { animation: trick-jump .55s ease; }
+#dog-trick-btn.trick-nap img { filter: grayscale(.55) brightness(.72); transition: filter .4s ease; }
 
 /* Pups gallery */
 .pup-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .8rem; margin-top: .6rem; }

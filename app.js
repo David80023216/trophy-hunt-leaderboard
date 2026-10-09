@@ -1256,13 +1256,13 @@
       } catch (e) { /* audio unavailable: stay silent */ }
     }
     var tricks = [
-      { emoji: '🐶', anim: 'trick-bark', say: 'Woof woof! 🐾', sound: true },
-      { emoji: '🐕', anim: '', say: '*sits politely* 🎖️' },
-      { emoji: '🐶', anim: 'trick-roll', say: '*rolls over!* 🌀' },
-      { emoji: '🐶', anim: 'trick-spin', say: '*does a spin!* ✨' },
-      { emoji: '🐶', anim: 'trick-jump', say: '*jumps for joy!* 🎉' },
-      { emoji: '🐩', anim: '', say: '*begs for a treat* 🦴' },
-      { emoji: '😴', anim: '', say: '*takes a quick nap…* 💤' }
+      { anim: 'trick-bark', say: 'Woof woof! 🐾', sound: true },
+      { anim: '', say: '*sits politely* 🎖️' },
+      { anim: 'trick-roll', say: '*rolls over!* 🌀' },
+      { anim: 'trick-spin', say: '*does a spin!* ✨' },
+      { anim: 'trick-jump', say: '*jumps for joy!* 🎉' },
+      { anim: '', say: '*begs for a treat* 🦴' },
+      { anim: 'trick-nap', say: '*takes a quick nap…* 💤' }
     ];
     var last = -1, hideT = null;
     btn.addEventListener('click', function () {
@@ -1270,8 +1270,7 @@
       do { i = Math.floor(Math.random() * tricks.length); } while (i === last);
       last = i;
       var tr = tricks[i];
-      btn.textContent = tr.emoji;
-      btn.classList.remove('trick-bark', 'trick-roll', 'trick-spin', 'trick-jump');
+      btn.classList.remove('trick-bark', 'trick-roll', 'trick-spin', 'trick-jump', 'trick-nap');
       void btn.offsetWidth; /* restart the animation */
       if (tr.anim) btn.classList.add(tr.anim);
       bubble.textContent = tr.say;
