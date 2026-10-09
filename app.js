@@ -1442,20 +1442,10 @@
     html += '<p class="board-caption">Just for fun — no contest points. The champion\u2019s pup wears a golden aura and a golden cup lands in their Den.</p>';
     wrap.innerHTML = html;
   }
-  /* The Den tab: each pup's own doghouse, decorated with the achievements
-     they've actually earned. Visit any pup's den from the picker. */
-  var DEN_DECOR = [
-    { key: 'First Entry', icon: '🐾', cls: 'deco-mat', label: 'Paw-print doormat' },
-    { key: 'Picture Pup', icon: '🖼️', cls: 'deco-frame', label: 'Framed photo' },
-    { key: 'Movie Star', icon: '📺', cls: 'deco-tv', label: 'Pup TV' },
-    { key: 'Explorer', icon: '🗺️', cls: 'deco-map', label: 'Explorer map' },
-    { key: 'Trailblazer', icon: '🌍', cls: 'deco-globe', label: 'Trailblazer globe' },
-    { key: 'On a Roll', icon: '🔥', cls: 'deco-torch', label: 'Streak torch' },
-    { key: 'Week Warrior', icon: '⭐', cls: 'deco-star', label: 'Week Warrior star' },
-    { key: 'Full Clear', icon: '🎏', cls: 'deco-banner', label: 'Full-clear banner' },
-    { key: 'Top 3', icon: '🥉', cls: 'deco-medal', label: 'Top-3 medal' },
-    { key: 'Top Dog', icon: '👑', cls: 'deco-crown', label: 'Top Dog crown' }
-  ];
+  /* The Den tab: each pup's own doghouse. The scene stays clean — the pup's
+     real photo on the wall — and every earned achievement becomes a tile on
+     the trophy shelf below (absolute-positioned emoji overlays looked broken
+     on phones, retired 2026-10-08). */
   function renderDen() {
     var sel = document.getElementById('den-player');
     var wrap = document.getElementById('den-scene-wrap');
@@ -1486,21 +1476,22 @@
     var sd = data.showdown || {};
     var isChamp = sd.active && sd.champion &&
       String(sd.champion).toLowerCase() === String(f.row.handle).toLowerCase();
-    var decos = '';
-    for (var d = 0; d < DEN_DECOR.length; d++) {
-      var dd = DEN_DECOR[d];
-      if (won[dd.key]) decos += '<div class="den-deco ' + dd.cls + '" title="' + esc(dd.label) + '">' + dd.icon + '</div>';
-    }
-    if (isChamp) decos += '<div class="den-deco deco-cup" title="Showdown Champion">🏆</div>';
     var dogName = f.row.dog_name || 'Pup';
     var nDeco = 0;
     for (var k in won) if (won.hasOwnProperty(k)) nDeco++;
+    /* Resident portrait: the pup's real uploaded photo on the doghouse wall. */
+    var plist = (data.dog_photos && data.dog_photos[f.row.handle]) || [];
+    var p0 = plist.length ? plist[0] : null;
+    var portrait = p0
+      ? '<img class="den-resident" src="' + esc(p0.src || p0.full || '') + '" alt="' + esc(dogName) + '" loading="lazy" onerror="this.style.display=\'none\'">'
+      : '<div class="den-resident den-resident-empty">🐶</div>';
     wrap.innerHTML =
       '<div class="den-scene">' +
         '<div class="den-house"><div class="den-roof"></div>' +
-        '<div class="den-wall"><div class="den-door"></div>' +
+        '<div class="den-wall">' + portrait +
+        '<div class="den-door"></div>' +
         '<div class="den-name">' + esc(dogName) + '</div></div></div>' +
-        decos +
+        '<div class="den-bone">🦴</div>' +
       '</div>' +
       '<p class="den-caption">' + esc(dogName) + '\u2019s den · ' +
       (nDeco + (isChamp ? 1 : 0)) + ' decorations earned</p>';
@@ -1509,9 +1500,10 @@
       for (var s2 = 0; s2 < achs.length; s2++) {
         sh += '<div class="mypup-ach ' + (achs[s2].won ? 'won' : 'locked') + ' den-ach">' +
           '<div class="ach-ico">' + (achs[s2].won ? achs[s2].icon : '🔒') + '</div>' +
-          '<div class="ach-name">' + achs[s2].name + '</div></div>';
+          '<div class="ach-name">' + achs[s2].name + '</div>' +
+          '<div class="ach-desc">' + achs[s2].desc + '</div></div>';
       }
-      if (isChamp) sh += '<div class="mypup-ach won den-ach"><div class="ach-ico">🏆</div><div class="ach-name">Showdown Champ</div></div>';
+      if (isChamp) sh += '<div class="mypup-ach won den-ach"><div class="ach-ico">🏆</div><div class="ach-name">Showdown Champ</div><div class="ach-desc">Won the weekly bracket</div></div>';
       shelf.innerHTML = sh;
     }
   }

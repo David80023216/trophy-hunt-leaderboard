@@ -882,7 +882,7 @@ body {
 .sd-handle { opacity: .65; font-size: .78rem; }
 .sd-pts { margin-left: auto; font-variant-numeric: tabular-nums; color: #ffd98a; }
 
-/* ---- The Den (2026-10-08) ---- */
+/* ---- The Den (2026-10-08; scene redesigned: no overlaid decorations) ---- */
 .den-picker-row { display: flex; align-items: center; gap: .5rem; justify-content: center; margin: .4rem 0 .8rem; }
 .den-picker-label { font-size: .9rem; opacity: .8; }
 .den-select {
@@ -910,17 +910,18 @@ body {
   position: absolute; top: 8px; left: 0; right: 0; text-align: center;
   font-weight: 800; color: #fff8e8; text-shadow: 0 1px 3px rgba(0,0,0,.6); font-size: .95rem;
 }
-.den-deco { position: absolute; font-size: 1.9rem; filter: drop-shadow(0 2px 3px rgba(0,0,0,.45)); }
-.deco-mat { left: 50%; bottom: 8px; transform: translateX(-50%); }
-.deco-frame { left: 12%; top: 34%; }
-.deco-tv { right: 10%; top: 30%; }
-.deco-map { left: 8%; bottom: 60px; }
-.deco-globe { right: 8%; bottom: 56px; }
-.deco-torch { left: 22%; top: 12%; }
-.deco-star { right: 22%; top: 10%; }
-.deco-banner { left: 50%; top: 4%; transform: translateX(-50%); }
-.deco-medal { left: 30%; bottom: 44px; }
-.deco-crown { right: 30%; bottom: 100px; font-size: 2.2rem; }
-.deco-cup { left: 50%; bottom: 110px; transform: translateX(-50%); font-size: 2.4rem; animation: aura-twinkle 1.8s ease-in-out infinite; }
+.den-resident {
+  position: absolute; left: 10px; top: 30px; width: 54px; height: 54px;
+  border-radius: 50%; object-fit: cover; border: 3px solid #fff8e8;
+  box-shadow: 0 2px 6px rgba(0,0,0,.4); background: #6b4423;
+}
+.den-resident-empty {
+  display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
+}
+.den-bone { position: absolute; right: 12%; bottom: 44px; font-size: 2rem; filter: drop-shadow(0 2px 3px rgba(0,0,0,.4)); }
 .den-caption { text-align: center; font-size: .9rem; opacity: .85; margin: .2rem 0 .8rem; }
-.den-ach .ach-desc { display: none; }
+.den-ach { text-align: center; padding: .7rem .4rem; }
+.den-ach .ach-ico { font-size: 2rem; }
+.den-ach .ach-name { font-size: .82rem; font-weight: 700; margin-top: .25rem; }
+.den-ach .ach-desc { font-size: .72rem; opacity: .7; margin-top: .15rem; }
+.den-ach.locked { opacity: .45; }
