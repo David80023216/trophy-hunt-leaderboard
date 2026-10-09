@@ -590,6 +590,7 @@ body {
 }
 .sheet-card h3 { color: var(--gold); margin: 0 0 .35rem; font-size: 1.05rem; }
 .sheet-sub { color: var(--muted); font-size: .82rem; margin: 0 0 .8rem; }
+.sheet-new { margin: .2rem 0 .9rem; font-size: .78rem; }
 .sheet-input {
   width: 100%; box-sizing: border-box; background: #0b0f14; color: #f3f6fb;
   border: 1px solid var(--line); border-radius: 8px; padding: .6rem .8rem;
