@@ -336,6 +336,9 @@
     });
     var sheet = document.getElementById('profile-sheet');
     if (sheet) sheet.hidden = false;
+    loadGallery(r.handle);
+    var upRow = document.querySelector('.profile-upload');
+    if (upRow) upRow.style.display = uploadsAvailable() ? '' : 'none';
   }
   function hideProfile() {
     var sheet = document.getElementById('profile-sheet');
@@ -358,6 +361,109 @@
       gsiUpdateChrome();
       renderVideos();
       toast('Signed out on this device.');
+    });
+  }
+
+  /* ---- Profile uploads (photos/videos via val.town, moderated before they show) ---- */
+  function uploadsAvailable() {
+    return typeof UPLOAD_VAL_URL === 'string' && UPLOAD_VAL_URL.indexOf('PLACEHOLDER') < 0;
+  }
+  function loadGallery(handle) {
+    var g = document.getElementById('profile-gallery');
+    if (!g) return;
+    if (!uploadsAvailable()) {
+      g.innerHTML = '<span class="gallery-empty">Uploads opening soon!</span>';
+      return;
+    }
+    g.innerHTML = '<span class="gallery-empty">Loading…</span>';
+    fetch(UPLOAD_VAL_URL + '/gallery?handle=' + encodeURIComponent(handle))
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        var items = (d && d.items) || [];
+        if (!items.length) {
+          g.innerHTML = '<span class="gallery-empty">No uploads yet — be the first!</span>';
+          return;
+        }
+        g.innerHTML = '';
+        items.forEach(function (it) {
+          var el;
+          if (it.kind === 'video') {
+            el = document.createElement('video');
+            el.src = UPLOAD_VAL_URL + '/file/' + it.id;
+            el.className = 'gallery-item';
+            el.preload = 'metadata';
+            el.playsInline = true;
+            el.controls = true;
+          } else {
+            el = document.createElement('img');
+            el.src = UPLOAD_VAL_URL + '/file/' + it.id;
+            el.className = 'gallery-item';
+            el.alt = 'Player upload';
+            el.loading = 'lazy';
+          }
+          g.appendChild(el);
+        });
+      })
+      .catch(function () {
+        g.innerHTML = '<span class="gallery-empty">Couldn\'t load uploads.</span>';
+      });
+  }
+  function downscaleImage(file) {
+    return new Promise(function (resolve) {
+      var img = new Image();
+      var url = URL.createObjectURL(file);
+      img.onload = function () {
+        URL.revokeObjectURL(url);
+        var max = 1600;
+        var w = img.width, h = img.height;
+        if (Math.max(w, h) > max) {
+          var s = max / Math.max(w, h);
+          w = Math.round(w * s); h = Math.round(h * s);
+        }
+        var c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        c.toBlob(function (b) { resolve(b || file); }, 'image/jpeg', 0.85);
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); resolve(file); };
+      img.src = url;
+    });
+  }
+  function uploadProfileFile(file) {
+    var st = document.getElementById('upload-status');
+    var say = function (m) { if (st) st.textContent = m; };
+    if (!uploadsAvailable()) { say('Uploads opening soon!'); return; }
+    var me = getMe();
+    if (!me) { say('Sign in first.'); return; }
+    var isImage = file.type.indexOf('image/') === 0;
+    var isVideo = file.type.indexOf('video/') === 0;
+    if (!isImage && !isVideo) { say('Only photos and videos.'); return; }
+    if (isVideo && file.size > 30 * 1024 * 1024) { say('Video must be under 30 MB.'); return; }
+    say('Preparing…');
+    var ready = isImage ? downscaleImage(file) : Promise.resolve(file);
+    ready.then(function (blob) {
+      say('Uploading…');
+      var fd = new FormData();
+      fd.append('handle', me);
+      fd.append('file', blob, file.name || 'upload');
+      return fetch(UPLOAD_VAL_URL + '/upload', { method: 'POST', body: fd });
+    }).then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d && d.ok) {
+          say('Uploaded! Pending review 🕵️');
+          var inp = document.getElementById('profile-file');
+          if (inp) inp.value = '';
+        } else {
+          say(d && d.error ? 'Hmm: ' + d.error : 'Upload failed — try again.');
+        }
+      })
+      .catch(function () { say('Upload failed — check connection.'); });
+  }
+  function initUploads() {
+    var inp = document.getElementById('profile-file');
+    if (!inp) return;
+    inp.addEventListener('change', function () {
+      if (inp.files && inp.files[0]) uploadProfileFile(inp.files[0]);
     });
   }
 
@@ -623,6 +729,7 @@
 
   var PUP_PROXY_URL = 'https://david80023216--3445f20cbd3611f19e881607ee4eb77e.web.val.run';
   var PUSH_VAL_URL = 'https://david80023216--b1c69af6c1d211f18bd01607ee4eb77e.web.val.run';
+  var UPLOAD_VAL_URL = 'UPLOAD_VAL_PLACEHOLDER'; // set to the trophy-hunt-uploads val web URL once deployed
   var VAPID_PUBLIC = 'BMBS6ae4rXqMhCt7ocFlx2weaNqHlza9NrysRE02leIUKQ-LQw3K6XfFsjnyZ-ivhFFu3N8E8IEo9uAKr8PG8ec';
   // Pup Helper's AI brain lives server-side in the proxy above (2026-09-30). No API key ships in this public repo.
   var PUP_AI_FALLBACK = "Hmm, my brain's fuzzy right now! 🤖💭 Try again in a bit, or drop it in the comments of today's hunt video — the channel answers fast.";
@@ -1071,6 +1178,7 @@
   initGoogleSignIn();
   initNameClaim();
   initProfile();
+  initUploads();
   renderVideos();
   initTabs();
   renderPupGrid();

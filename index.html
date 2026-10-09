@@ -14,7 +14,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css?v=1791506631">
+<link rel="stylesheet" href="styles.css?v=1791507466">
 </head>
 <body>
 
@@ -69,6 +69,13 @@
       <div class="pstat"><span id="profile-today" class="pstat-v">—</span><span class="pstat-l">Today</span></div>
     </div>
     <div id="profile-checklist" class="profile-checklist"></div>
+    <div class="profile-gallery-head">📸 Pup gallery</div>
+    <div id="profile-gallery" class="profile-gallery"><span class="gallery-empty">No uploads yet — be the first!</span></div>
+    <div class="profile-upload">
+      <label class="upload-btn" for="profile-file">+ Add photo / video</label>
+      <input type="file" id="profile-file" accept="image/*,video/*" hidden>
+      <span id="upload-status" class="upload-status"></span>
+    </div>
     <div class="sheet-row">
       <button id="profile-close" class="sheet-go">Done</button>
       <button id="profile-forget" class="sheet-cancel">Forget me</button>
@@ -217,7 +224,7 @@
 
 <script id="th-data" type="application/json">
 {
- "updated_at": "2026-10-08T19:44:03.300050-05:00",
+ "updated_at": "2026-10-08T19:59:21.084712-05:00",
  "season": {
   "name": "Season 1",
   "start": "2026-09-29",
@@ -1030,6 +1037,6 @@
   </div>
 </div>
 
-<script src="app.js?v=1791506649"></script>
+<script src="app.js?v=1791507488"></script>
 </body>
 </html>

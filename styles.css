@@ -618,6 +618,24 @@ body {
 }
 .pcheck.done { color: #f3f6fb; }
 .pcheck .pts { color: var(--gold); font-weight: 700; font-size: .75rem; }
+/* Profile gallery + uploads */
+.profile-gallery-head { color: var(--gold); font-size: .82rem; font-weight: 700; margin-bottom: .4rem; }
+.profile-gallery {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: .4rem;
+  margin-bottom: .8rem; min-height: 3.4rem;
+}
+.gallery-empty { grid-column: 1 / -1; color: var(--muted); font-size: .78rem; text-align: center; padding: .8rem 0; }
+.gallery-item {
+  aspect-ratio: 1; object-fit: cover; width: 100%; border-radius: 8px;
+  border: 1px solid var(--line); background: #0b0f14;
+}
+.profile-upload { display: flex; align-items: center; gap: .6rem; margin-bottom: .9rem; }
+.upload-btn {
+  background: rgba(255, 211, 77, .14); color: var(--gold); border: 1px solid var(--gold-dim);
+  border-radius: 8px; padding: .5rem .8rem; font-size: .8rem; font-weight: 700; cursor: pointer;
+  white-space: nowrap;
+}
+.upload-status { color: var(--muted); font-size: .76rem; }
 .sheet-input {
   width: 100%; box-sizing: border-box; background: #0b0f14; color: #f3f6fb;
   border: 1px solid var(--line); border-radius: 8px; padding: .6rem .8rem;
