@@ -368,45 +368,58 @@
   function uploadsAvailable() {
     return typeof UPLOAD_VAL_URL === 'string' && UPLOAD_VAL_URL.indexOf('PLACEHOLDER') < 0;
   }
+  function galleryItemEl(src, kind) {
+    var el;
+    if (kind === 'video') {
+      el = document.createElement('video');
+      el.src = src;
+      el.className = 'gallery-item';
+      el.preload = 'metadata';
+      el.playsInline = true;
+      el.controls = true;
+    } else {
+      el = document.createElement('img');
+      el.src = src;
+      el.className = 'gallery-item';
+      el.alt = 'Player upload';
+      el.loading = 'lazy';
+    }
+    return el;
+  }
   function loadGallery(handle) {
     var g = document.getElementById('profile-gallery');
     if (!g) return;
-    if (!uploadsAvailable()) {
-      g.innerHTML = '<span class="gallery-empty">Uploads opening soon!</span>';
-      return;
-    }
-    g.innerHTML = '<span class="gallery-empty">Loading…</span>';
+    g.innerHTML = '';
+    var rendered = 0;
+    /* Verified photos already in the ledger (Pups tab data) show first. */
+    try {
+      var media = (data && data.dog_photos) || {};
+      var items = media[handle] || media[handle.toLowerCase()] || [];
+      if (!Array.isArray(items)) items = [items];
+      items.forEach(function (p) {
+        p = p || {};
+        var src = p.src || p.full || '';
+        if (!src) return;
+        g.appendChild(galleryItemEl(src, p.type === 'video' ? 'video' : 'photo'));
+        rendered++;
+      });
+    } catch (e) {}
+    /* Then fresh uploads from the upload backend (moderated). */
+    var finish = function () {
+      if (!rendered) g.innerHTML = '<span class="gallery-empty">No uploads yet — be the first!</span>';
+    };
+    if (!uploadsAvailable()) { finish(); return; }
     fetch(UPLOAD_VAL_URL + '/gallery?handle=' + encodeURIComponent(handle))
       .then(function (r) { return r.json(); })
       .then(function (d) {
         var items = (d && d.items) || [];
-        if (!items.length) {
-          g.innerHTML = '<span class="gallery-empty">No uploads yet — be the first!</span>';
-          return;
-        }
-        g.innerHTML = '';
         items.forEach(function (it) {
-          var el;
-          if (it.kind === 'video') {
-            el = document.createElement('video');
-            el.src = UPLOAD_VAL_URL + '/file/' + it.id;
-            el.className = 'gallery-item';
-            el.preload = 'metadata';
-            el.playsInline = true;
-            el.controls = true;
-          } else {
-            el = document.createElement('img');
-            el.src = UPLOAD_VAL_URL + '/file/' + it.id;
-            el.className = 'gallery-item';
-            el.alt = 'Player upload';
-            el.loading = 'lazy';
-          }
-          g.appendChild(el);
+          g.appendChild(galleryItemEl(UPLOAD_VAL_URL + '/file/' + it.id, it.kind));
+          rendered++;
         });
+        finish();
       })
-      .catch(function () {
-        g.innerHTML = '<span class="gallery-empty">Couldn\'t load uploads.</span>';
-      });
+      .catch(function () { finish(); });
   }
   function downscaleImage(file) {
     return new Promise(function (resolve) {
