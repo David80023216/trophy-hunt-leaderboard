@@ -687,19 +687,17 @@
     var dayOfYear = Math.floor((now - Date.UTC(now.getUTCFullYear(), 0, 0)) / 86400000);
     el.textContent = DOG_FACTS[dayOfYear % DOG_FACTS.length];
   }
+  /* Season 1 ends Oct 31, 2026 at midnight Central (Nov 1, 05:00 UTC). */
+  var SEASON_END = Date.UTC(2026, 10, 1, 5, 0, 0);
   function tickCountdown() {
     var el = document.getElementById('countdown');
     if (!el) return;
-    var now = new Date();
-    var chi = new Date(now.toLocaleString('en-US', {timeZone: 'America/Chicago'}));
-    var target = new Date(chi);
-    target.setHours(12, 0, 0, 0);
-    if (chi >= target) target.setDate(target.getDate() + 1);
-    var diff = Math.max(0, target - chi);
-    var h = Math.floor(diff / 3600000);
+    var diff = Math.max(0, SEASON_END - Date.now());
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor(diff % 86400000 / 3600000);
     var m = Math.floor(diff % 3600000 / 60000);
     var s = Math.floor(diff % 60000 / 1000);
-    el.textContent = '\u23F3 ' + h + 'h ' + m + 'm ' + s + 's';
+    el.textContent = '\u23F3 ' + d + 'd ' + h + 'h ' + m + 'm ' + s + 's';
   }
 
   function renderMission() {
@@ -857,7 +855,7 @@
       return '👑 Monthly Top Dog wins: a dedicated video about YOUR dog + your dog on our channel banner for the month! You must be <a href="' + SUB_LINK + '" target="_blank" rel="noopener">subscribed</a> to win.';
     }
     if (has('next', 'round', 'today', 'tomorrow', 'daily', 'noon', 'hunt', 'tonight')) {
-      return '🕛 A new Trophy Hunt drops every day at 12:00 PM Central! Watch for the countdown at the top of this page.';
+      return '🕛 Season 1 runs through October 31! Watch the countdown at the top of this page — every day counts.';
     }
     if (has('shelter', 'donat', 'mission', 'charity', 'money', 'dollar')) {
       var m = data.mission || {};
