@@ -14,7 +14,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css?v=1791516155">
+<link rel="stylesheet" href="styles.css?v=1791516622">
 </head>
 <body>
 
@@ -158,7 +158,7 @@
 
   <section class="view" id="view-pups" aria-label="My Pup">
     <h2 class="view-title">🐶 MY PUP</h2>
-    <p class="board-caption view-sub">Your virtual pup lives here — feed them, play, and keep that tail wagging!</p>
+    <p class="board-caption view-sub">Your pup grows with your hunt — earn points, level up, unlock achievements!</p>
     <div id="mypup-signedout" class="mypup-signedout" hidden>
       <p class="mypup-big">🐾</p>
       <p>Sign in with your YouTube handle to meet your pup!</p>
@@ -181,19 +181,14 @@
         <div id="mypup-placeholder" class="mypup-placeholder" hidden>🐶</div>
       </div>
       <div class="mypup-name" id="mypup-name"></div>
-      <div class="mypup-mood" id="mypup-mood"></div>
-      <div class="mypup-stats">
-        <div class="mstat"><span class="mstat-label">🍖 Food</span><div class="mbar"><div class="mfill" id="stat-food"></div></div></div>
-        <div class="mstat"><span class="mstat-label">😊 Happy</span><div class="mbar"><div class="mfill" id="stat-happy"></div></div></div>
-        <div class="mstat"><span class="mstat-label">⚡ Energy</span><div class="mbar"><div class="mfill" id="stat-energy"></div></div></div>
+      <div class="mypup-level" id="mypup-level"></div>
+      <div class="mypup-progress">
+        <div class="mbar"><div class="mfill" id="mypup-progress-fill"></div></div>
+        <div class="mypup-progress-label" id="mypup-progress-label"></div>
       </div>
-      <div class="mypup-actions">
-        <button type="button" data-act="feed">🦴<span>Feed</span></button>
-        <button type="button" data-act="play">🎾<span>Play</span></button>
-        <button type="button" data-act="pet">🐾<span>Pet</span></button>
-        <button type="button" data-act="sleep">💤<span>Nap</span></button>
-      </div>
-      <p class="board-caption mypup-note">Just for fun — no points, just vibes. Stats fade over time, so come back and visit!</p>
+      <h3 class="mypup-ach-title">🏅 Achievements</h3>
+      <div class="mypup-ach-grid" id="mypup-achievements"></div>
+      <p class="board-caption mypup-note">Your pup levels up with YOUR Trophy Hunt points — comment, upload, and keep your streak alive!</p>
     </div>
   </section>
 
@@ -255,7 +250,7 @@
 
 <script id="th-data" type="application/json">
 {
- "updated_at": "2026-10-08T22:22:24.909780-05:00",
+ "updated_at": "2026-10-08T22:29:00.812222-05:00",
  "season": {
   "name": "Season 1",
   "start": "2026-09-29",
@@ -1072,6 +1067,6 @@
   <img id="lightbox-img" alt="Expanded photo">
 </div>
 
-<script src="app.js?v=1791515863"></script>
+<script src="app.js?v=1791516679"></script>
 </body>
 </html>
