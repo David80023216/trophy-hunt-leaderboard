@@ -1131,7 +1131,7 @@
   }
   function initPush() {
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
-    navigator.serviceWorker.register('./sw.js').catch(function () {});
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).catch(function () {});
   }
   function pushState(handle) {
     try { return localStorage.getItem('th-push-' + handle) || ''; } catch (e) { return ''; }

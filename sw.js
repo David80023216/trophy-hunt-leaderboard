@@ -7,7 +7,7 @@
  * 2026-10-07 fix: the old cache-first-for-everything strategy served a
  * day-old page indefinitely (Shawn caught 576 subs / "updated 27h ago").
  */
-var SHELL_CACHE = 'th-shell-v2';
+var SHELL_CACHE = 'th-shell-v3';
 var SHELL_ASSETS = ['./app.js', './styles.css', './manifest.json',
   './icon-192.png', './icon-512.png'];
 
@@ -34,7 +34,16 @@ self.addEventListener('activate', function (e) {
 
 self.addEventListener('fetch', function (e) {
   if (e.request.method !== 'GET') return;
+  /* 2026-10-08 fix (frozen avatar video): NEVER intercept byte-range
+   * requests. Video/audio elements fetch in ranges; the cache-first path
+   * below stored a 206 partial under the plain URL and then served those
+   * same first bytes for every later range — the player got garbage and
+   * froze on the poster frame. Let ranges hit the network directly. */
+  if (e.request.headers.has('range')) return;
   var u = new URL(e.request.url);
+  /* Media files never go through the worker cache either — same class of
+   * bug (partial/encoded responses cached under the plain URL). */
+  if (/\.(mp4|webm|mp3|wav|ogg)$/i.test(u.pathname)) return;
   if (u.origin !== self.location.origin) return;
 
   if (isPageRequest(u) || e.request.mode === 'navigate') {
