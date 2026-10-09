@@ -242,6 +242,7 @@
         gsiUpdateChrome();
         renderVideos();
         toast('Signed in as ' + match.handle + ' — your stuff loaded automatically.');
+        openProfile();
       } else {
         toast('Signed in, but no Trophy Hunt entries on this YouTube channel yet — comment your dog\'s name on any video to enter!');
       }
@@ -287,14 +288,78 @@
         clearInterval(timer); // GIS unreachable; picker remains the identity path
       }
     }, 250);
-    chip.addEventListener('click', function () {
-      setMe('');
-      try { localStorage.removeItem('th-via'); } catch (e) {}
-      gsiUpdateChrome();
-      renderVideos();
-    });
+    // Chip tap opens the profile popup (forget lives inside it now).
+    gsiUpdateChrome();
   }
   /* (name picker removed 2026-10-08 — Google sign-in is the identity path) */
+
+  /* ---- Player profile popup ---- */
+  function meRow() {
+    var me = normHandle(getMe());
+    if (!me) return null;
+    var st = data.standings || [];
+    for (var i = 0; i < st.length; i++) {
+      if (normHandle(st[i].handle) === me) return { row: st[i], rank: i + 1, total: st.length };
+    }
+    return null;
+  }
+  function openProfile() {
+    var found = meRow();
+    if (!found) return;
+    var r = found.row;
+    var av = document.getElementById('profile-avatar');
+    if (r.avatar) { av.src = r.avatar; av.style.display = ''; }
+    else { av.removeAttribute('src'); av.style.display = 'none'; }
+    document.getElementById('profile-handle').textContent = r.handle || '';
+    document.getElementById('profile-dog').textContent = r.dog_name ? '\uD83D\uDC36 ' + r.dog_name : '';
+    document.getElementById('profile-rank').textContent = '#' + found.rank;
+    document.getElementById('profile-points').textContent = r.season_points || 0;
+    document.getElementById('profile-streak').textContent = (r.streak || 0) + '\uD83D\uDD25';
+    document.getElementById('profile-today').textContent = '+' + (r.today_points || 0);
+    var cl = document.getElementById('profile-checklist');
+    cl.innerHTML = '';
+    var items = (r.checklist && r.checklist.items) || [];
+    var head = document.createElement('div');
+    head.className = 'pcheck';
+    head.innerHTML = '<span>Today&apos;s hunt</span>';
+    cl.appendChild(head);
+    items.forEach(function (it) {
+      var d = document.createElement('div');
+      d.className = 'pcheck' + (it.done ? ' done' : '');
+      var label = document.createElement('span');
+      label.textContent = (it.done ? '\u2705 ' : '\u2B1C ') + it.label;
+      var pts = document.createElement('span');
+      pts.className = 'pts';
+      pts.textContent = '+' + it.points;
+      d.appendChild(label); d.appendChild(pts);
+      cl.appendChild(d);
+    });
+    var sheet = document.getElementById('profile-sheet');
+    if (sheet) sheet.hidden = false;
+  }
+  function hideProfile() {
+    var sheet = document.getElementById('profile-sheet');
+    if (sheet) sheet.hidden = true;
+  }
+  function initProfile() {
+    var chip = document.getElementById('gsi-signout');
+    var close = document.getElementById('profile-close');
+    var forget = document.getElementById('profile-forget');
+    var sheet = document.getElementById('profile-sheet');
+    if (chip) chip.addEventListener('click', openProfile);
+    if (close) close.addEventListener('click', hideProfile);
+    if (sheet) sheet.addEventListener('click', function (e) {
+      if (e.target === sheet) hideProfile();
+    });
+    if (forget) forget.addEventListener('click', function () {
+      setMe('');
+      try { localStorage.removeItem('th-via'); } catch (e) {}
+      hideProfile();
+      gsiUpdateChrome();
+      renderVideos();
+      toast('Signed out on this device.');
+    });
+  }
 
   /* ---- Handle claim (no Google needed) ----
      Player types their YouTube @handle; matched against the standings in
@@ -319,6 +384,7 @@
       gsiUpdateChrome();
       renderVideos();
       toast('Found you, ' + found.handle + ' — your checkmarks and bonuses are loaded.');
+      openProfile();
     } else {
       toast('No player named @' + want + ' on the board yet — check the spelling, or comment your dog\'s name on any video to enter.');
     }
@@ -1004,6 +1070,7 @@
   renderHistory();
   initGoogleSignIn();
   initNameClaim();
+  initProfile();
   renderVideos();
   initTabs();
   renderPupGrid();

@@ -591,6 +591,33 @@ body {
 .sheet-card h3 { color: var(--gold); margin: 0 0 .35rem; font-size: 1.05rem; }
 .sheet-sub { color: var(--muted); font-size: .82rem; margin: 0 0 .8rem; }
 .sheet-new { margin: .2rem 0 .9rem; font-size: .78rem; }
+/* Player profile card */
+.profile-card { max-width: 360px; text-align: left; }
+.profile-head { display: flex; align-items: center; gap: .8rem; margin-bottom: .9rem; }
+.profile-avatar {
+  width: 3.2rem; height: 3.2rem; border-radius: 50%; object-fit: cover;
+  border: 2px solid var(--gold-dim); background: #0b0f14; flex: none;
+}
+.profile-handle { color: #f3f6fb; font-weight: 800; font-size: 1rem; }
+.profile-dog { color: var(--gold); font-size: .85rem; font-weight: 600; }
+.profile-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: .4rem;
+  margin-bottom: .9rem;
+}
+.pstat {
+  background: #0b0f14; border: 1px solid var(--line); border-radius: 10px;
+  padding: .5rem .2rem; text-align: center; display: flex;
+  flex-direction: column; gap: 2px;
+}
+.pstat-v { color: var(--gold); font-weight: 800; font-size: 1.05rem; }
+.pstat-l { color: var(--muted); font-size: .66rem; }
+.profile-checklist { margin-bottom: .9rem; display: flex; flex-direction: column; gap: .3rem; }
+.pcheck {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: .8rem; color: var(--muted); padding: .3rem .1rem;
+}
+.pcheck.done { color: #f3f6fb; }
+.pcheck .pts { color: var(--gold); font-weight: 700; font-size: .75rem; }
 .sheet-input {
   width: 100%; box-sizing: border-box; background: #0b0f14; color: #f3f6fb;
   border: 1px solid var(--line); border-radius: 8px; padding: .6rem .8rem;

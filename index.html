@@ -14,7 +14,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css?v=1791505646">
+<link rel="stylesheet" href="styles.css?v=1791506631">
 </head>
 <body>
 
@@ -49,6 +49,29 @@
     <div class="sheet-row">
       <button id="claim-go" class="sheet-go">Find me</button>
       <button id="claim-cancel" class="sheet-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="profile-sheet" class="sheet" hidden>
+  <div class="sheet-card profile-card" role="dialog" aria-label="Your player profile">
+    <div class="profile-head">
+      <img id="profile-avatar" class="profile-avatar" alt="">
+      <div class="profile-id">
+        <div id="profile-handle" class="profile-handle">—</div>
+        <div id="profile-dog" class="profile-dog">—</div>
+      </div>
+    </div>
+    <div class="profile-stats">
+      <div class="pstat"><span id="profile-rank" class="pstat-v">—</span><span class="pstat-l">Rank</span></div>
+      <div class="pstat"><span id="profile-points" class="pstat-v">—</span><span class="pstat-l">Points</span></div>
+      <div class="pstat"><span id="profile-streak" class="pstat-v">—</span><span class="pstat-l">Day streak</span></div>
+      <div class="pstat"><span id="profile-today" class="pstat-v">—</span><span class="pstat-l">Today</span></div>
+    </div>
+    <div id="profile-checklist" class="profile-checklist"></div>
+    <div class="sheet-row">
+      <button id="profile-close" class="sheet-go">Done</button>
+      <button id="profile-forget" class="sheet-cancel">Forget me</button>
     </div>
   </div>
 </div>
@@ -194,7 +217,7 @@
 
 <script id="th-data" type="application/json">
 {
- "updated_at": "2026-10-08T19:37:56.301380-05:00",
+ "updated_at": "2026-10-08T19:44:03.300050-05:00",
  "season": {
   "name": "Season 1",
   "start": "2026-09-29",
@@ -1007,6 +1030,6 @@
   </div>
 </div>
 
-<script src="app.js?v=1791506159"></script>
+<script src="app.js?v=1791506649"></script>
 </body>
 </html>
