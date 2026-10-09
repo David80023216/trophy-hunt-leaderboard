@@ -844,7 +844,7 @@
       return "🔥 Play every day to build a streak — any scoring day keeps it alive! Bonuses: 3 days +10 · 7 days +25 · 14 days +50 · 30 days +100. Miss a day and it resets.";
     }
     if (has('photo', 'photos', 'picture', 'pic', 'upload', 'submit')) {
-      return '📸 Sign in with your YouTube handle, tap your name, and add a real photo of your dog → +5 pts every day. Real photos only — no screenshots or stock pics!';
+      return '📸 Sign in with your YouTube handle, tap your name, and add a real photo of your dog → +25 pts every day. Real photos only — no screenshots or stock pics!';
     }
     if (has('point', 'points', 'earn', 'enter', 'entry', 'join') || (has('play') && !has('replay'))) {
       return "🐶 Easy! Comment your dog's NAME on any hunt video → +10 pts per comment, up to 3 scoring comments a day. Any other comment → +1 pt once a day. Keep names clean!";
