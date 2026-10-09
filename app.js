@@ -183,22 +183,26 @@
   }
   function gsiUpdateChrome() {
     var btn = document.getElementById('gsi-signin');
+    var claimBtn = document.getElementById('name-claim');
     var chip = document.getElementById('gsi-signout');
     if (!btn || !chip) return;
     var r = gsiRemembered();
+    var identified = !!r.handle;
     var signedViaGoogle = !!(r.handle && r.via === 'google');
     var available = !!GOOGLE_CLIENT_ID;
-    btn.hidden = !available || signedViaGoogle;
-    chip.hidden = !signedViaGoogle;
-    if (signedViaGoogle) {
+    btn.hidden = !available || identified;
+    if (claimBtn) claimBtn.hidden = identified;
+    chip.hidden = !identified;
+    if (identified) {
       document.getElementById('gsi-handle').textContent = r.handle;
-      document.getElementById('gsi-avatar').textContent = (r.handle.charAt(1) || r.handle.charAt(0) || '?').toUpperCase();
+      var bare = r.handle.replace(/^@/, '');
+      document.getElementById('gsi-avatar').textContent = (bare.charAt(0) || '?').toUpperCase();
     }
     // Videos tab: legend when identified, sign-in nudge when available but signed out.
     var hint = document.getElementById('me-hint');
     var prompt = document.getElementById('signin-prompt');
     if (hint) hint.hidden = !r.handle;
-    if (prompt) prompt.hidden = !(available && !signedViaGoogle);
+    if (prompt) prompt.hidden = identified;
   }
   function gsiFindByChannel(cid) {
     var st = data.standings || [];
@@ -287,6 +291,63 @@
     });
   }
   /* (name picker removed 2026-10-08 — Google sign-in is the identity path) */
+
+  /* ---- Handle claim (no Google needed) ----
+     Player types their YouTube @handle; matched against the standings in
+     this browser only. Identity is display-only (badges, checkmarks) and
+     lives in localStorage — scoring always comes from real YouTube
+     comments, so a mistyped handle can't move anyone's points. */
+  function normHandle(h) {
+    return (h || '').trim().replace(/^@/, '').toLowerCase();
+  }
+  function claimByHandle(raw) {
+    var want = normHandle(raw);
+    if (!want) { toast('Type your YouTube handle first.'); return; }
+    var st = data.standings || [];
+    var found = null;
+    for (var i = 0; i < st.length; i++) {
+      if (normHandle(st[i].handle) === want) { found = st[i]; break; }
+    }
+    if (found) {
+      setMe(found.handle);
+      try { localStorage.setItem('th-via', 'name'); } catch (e) {}
+      hideClaimSheet();
+      gsiUpdateChrome();
+      renderVideos();
+      toast('Found you, ' + found.handle + ' — your checkmarks and bonuses are loaded.');
+    } else {
+      toast('No player named @' + want + ' on the board yet — check the spelling, or comment your dog\'s name on any video to enter.');
+    }
+  }
+  function showClaimSheet() {
+    var s = document.getElementById('claim-sheet');
+    var inp = document.getElementById('claim-input');
+    if (!s) return;
+    s.hidden = false;
+    if (inp) { inp.value = ''; setTimeout(function () { inp.focus(); }, 60); }
+  }
+  function hideClaimSheet() {
+    var s = document.getElementById('claim-sheet');
+    if (s) s.hidden = true;
+  }
+  function initNameClaim() {
+    var open = document.getElementById('name-claim');
+    var go = document.getElementById('claim-go');
+    var cancel = document.getElementById('claim-cancel');
+    var sheet = document.getElementById('claim-sheet');
+    var inp = document.getElementById('claim-input');
+    if (!open || !go) return;
+    open.addEventListener('click', showClaimSheet);
+    go.addEventListener('click', function () { claimByHandle(inp ? inp.value : ''); });
+    if (inp) inp.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') claimByHandle(inp.value);
+    });
+    if (cancel) cancel.addEventListener('click', hideClaimSheet);
+    if (sheet) sheet.addEventListener('click', function (e) {
+      if (e.target === sheet) hideClaimSheet();
+    });
+    gsiUpdateChrome();
+  }
 
 
   function applySearch() {
@@ -938,6 +999,7 @@
   renderStandings();
   renderHistory();
   initGoogleSignIn();
+  initNameClaim();
   renderVideos();
   initTabs();
   renderPupGrid();
