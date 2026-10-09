@@ -1488,7 +1488,7 @@
         '<span class="sd-pts">' + p.week_pts + ' pts this week</span></div>';
     }
     var html = '';
-    if (sd.champion) {
+    if (sd.champion && sd.decided) {
       var cf = findStandingsRow(sd.champion);
       var cname = cf ? (cf.row.dog_name || 'Pup') : 'Pup';
       html += '<div class="sd-champ">🏆 <strong>' + esc(cname) + '</strong> (' + esc(sd.champion) + ') is this week\u2019s <strong>Showdown Champion!</strong></div>';
@@ -1542,7 +1542,7 @@
     var won = {};
     for (var a = 0; a < achs.length; a++) if (achs[a].won) won[achs[a].name] = true;
     var sd = data.showdown || {};
-    var isChamp = sd.active && sd.champion &&
+    var isChamp = sd.active && sd.decided && sd.champion &&
       String(sd.champion).toLowerCase() === String(f.row.handle).toLowerCase();
     var dogName = f.row.dog_name || 'Pup';
     var nDeco = 0;
