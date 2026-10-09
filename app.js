@@ -1331,7 +1331,9 @@
     var stage = game.querySelector('.mypup-stage');
     if (stage) stage.classList.toggle('legend-aura', tier >= 8);
     function mypupShowVideo(src, poster) {
-      if (vel.getAttribute('src') !== src) vel.src = src;
+      /* Only touch src when it actually changes: re-assigning the same URL
+         restarts the load and freezes playback on some mobile browsers. */
+      if (vel.dataset.playedSrc !== src) { vel.src = src; vel.dataset.playedSrc = src; }
       if (poster && vel.getAttribute('poster') !== poster) vel.poster = poster;
       vel.hidden = false;
       vel.classList.add('idle');
