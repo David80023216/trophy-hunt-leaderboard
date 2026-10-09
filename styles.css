@@ -759,7 +759,7 @@ body {
   .appbar-sub { display: none; }
   .appbar-side { flex: 1 1 100%; max-width: none; justify-content: flex-start; flex-wrap: nowrap; gap: .5rem; }
   .countdown-chip { font-size: .72rem; padding: .3rem .6rem; flex: none; }
-  .gsi-chip { flex: 0 1 auto; min-width: 0; max-width: 10rem; }
+  .gsi-chip { flex: 1 1 auto; min-width: 0; }
   .gsi-chip span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
   .name-claim { flex: none; }
   .appbar-sub-btn { flex: none; }
