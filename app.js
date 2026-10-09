@@ -1479,6 +1479,13 @@
     var dogName = f.row.dog_name || 'Pup';
     var nDeco = 0;
     for (var k in won) if (won.hasOwnProperty(k)) nDeco++;
+    /* Earned decorations as gold medal badges hung in a neat row in the scene. */
+    var medals = '';
+    for (var m = 0; m < achs.length; m++) {
+      if (achs[m].won) medals += '<div class="den-medal" title="' + esc(achs[m].name) + '">' + achs[m].icon + '</div>';
+    }
+    if (isChamp) medals += '<div class="den-medal den-medal-gold" title="Showdown Champion">🏆</div>';
+    if (!medals) medals = '<div class="den-medals-empty">Earn achievements to hang medals here!</div>';
     /* Resident portrait: the pup's real uploaded photo on the doghouse wall. */
     var plist = (data.dog_photos && data.dog_photos[f.row.handle]) || [];
     var p0 = plist.length ? plist[0] : null;
@@ -1487,6 +1494,7 @@
       : '<div class="den-resident den-resident-empty">🐶</div>';
     wrap.innerHTML =
       '<div class="den-scene">' + portrait +
+        '<div class="den-medals">' + medals + '</div>' +
         '<div class="den-nameplate">' + esc(dogName) + '\u2019s Den</div>' +
       '</div>' +
       '<p class="den-caption">' + esc(dogName) + '\u2019s den · ' +

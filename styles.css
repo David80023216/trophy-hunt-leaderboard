@@ -913,7 +913,44 @@ body {
 }
 .den-caption { text-align: center; font-size: .9rem; opacity: .85; margin: .2rem 0 .8rem; }
 .den-ach { text-align: center; padding: .7rem .4rem; }
-.den-ach .ach-ico { font-size: 2rem; }
-.den-ach .ach-name { font-size: .82rem; font-weight: 700; margin-top: .25rem; }
+.den-ach .ach-ico {
+  width: 84px; height: 84px; margin: 0 auto; border-radius: 50%;
+  background: url('dogs/medal-gold.png') center / cover no-repeat;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.3rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,.5));
+}
+.den-ach .ach-name { font-size: .82rem; font-weight: 700; margin-top: .4rem; }
 .den-ach .ach-desc { font-size: .72rem; opacity: .7; margin-top: .15rem; }
-.den-ach.locked { opacity: .45; }
+.den-ach.locked { opacity: .55; }
+.den-ach.locked .ach-ico { filter: grayscale(1) brightness(.55); }
+
+/* ---- Den medal row: earned decorations as gold medals in the scene (2026-10-08) ---- */
+.den-medals {
+  position: absolute; left: 0; right: 0; bottom: 66px;
+  display: flex; justify-content: center; align-items: center; gap: 8px;
+  padding: 0 12px;
+}
+.den-medal {
+  width: 52px; height: 52px; border-radius: 50%; flex: none;
+  background: url('dogs/medal-gold.png') center / cover no-repeat;
+  display: flex; align-items: center; justify-content: center; font-size: 26px;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,.55));
+}
+.den-medal-gold {
+  box-shadow: 0 0 14px 4px rgba(255,200,60,.85), 0 3px 8px rgba(0,0,0,.55), inset 0 2px 3px rgba(255,255,255,.65);
+  animation: aura-twinkle 1.8s ease-in-out infinite;
+}
+.den-medals-empty {
+  background: rgba(20, 14, 8, .72); color: #ffe9b8; font-size: .8rem;
+  padding: .4rem .9rem; border-radius: 10px; border: 1px dashed #a9763f;
+}
+
+/* ---- My Pup achievements on the same gold medal (2026-10-08) ---- */
+#mypup-achievements .ach-ico {
+  width: 64px; height: 64px; margin: 0 auto; border-radius: 50%;
+  background: url('dogs/medal-gold.png') center / cover no-repeat;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.9rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,.5));
+}
+#mypup-achievements .mypup-ach.locked .ach-ico { filter: grayscale(1) brightness(.55); }
+#mypup-achievements .mypup-ach.locked .ach-ico { font-size: 1.6rem; }
