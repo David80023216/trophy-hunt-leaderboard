@@ -1337,7 +1337,11 @@
       if (poster && vel.getAttribute('poster') !== poster) vel.poster = poster;
       vel.hidden = false;
       vel.classList.add('idle');
-      if (vel.paused) { try { var vpr = vel.play(); if (vpr && vpr.catch) vpr.catch(function () {}); } catch (e) {} }
+      var kick = function () { if (vel.paused) { try { var vpr = vel.play(); if (vpr && vpr.catch) vpr.catch(function () {}); } catch (e) {} } };
+      kick();
+      /* Belt and suspenders: if the first play() didn't take (slow load,
+         backgrounded tab), retry once the video can actually play. */
+      vel.addEventListener('canplay', kick, { once: true });
       img.hidden = true;
       img.classList.remove('idle');
       if (ph) ph.hidden = true;
