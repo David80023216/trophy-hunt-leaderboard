@@ -1539,7 +1539,7 @@
         'dogs/avatar/housemouse17-idle.mp4',
         'dogs/avatar/housemouse17-t2-idle.mp4',
         'dogs/avatar/housemouse17-t3-idle.mp4',
-        'dogs/avatar/housemouse17-t4-idle.mp4',
+        'dogs/avatar/housemouse17-t4-idle.mp4?v=2',
         'dogs/avatar/housemouse17-t5-idle.mp4',
         'dogs/avatar/housemouse17-t6-idle.mp4',
         'dogs/avatar/housemouse17-t7-idle.mp4',
