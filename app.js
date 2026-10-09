@@ -1301,24 +1301,32 @@
     var img = document.getElementById('mypup-img');
     var vel = document.getElementById('mypup-video');
     var ph = document.getElementById('mypup-placeholder');
-    /* A real uploaded video of the player's dog beats a still photo — genuine
-       movement of their real dog. Otherwise the photo idles with a gentle
-       "breathing" loop so the pup feels alive at rest. */
-    if (vid) {
-      if (vel.getAttribute('src') !== vid) vel.src = vid;
+    /* Avatar pup: cartoon likeness of the player's actual dog with real
+       movement beats a still photo. Then a real uploaded video, then photo. */
+    var av = MYPUP_AVATARS[String(handle).toLowerCase()] || null;
+    var avVid = av && av.video;
+    var avImg = av && av.img;
+    function mypupShowVideo(src, poster) {
+      if (vel.getAttribute('src') !== src) vel.src = src;
+      if (poster && vel.getAttribute('poster') !== poster) vel.poster = poster;
       vel.hidden = false;
       vel.classList.add('idle');
-      if (vel.paused) { try { var pr = vel.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {} }
+      if (vel.paused) { try { var vpr = vel.play(); if (vpr && vpr.catch) vpr.catch(function () {}); } catch (e) {} }
       img.hidden = true;
       img.classList.remove('idle');
       if (ph) ph.hidden = true;
-    } else if (photo) {
-      if (img.getAttribute('src') !== photo) img.src = photo;
+    }
+    function mypupShowPhoto(src) {
+      if (img.getAttribute('src') !== src) img.src = src;
       img.hidden = false;
       img.classList.add('idle');
       if (vel) { vel.hidden = true; vel.classList.remove('idle'); try { vel.pause(); } catch (e) {} }
       if (ph) ph.hidden = true;
-    } else {
+    }
+    if (avVid) mypupShowVideo(avVid, avImg || photo);
+    else if (vid) mypupShowVideo(vid, photo);
+    else if (avImg || photo) mypupShowPhoto(avImg || photo);
+    else {
       img.hidden = true;
       img.classList.remove('idle');
       if (vel) { vel.hidden = true; vel.classList.remove('idle'); }
@@ -1341,6 +1349,12 @@
     pet:   { df: 0,  dh: 15, de: 5,   anim: 'trick-jump', say: '*wags tail happily* 🐾' },
     sleep: { df: -8, dh: 5,  de: 35,  anim: 'trick-nap',  say: 'Zzz… all rested! 💤' }
   };
+  /* Avatar pups: cartoon likeness of the player's actual dog, with real
+     movement (animated video). Keyed by lowercase handle. New avatars are
+     generated when a player uploads their dog's photo. */
+  var MYPUP_AVATARS = {
+    '@housemouse17': { img: 'dogs/avatar/housemouse17.png', video: 'dogs/avatar/housemouse17-idle.mp4' }
+  };
   /* Applies one My Pup action: updates stats, plays the reaction animation on
      the photo (or video), and shows the message bubble. */
   function mypupAct(game, actName) {
@@ -1357,13 +1371,15 @@
     mypupSetBar('stat-happy', st.happy);
     mypupSetBar('stat-energy', st.energy);
     var img = document.getElementById('mypup-img');
-    img.classList.remove('trick-bark', 'trick-roll', 'trick-spin', 'trick-jump', 'trick-nap', 'idle');
-    void img.offsetWidth; /* restart the animation */
-    if (act.anim) img.classList.add(act.anim);
-    clearTimeout(img._mptr);
-    img._mptr = setTimeout(function () {
-      img.classList.remove('trick-bark', 'trick-roll', 'trick-spin', 'trick-jump', 'trick-nap');
-      if (!img.hidden) img.classList.add('idle');
+    var vel = document.getElementById('mypup-video');
+    var target = (vel && !vel.hidden) ? vel : img;
+    target.classList.remove('trick-bark', 'trick-roll', 'trick-spin', 'trick-jump', 'trick-nap', 'idle');
+    void target.offsetWidth; /* restart the animation */
+    if (act.anim) target.classList.add(act.anim);
+    clearTimeout(target._mptr);
+    target._mptr = setTimeout(function () {
+      target.classList.remove('trick-bark', 'trick-roll', 'trick-spin', 'trick-jump', 'trick-nap');
+      if (!target.hidden) target.classList.add('idle');
     }, 800);
     var bub = document.getElementById('mypup-bubble');
     bub.textContent = act.say;
@@ -1401,9 +1417,11 @@
       }
     }
     /* Tapping the pup itself is a pet. */
-    var pimg = document.getElementById('mypup-img');
-    if (pimg) pimg.addEventListener('click', function () {
-      mypupAct(document.getElementById('mypup-game'), 'pet');
+    ['mypup-img', 'mypup-video'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.addEventListener('click', function () {
+        mypupAct(document.getElementById('mypup-game'), 'pet');
+      });
     });
     renderMyPup();
   }

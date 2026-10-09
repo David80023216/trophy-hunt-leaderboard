@@ -723,11 +723,11 @@ body {
    below come after this one so they win while an action plays. */
 @keyframes mypup-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.028); } }
 #mypup-img.idle, #mypup-video.idle { animation: mypup-breathe 4.2s ease-in-out infinite; }
-#mypup-img.trick-roll { animation: trick-roll .7s ease; }
-#mypup-img.trick-spin { animation: trick-spin .7s ease; }
-#mypup-img.trick-bark { animation: trick-bark .5s ease; }
-#mypup-img.trick-jump { animation: trick-jump .55s ease; }
-#mypup-img.trick-nap { filter: grayscale(.55) brightness(.72); }
+#mypup-img.trick-roll, #mypup-video.trick-roll { animation: trick-roll .7s ease; }
+#mypup-img.trick-spin, #mypup-video.trick-spin { animation: trick-spin .7s ease; }
+#mypup-img.trick-bark, #mypup-video.trick-bark { animation: trick-bark .5s ease; }
+#mypup-img.trick-jump, #mypup-video.trick-jump { animation: trick-jump .55s ease; }
+#mypup-img.trick-nap, #mypup-video.trick-nap { filter: grayscale(.55) brightness(.72); }
 .mypup-bubble {
   position: absolute; top: .7rem; left: 50%; transform: translateX(-50%);
   background: rgba(10, 14, 20, .94); border: 1px solid var(--line);
