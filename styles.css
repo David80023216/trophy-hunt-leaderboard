@@ -751,6 +751,28 @@ body {
 .mypup-actions button span { font-size: .72rem; font-weight: 700; color: var(--muted); }
 .mypup-actions button:active { transform: scale(.93); }
 .mypup-note { text-align: center; }
+.mypup-level { text-align: center; font-size: 1.05rem; margin: .5rem 0 .2rem; }
+.lvl-badge {
+  display: inline-block; background: linear-gradient(135deg, var(--gold), #ff9d2e);
+  color: #1a1206; font-weight: 800; font-size: .8rem; padding: .2rem .6rem;
+  border-radius: 999px; margin-right: .4rem; vertical-align: middle;
+}
+.mypup-progress { max-width: 22rem; margin: .55rem auto .2rem; }
+.mypup-progress-label { text-align: center; font-size: .8rem; color: var(--muted); margin-top: .25rem; }
+.mypup-ach-title { text-align: center; margin: 1rem 0 .55rem; font-size: 1rem; }
+.mypup-ach-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .5rem; max-width: 26rem; margin: 0 auto; }
+.mypup-ach {
+  background: rgba(255, 255, 255, .03); border: 1px solid var(--line);
+  border-radius: .9rem; padding: .6rem .55rem; text-align: center;
+}
+.mypup-ach.won { border-color: var(--gold); background: rgba(255, 193, 60, .07); }
+.mypup-ach.locked { opacity: .42; filter: grayscale(.85); }
+.mypup-ach .ach-ico { font-size: 1.5rem; }
+.mypup-ach .ach-name { font-weight: 700; font-size: .85rem; margin-top: .15rem; }
+.mypup-ach .ach-desc { font-size: .72rem; color: var(--muted); margin-top: .1rem; }
+/* happy wiggle when the pup is tapped */
+@keyframes trick-wiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-7deg); } 75% { transform: rotate(7deg); } }
+#mypup-img.trick-wiggle, #mypup-video.trick-wiggle { animation: trick-wiggle .5s ease; }
 .mypup-placeholder {
   font-size: 5rem; text-align: center; padding: 2.2rem 1rem;
   border: 2px dashed var(--line); border-radius: 1.2rem; background: rgba(255, 255, 255, .02);

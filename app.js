@@ -1232,36 +1232,39 @@
     });
   }
 
-  function mypupLoad(handle) {
-    var key = 'th-mypup-' + String(handle).toLowerCase();
-    var st = null;
-    try { st = JSON.parse(localStorage.getItem(key)); } catch (e) {}
-    if (!st || typeof st.food !== 'number') st = { food: 70, happy: 70, energy: 70, at: Date.now() };
-    var hrs = Math.max(0, (Date.now() - (st.at || Date.now())) / 3600000);
-    if (hrs > 0.02) {
-      st.food = Math.max(0, Math.round(st.food - hrs * 6));
-      st.happy = Math.max(0, Math.round(st.happy - hrs * 5));
-      st.energy = Math.min(100, Math.round(st.energy + hrs * 4)); /* naps while away */
+  /* ---- My Pup: game inside the game (2026-10-08, Shawn) ----
+     The pup levels up with the player's REAL Trophy Hunt points: every 25
+     season points = one level. Achievements unlock from live board data. */
+  var MYPUP_TITLES = ['Pup', 'Scout', 'Hunter', 'Tracker', 'Ranger', 'Champion', 'Alpha', 'Legend'];
+  function mypupLevelInfo(pts) {
+    pts = Math.max(0, pts || 0);
+    var lvl = Math.floor(pts / 25) + 1;
+    var title = MYPUP_TITLES[Math.min(lvl, MYPUP_TITLES.length) - 1];
+    var into = pts % 25;
+    return { level: lvl, title: title, into: into, need: 25 - into, pts: pts };
+  }
+  function mypupAchievements(rw, rank) {
+    var cl = (rw && rw.checklist && rw.checklist.items) || [];
+    function itemDone(key) {
+      for (var i = 0; i < cl.length; i++) if (cl[i].key === key) return !!cl[i].done;
+      return false;
     }
-    st._key = key;
-    return st;
-  }
-  function mypupSave(st) {
-    st.at = Date.now();
-    try { localStorage.setItem(st._key, JSON.stringify({ food: st.food, happy: st.happy, energy: st.energy, at: st.at })); } catch (e) {}
-  }
-  function mypupSetBar(id, v) {
-    var el = document.getElementById(id);
-    if (el) el.style.width = Math.max(0, Math.min(100, v)) + '%';
-  }
-  function mypupMood(name, st) {
-    var m;
-    if (st.food < 30) m = 'is getting hungry… 🍖';
-    else if (st.happy < 30) m = 'wants some attention 🥺';
-    else if (st.energy < 30) m = 'is getting sleepy 😴';
-    else if (st.food > 70 && st.happy > 70 && st.energy > 70) m = 'is living their best life! 🌟';
-    else m = 'is doing great! 🐶';
-    return name + ' ' + m;
+    var vids = (rw && rw.videos_ever) || [];
+    var pts = (rw && rw.season_points) || 0;
+    var streak = (rw && rw.streak) || 0;
+    var photos = (rw && rw.photo_count) || 0;
+    return [
+      { icon: '🐾', name: 'First Entry', desc: 'Comment your dog\u2019s name', won: pts > 0 },
+      { icon: '📸', name: 'Picture Pup', desc: 'Upload a dog photo', won: photos >= 1 || itemDone('photo') },
+      { icon: '🎬', name: 'Movie Star', desc: 'Upload a dog video', won: itemDone('clip') },
+      { icon: '🧭', name: 'Explorer', desc: 'Enter on 3 videos', won: vids.length >= 3 },
+      { icon: '🗺️', name: 'Trailblazer', desc: 'Enter on 8 videos', won: vids.length >= 8 },
+      { icon: '🔥', name: 'On a Roll', desc: '3-day streak', won: streak >= 3 },
+      { icon: '⭐', name: 'Week Warrior', desc: '7-day streak', won: streak >= 7 },
+      { icon: '🌟', name: 'Full Clear', desc: 'Clear a full day', won: !!(rw && rw.checklist && rw.checklist.complete) },
+      { icon: '🥉', name: 'Top 3', desc: 'Reach the top 3', won: rank >= 1 && rank <= 3 },
+      { icon: '👑', name: 'Top Dog', desc: 'Hit #1 on the board', won: rank === 1 }
+    ];
   }
   function renderMyPup() {
     var signedOut = document.getElementById('mypup-signedout');
@@ -1336,57 +1339,71 @@
     document.getElementById('mypup-name').textContent = '🐶 ' + name;
     game.dataset.handle = handle;
     game.dataset.dogname = name;
-    var st = mypupLoad(handle);
-    mypupSave(st);
-    mypupSetBar('stat-food', st.food);
-    mypupSetBar('stat-happy', st.happy);
-    mypupSetBar('stat-energy', st.energy);
-    document.getElementById('mypup-mood').textContent = mypupMood(name, st);
+    /* Level + achievements from the player's REAL hunt data. */
+    var pts = (rw && rw.season_points) || 0;
+    var rank = (fnd && fnd.rank) || 0;
+    var info = mypupLevelInfo(pts);
+    document.getElementById('mypup-level').innerHTML =
+      '<span class="lvl-badge">Lv ' + info.level + '</span>' + info.title;
+    var fill = document.getElementById('mypup-progress-fill');
+    if (fill) fill.style.width = Math.round(info.into / 25 * 100) + '%';
+    document.getElementById('mypup-progress-label').textContent =
+      info.into + ' / 25 pts — ' + info.need + ' more to Level ' + (info.level + 1);
+    var achWrap = document.getElementById('mypup-achievements');
+    if (achWrap) {
+      var achs = mypupAchievements(rw, rank);
+      var html = '';
+      for (var ai = 0; ai < achs.length; ai++) {
+        var a = achs[ai];
+        html += '<div class="mypup-ach ' + (a.won ? 'won' : 'locked') + '">' +
+          '<div class="ach-ico">' + (a.won ? a.icon : '🔒') + '</div>' +
+          '<div class="ach-name">' + a.name + '</div>' +
+          '<div class="ach-desc">' + a.desc + '</div></div>';
+      }
+      achWrap.innerHTML = html;
+    }
+    /* Level-up celebration when the player returns stronger. */
+    var lkey = 'th-mypup-level-' + String(handle).toLowerCase();
+    var lastLvl = 0;
+    try { lastLvl = parseInt(localStorage.getItem(lkey) || '0', 10) || 0; } catch (e) {}
+    if (lastLvl > 0 && info.level > lastLvl) {
+      var bub2 = document.getElementById('mypup-bubble');
+      bub2.textContent = '🎉 LEVEL UP! ' + name + ' is now Level ' + info.level + ' ' + info.title + '!';
+      bub2.hidden = false;
+      clearTimeout(img._mplvl);
+      img._mplvl = setTimeout(function () { bub2.hidden = true; }, 3500);
+    }
+    try { localStorage.setItem(lkey, String(info.level)); } catch (e) {}
   }
-  var MYPUP_ACTS = {
-    feed:  { df: 30, dh: 5,  de: 0,   anim: 'trick-bark', say: 'Yum! *crunch crunch* 🦴' },
-    play:  { df: -8, dh: 25, de: -12, anim: 'trick-spin', say: 'Wheee! That was fun! 🎾' },
-    pet:   { df: 0,  dh: 15, de: 5,   anim: 'trick-jump', say: '*wags tail happily* 🐾' },
-    sleep: { df: -8, dh: 5,  de: 35,  anim: 'trick-nap',  say: 'Zzz… all rested! 💤' }
-  };
   /* Avatar pups: cartoon likeness of the player's actual dog, with real
      movement (animated video). Keyed by lowercase handle. New avatars are
      generated when a player uploads their dog's photo. */
   var MYPUP_AVATARS = {
     '@housemouse17': { img: 'dogs/avatar/housemouse17.png', video: 'dogs/avatar/housemouse17-idle.mp4' }
   };
-  /* Applies one My Pup action: updates stats, plays the reaction animation on
-     the photo (or video), and shows the message bubble. */
-  function mypupAct(game, actName) {
-    var act = MYPUP_ACTS[actName];
-    if (!act) return;
-    var handle = game && game.dataset.handle;
-    if (!handle) return;
-    var st = mypupLoad(handle);
-    st.food = Math.max(0, Math.min(100, st.food + act.df));
-    st.happy = Math.max(0, Math.min(100, st.happy + act.dh));
-    st.energy = Math.max(0, Math.min(100, st.energy + act.de));
-    mypupSave(st);
-    mypupSetBar('stat-food', st.food);
-    mypupSetBar('stat-happy', st.happy);
-    mypupSetBar('stat-energy', st.energy);
+  /* Tapping the pup is pure affection: a happy wiggle and a sweet bubble.
+     (The old Feed/Play/Pet/Nap stat actions were retired 2026-10-08 when the
+     tab became a levels-and-achievements game driven by real hunt points.) */
+  var MYPUP_PETSAYS = ['*wags tail* 🐾', 'loves the attention! 💛', '*happy bounce* 🐶', 'Woof woof! 🐾', '*nuzzles your hand* 🥰'];
+  function mypupPet(game) {
+    if (!game || game.hidden) return;
+    var name = game.dataset.dogname || 'Pup';
     var img = document.getElementById('mypup-img');
     var vel = document.getElementById('mypup-video');
     var target = (vel && !vel.hidden) ? vel : img;
-    target.classList.remove('trick-bark', 'trick-roll', 'trick-spin', 'trick-jump', 'trick-nap', 'idle');
+    target.classList.remove('trick-wiggle', 'idle');
     void target.offsetWidth; /* restart the animation */
-    if (act.anim) target.classList.add(act.anim);
+    target.classList.add('trick-wiggle');
     clearTimeout(target._mptr);
     target._mptr = setTimeout(function () {
-      target.classList.remove('trick-bark', 'trick-roll', 'trick-spin', 'trick-jump', 'trick-nap');
+      target.classList.remove('trick-wiggle');
       if (!target.hidden) target.classList.add('idle');
-    }, 800);
+    }, 600);
     var bub = document.getElementById('mypup-bubble');
-    bub.textContent = act.say;
+    bub.textContent = name + ' ' + MYPUP_PETSAYS[Math.floor(Math.random() * MYPUP_PETSAYS.length)];
     bub.hidden = false;
     clearTimeout(img._mpt);
-    img._mpt = setTimeout(function () { bub.hidden = true; }, 2200);
-    document.getElementById('mypup-mood').textContent = mypupMood(game.dataset.dogname || 'Pup', st);
+    img._mpt = setTimeout(function () { bub.hidden = true; }, 2000);
   }
   var mypupBound = false;
   function initMyPup() {
@@ -1404,23 +1421,11 @@
       if (getMe()) openProfile();
       else showClaimSheet();
     });
-    var wrap = document.querySelector('.mypup-actions');
-    if (wrap) {
-      var btns = wrap.querySelectorAll('button[data-act]');
-      for (var i = 0; i < btns.length; i++) {
-        (function (b) {
-          b.addEventListener('click', function () {
-            var game = document.getElementById('mypup-game');
-            mypupAct(game, b.getAttribute('data-act'));
-          });
-        })(btns[i]);
-      }
-    }
     /* Tapping the pup itself is a pet. */
     ['mypup-img', 'mypup-video'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.addEventListener('click', function () {
-        mypupAct(document.getElementById('mypup-game'), 'pet');
+        mypupPet(document.getElementById('mypup-game'));
       });
     });
     renderMyPup();
